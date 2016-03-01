@@ -1,21 +1,47 @@
 {
-  "name": "single",
-  "handler": "single/handler.handler",
-  "runtime": "nodejs",
+  "name": "fetch",
+  "customName": false,
+  "customRole": false,
+  "handler": "fetch/handler.handler",
   "timeout": 6,
   "memorySize": 128,
   "custom": {
     "excludePatterns": [],
-    "envVars": [],
-    "optimize": true
+    "envVars": []
   },
   "endpoints": [
     {
-      "path": "single",
+      "path": "fetch/{serviceType}/orgs",
+      "method": "GET",
+      "type": "AWS",
+      "authorizationType": "none",
+      "apiKeyRequired": false,
+      "requestParameters": {
+        "integration.request.querystring.page": "method.request.querystring.page"
+      },
+      "requestTemplates": "$${apiRequestTemplate}",
+      "responses": {
+        "400": {
+          "statusCode": "400"
+        },
+        "default": {
+          "statusCode": "200",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": {
+            "application/json": ""
+          }
+        }
+      }
+    },
+    {
+      "path": "fetch/{serviceType}/orgs/{orgId}/repos",
       "method": "GET",
       "authorizationType": "none",
       "apiKeyRequired": false,
-      "requestParameters": {},
+      "requestParameters": {
+        "integration.request.querystring.page": "method.request.querystring.page"
+      },
       "requestTemplates": "$${apiRequestTemplate}",
       "responses": {
         "400": {
@@ -31,51 +57,13 @@
       }
     },
     {
-      "path": "single",
-      "method": "PUT",
+      "path": "fetch/{serviceType}/orgs/{orgId}/repos/{repoId}",
+      "method": "GET",
       "authorizationType": "none",
       "apiKeyRequired": false,
-      "requestParameters": {},
-      "requestTemplates": "$${apiRequestTemplate}",
-      "responses": {
-        "400": {
-          "statusCode": "400"
-        },
-        "default": {
-          "statusCode": "200",
-          "responseParameters": {},
-          "responseModels": {},
-          "responseTemplates": {},
-          "application/json": ""
-        }
-      }
-    },
-    {
-      "path": "single",
-      "method": "POST",
-      "authorizationType": "none",
-      "apiKeyRequired": false,
-      "requestParameters": {},
-      "requestTemplates": "$${apiRequestTemplate}",
-      "responses": {
-        "400": {
-          "statusCode": "400"
-        },
-        "default": {
-          "statusCode": "200",
-          "responseParameters": {},
-          "responseModels": {},
-          "responseTemplates": {},
-          "application/json": ""
-        }
-      }
-    },
-    {
-      "path": "single",
-      "method": "DELETE",
-      "authorizationType": "none",
-      "apiKeyRequired": false,
-      "requestParameters": {},
+      "requestParameters": {
+        "integration.request.querystring.page": "method.request.querystring.page"
+      },
       "requestTemplates": "$${apiRequestTemplate}",
       "responses": {
         "400": {
@@ -90,5 +78,6 @@
         }
       }
     }
-  ]
+  ],
+  "events": []
 }

@@ -1,6 +1,6 @@
 var Constants = require('../constants');
 var q = require('q');
-var security = require('../security')
+var security = require('../security');
 //Oauth client setup
 var OAuth = require('oauth');
 var OAuth2 = OAuth.OAuth2;
@@ -78,31 +78,33 @@ module.exports = function(event, cb) {
 
             //The table is keyed off of the ServiceType and Username.
             var table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLESS_PROJECT_NAME + '-users';
+            var entry = {
+                "ServiceType": 'github',
+                "ServiceId": user_data.user_profile.id,
+                "Username": user_data.user_profile.login,
+                "Name": user_data.user_profile.name,
+                "Email": user_data.user_profile.email,
+                "Company": user_data.user_profile.company,
+                "Blog": user_data.user_profile.blog,
+                "Location": user_data.user_profile.location,
+                "AccessToken": security.encrypt(user_data.oauth_data.access_token)
+            }
             var params = {
                 TableName:table,
-                Item:{
-                    "ServiceType": 'github',
-                    "ServiceId": user_data.user_profile.id,
-                    "Username": user_data.user_profile.login,
-                    "Name": user_data.user_profile.name,
-                    "Email": user_data.user_profile.email,
-                    "Company": user_data.user_profile.company,
-                    "Blog": user_data.user_profile.blog,
-                    "Location": user_data.user_profile.location,
-                    "AccessToken": security.encrypt(user_data.oauth_data.access_token)
-                }
+                Item: entry
             };
 
-            var deferred = q.defer();
+            var db_deferred = q.defer();
             docClient.put(params, function(err, data) {
-                if (err)  return deferred.reject(err);
-                return deferred.resolve(data);
+                if (err)  return db_deferred.reject(err);
+                //TODO:for some reason this data is empty. We'll send entry for now.
+                return db_deferred.resolve(entry);
             });
-
-            return deferred.promise
+            return db_deferred.promise
         })
-        .then(function(response){
-            return cb(null, response)
+        .then(security.sign_token)
+        .then(function(jwt){
+            return cb(null, {token:jwt})
         })
         .fail(function(err){
             return cb(err, null)

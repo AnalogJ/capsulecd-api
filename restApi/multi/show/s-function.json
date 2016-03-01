@@ -3,7 +3,7 @@
   "handler": "multi/show/handler.handler",
   "runtime": "nodejs",
   "timeout": 6,
-  "memorySize": 256,
+  "memorySize": 128,
   "custom": {
     "excludePatterns": [],
     "envVars": [],

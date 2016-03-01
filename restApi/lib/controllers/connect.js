@@ -1,4 +1,4 @@
-var Constants = require('../constants')
+var Constants = require('../constants');
 var OAuth = require('oauth');
 var OAuth2 = OAuth.OAuth2;
 var github_client = new OAuth2(

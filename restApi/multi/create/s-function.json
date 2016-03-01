@@ -3,7 +3,7 @@
   "handler": "multi/create/handler.handler",
   "runtime": "nodejs",
   "timeout": 6,
-  "memorySize": 1024,
+  "memorySize": 128,
   "custom": {
     "excludePatterns": [],
     "envVars": [],

@@ -1,10 +1,13 @@
 /**
- * Lib
+ * Lib Router
  */
 
 module.exports = {
   connect: require('./controllers/connect'),
-  callback: require('./controllers/callback')
+  callback: require('./controllers/callback'),
+
+  //Authenticated Controllers (requires JWT Header)
+  fetch: require('./controllers/fetch')
 };
 //
 //
