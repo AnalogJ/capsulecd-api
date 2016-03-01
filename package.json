@@ -1,0 +1,24 @@
+{
+  "_npmOperationalInternal": {
+    "host": "packages-5-east.internal.npmjs.com",
+    "tmp": "tmp/serverless-starter-0.2.0.tgz_1455215968713_0.15588788595050573"
+  },
+  "author": {
+    "name": "Jason Kulatunga <jason@thesparktree.com>"
+  },
+  "dependencies": {
+    "serverless-optimizer-plugin": "^1.0.0"
+  },
+  "description": "The API for CapsuleCD web service",
+  "devDependencies": {},
+  "license": "MIT",
+  "name": "capsulecd-api",
+  "optionalDependencies": {},
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/AnalogJ/capsulecd-api.git"
+  },
+  "scripts": {},
+  "version": "0.2.0"
+}

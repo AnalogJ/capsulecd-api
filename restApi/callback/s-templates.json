@@ -1,0 +1,8 @@
+{
+  "apiRequestTemplate": {
+    "application/json": {
+      "serviceType": "$input.params('serviceType')",
+      "code":"$input.params('code')"
+    }
+  }
+}
