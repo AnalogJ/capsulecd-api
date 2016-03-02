@@ -20,7 +20,7 @@ module.exports = function (event, cb) {
             //retrieve data from github api.
             github.authenticate({
                 type: "oauth",
-                token: decoded.access_token
+                token: decoded.AccessToken
             });
 
             var deferred = q.defer();
@@ -28,14 +28,14 @@ module.exports = function (event, cb) {
             var page = page|0;
             if(event.orgId && event.repoId){
                 //repo and org specified, print the specific repo information
-                github.repos.get({user:orgId, repo:repoId}, function(err, data){
+                github.repos.get({user:event.orgId, repo:event.repoId}, function(err, data){
                     if (err) return deferred.reject(err);
                     return deferred.resolve(data);
                 })
             }
             else if(event.orgId && !event.repoId){
-                //repo and org specified, print the repo information
-                github.repos.get({org:orgId, page:page}, function(err, data){
+                //org specified find all repos
+                github.repos.get({org:event.orgId, page:page}, function(err, data){
                     if (err) return deferred.reject(err);
                     return deferred.resolve(data);
                 })

@@ -7,7 +7,8 @@ module.exports = {
   callback: require('./controllers/callback'),
 
   //Authenticated Controllers (requires JWT Header)
-  fetch: require('./controllers/fetch')
+  fetch: require('./controllers/fetch'),
+  project: require('./controllers/project').router
 };
 //
 //

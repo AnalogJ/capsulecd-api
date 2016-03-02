@@ -27,6 +27,7 @@ module.exports = {
     //JWT methods
 
     sign_token: function(payload){
+        //TODO: put a reasonable expiry date here, 24h? 48?
         var deferred = q.defer();
         jwt.sign(payload, jwt_passphrase,{}, function(token) {
             return deferred.resolve(token);

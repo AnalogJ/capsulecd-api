@@ -1,0 +1,9 @@
+{
+  "ServiceType": "String, should be github",
+  "Id":"String - made up of OrgId/RepoId",
+  "OrgId": "String",
+  "RepoId": "String",
+  "Owner": "String - FK to User.Login",
+  "Secrets": "Hash"
+
+}

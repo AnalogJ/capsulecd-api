@@ -80,7 +80,7 @@ module.exports = function(event, cb) {
             var table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLESS_PROJECT_NAME + '-users';
             var entry = {
                 "ServiceType": 'github',
-                "ServiceId": user_data.user_profile.id,
+                "ServiceId": '' + user_data.user_profile.id,
                 "Username": user_data.user_profile.login,
                 "Name": user_data.user_profile.name,
                 "Email": user_data.user_profile.email,
@@ -89,6 +89,7 @@ module.exports = function(event, cb) {
                 "Location": user_data.user_profile.location,
                 "AccessToken": security.encrypt(user_data.oauth_data.access_token)
             }
+            //TODO: store the user's profile info
             var params = {
                 TableName:table,
                 Item: entry
@@ -98,7 +99,13 @@ module.exports = function(event, cb) {
             docClient.put(params, function(err, data) {
                 if (err)  return db_deferred.reject(err);
                 //TODO:for some reason this data is empty. We'll send entry for now.
-                return db_deferred.resolve(entry);
+                return db_deferred.resolve({
+                    "ServiceType": 'github',
+                    "ServiceId": user_data.user_profile.id,
+                    "Username": user_data.user_profile.login,
+                    "Name": user_data.user_profile.name,
+                    "AccessToken": user_data.oauth_data.access_token
+                });
             });
             return db_deferred.promise
         })

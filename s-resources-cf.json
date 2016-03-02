@@ -54,7 +54,7 @@
         ]
       }
     },
-    "DynamoDB": {
+    "DynamoDBUser": {
       "Type" : "AWS::DynamoDB::Table",
       "DeletionPolicy" : "Retain",
       "Properties" : {
@@ -70,11 +70,11 @@
         ],
         "KeySchema" : [
           {
-            "AttributeName" : "Username",
+            "AttributeName" : "ServiceType",
             "KeyType" : "HASH"
           },
           {
-            "AttributeName" : "ServiceType",
+            "AttributeName" : "Username",
             "KeyType" : "RANGE"
           }
         ],
@@ -83,6 +83,37 @@
           "WriteCapacityUnits" : "5"
         },
         "TableName" : "${stage}-${project}-users"
+      }
+    },
+    "DynamoDBProject": {
+      "Type" : "AWS::DynamoDB::Table",
+      "DeletionPolicy" : "Retain",
+      "Properties" : {
+        "AttributeDefinitions" : [
+          {
+            "AttributeName" : "ServiceType",
+            "AttributeType" : "S"
+          },
+          {
+            "AttributeName" : "Id",
+            "AttributeType" : "S"
+          }
+        ],
+        "KeySchema" : [
+          {
+            "AttributeName" : "ServiceType",
+            "KeyType" : "HASH"
+          },
+          {
+            "AttributeName" : "Id",
+            "KeyType" : "RANGE"
+          }
+        ],
+        "ProvisionedThroughput" : {
+          "ReadCapacityUnits" : "5",
+          "WriteCapacityUnits" : "5"
+        },
+        "TableName" : "${stage}-${project}-projects"
       }
     }
 
