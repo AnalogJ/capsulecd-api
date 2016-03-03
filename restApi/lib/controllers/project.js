@@ -136,6 +136,7 @@ var self = {
                 });
                 return deferred_hook.promise
             })
+            //TODO: we should also add the CapsuleCD user as a collaborator to this repo so it can commit?
     },
     update: function(auth, serviceType, orgId, repoId, event){
         throw new Error('unsupported action')
