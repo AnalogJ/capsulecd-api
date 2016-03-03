@@ -1,14 +1,13 @@
 var security = require('../security');
 //node-github client setup
 var GitHubApi = require("github");
-var github = new GitHubApi({
-    // required
-    version: "3.0.0"
-});
 var q = require('q');
 
 
 module.exports = function (event, cb) {
+    var github = new GitHubApi({
+        version: "3.0.0"
+    });
 
     if(event.serviceType != 'github'){
         return cb('Service not supported', null);

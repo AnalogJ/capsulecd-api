@@ -3,8 +3,14 @@
  */
 
 module.exports = {
+  test: function(event, cb) {
+    return cb(null, event);
+  },
+
   connect: require('./controllers/connect'),
   callback: require('./controllers/callback'),
+  hook: require('./controllers/hook'),
+
 
   //Authenticated Controllers (requires JWT Header)
   fetch: require('./controllers/fetch'),

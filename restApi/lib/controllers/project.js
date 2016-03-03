@@ -1,10 +1,7 @@
 var security = require('../security');
+var constants = require('../constants');
 //node-github client setup
 var GitHubApi = require("github");
-var github = new GitHubApi({
-    // required
-    version: "3.0.0"
-});
 var q = require('q');
 
 var AWS = require("aws-sdk");
@@ -111,12 +108,41 @@ var self = {
             return db_deferred.resolve(entry);
         });
         return db_deferred.promise
+            .then(function(data){
+                var github = new GitHubApi({
+                    version: "3.0.0"
+                });
+                //authenticate and retrieve user data.
+                github.authenticate({
+                    type: "oauth",
+                    token: auth.AccessToken
+                });
+
+                var deferred_hook = q.defer();
+                github.repos.createHook({
+                    "user":orgId,
+                    "repo":repoId,
+                    "name":"web",
+                    "config": {
+                        "url": constants.lambda_endpoint + '/hook/github/' + orgId + '/' + repoId,
+                        "content_type": "json"
+                    },
+                    "events":["pull_request"]
+                }, function(err, hook_data){
+                    if (err) return deferred_hook.reject(err);
+
+                    //after creating the hook, return the database data.
+                    return deferred_hook.resolve(data);
+                });
+                return deferred_hook.promise
+            })
     },
     update: function(auth, serviceType, orgId, repoId, event){
         throw new Error('unsupported action')
     },
     delete: function(auth, serviceType, orgId, repoId, event){
         throw new Error('unsupported action')
+        //TODO: delete entry in database and delete github webhook.
     }
 };
 module.exports = self

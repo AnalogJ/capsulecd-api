@@ -14,10 +14,7 @@ var github_client = new OAuth2(
 
 //node-github client setup
 var GitHubApi = require("github");
-var github = new GitHubApi({
-    // required
-    version: "3.0.0"
-});
+
 
 
 //Dynamodb client setup
@@ -30,6 +27,9 @@ var docClient = new AWS.DynamoDB.DocumentClient();
 // store the basic user info and access token in dynamo db.
 
 module.exports = function(event, cb) {
+    var github = new GitHubApi({
+        version: "3.0.0"
+    });
 
     if(event.serviceType != 'github'){
         throw 'Service not supported'
