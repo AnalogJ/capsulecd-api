@@ -146,4 +146,4 @@ var self = {
         //TODO: delete entry in database and delete github webhook.
     }
 };
-module.exports = self
+module.exports = self;

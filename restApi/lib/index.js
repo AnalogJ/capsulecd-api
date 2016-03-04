@@ -11,10 +11,11 @@ module.exports = {
   callback: require('./controllers/callback'),
   hook: require('./controllers/hook'),
 
-
   //Authenticated Controllers (requires JWT Header)
   fetch: require('./controllers/fetch'),
-  project: require('./controllers/project').router
+  project: require('./controllers/project').router,
+  project_process: require('./controllers/project_process')
+
 };
 //
 //

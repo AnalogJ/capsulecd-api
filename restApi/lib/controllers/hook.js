@@ -105,7 +105,7 @@ module.exports = function (event, cb) {
             //we have to write this comment as the CapsuleCD user.
             capsulecd_github.authenticate({
                 type: "oauth",
-                token: process.env.CAPSULECD_USER_TOKEN
+                token: process.env.GITHUB_CAPSULECD_USER_TOKEN
             });
 
             var deferred_comment = q.defer();
