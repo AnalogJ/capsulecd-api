@@ -1,4 +1,5 @@
 var Constants = require('../constants');
+var Helpers = require('../helpers');
 var OAuth = require('oauth');
 var OAuth2 = OAuth.OAuth2;
 var github_client = new OAuth2(
@@ -22,5 +23,7 @@ module.exports = function(event, cb) {
 
     var response = {url:url};
 
-    return cb(null, response);
+    var error = new Error('testing error response');
+    //var error = {message:'this is the error response status: 400', status:400};
+    return Helpers.errorHandler(cb)(error);
 };

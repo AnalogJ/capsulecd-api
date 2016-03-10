@@ -19,8 +19,13 @@
       "requestParameters": {},
       "requestTemplates": "$${apiRequestTemplate}",
       "responses": {
-        "400": {
-          "statusCode": "400"
+        ".*400.*": {
+          "statusCode": "400",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": {
+            "application/json": "#set($inputRoot = $input.path('$.errorMessage'))$inputRoot"
+          }
         },
         "default": {
           "statusCode": "200",
