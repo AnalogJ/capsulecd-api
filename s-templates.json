@@ -12,6 +12,9 @@
   "apiSuccessResponseTemplate":{
     "application/json": "{\"success\":true, \"data\": $input.json('$') }"
   },
+  "apiFailureResponseTemplate":{
+    "application/json": "#set($inputRoot = $input.path('$.errorMessage')){\"success\":false, \"error\": $inputRoot }"
+  },
 
 
 
