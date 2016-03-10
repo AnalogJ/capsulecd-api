@@ -28,12 +28,16 @@
           "statusCode": "200",
           "responseParameters": {},
           "responseModels": {},
-          "responseTemplates": {
-            "application/json": ""
-          }
+          "responseTemplates": "$${apiSuccessResponseTemplate}"
         }
       }
     }
   ],
-  "events": []
+  "events": [],
+  "custom": {
+    "cors": {
+      "allowOrigin": "*",
+      "allowHeaders": ["Content-Type", "X-Amz-Date", "Authorization", "X-Api-Key"]
+    }
+  }
 }

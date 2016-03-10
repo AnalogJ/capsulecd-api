@@ -1,9 +1,9 @@
 {
-  "name": "hook",
+  "name": "project_process",
   "customName": false,
   "customRole": false,
-  "handler": "hook/handler.handler",
-  "timeout": 10,
+  "handler": "project_process/handler.handler",
+  "timeout": 6,
   "memorySize": 128,
   "custom": {
     "excludePatterns": [],
@@ -11,7 +11,7 @@
   },
   "endpoints": [
     {
-      "path": "hook/{serviceType}/{orgId}/{repoId}",
+      "path": "project/{serviceType}/{orgId}/{repoId}/process",
       "method": "POST",
       "type": "AWS",
       "authorizationType": "none",

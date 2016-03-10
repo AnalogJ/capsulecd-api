@@ -25,8 +25,7 @@
           "statusCode": "200",
           "responseParameters": {},
           "responseModels": {},
-          "responseTemplates": {},
-          "application/json": ""
+          "responseTemplates": "$${apiSuccessResponseTemplate}"
         }
       }
     },
@@ -45,8 +44,7 @@
           "statusCode": "200",
           "responseParameters": {},
           "responseModels": {},
-          "responseTemplates": {},
-          "application/json": ""
+          "responseTemplates": "$${apiSuccessResponseTemplate}"
         }
       }
     },
@@ -65,8 +63,7 @@
           "statusCode": "200",
           "responseParameters": {},
           "responseModels": {},
-          "responseTemplates": {},
-          "application/json": ""
+          "responseTemplates": "$${apiSuccessResponseTemplate}"
         }
       }
     },
@@ -85,8 +82,7 @@
           "statusCode": "200",
           "responseParameters": {},
           "responseModels": {},
-          "responseTemplates": {},
-          "application/json": ""
+          "responseTemplates": "$${apiSuccessResponseTemplate}"
         }
       }
     },
@@ -105,8 +101,7 @@
           "statusCode": "200",
           "responseParameters": {},
           "responseModels": {},
-          "responseTemplates": {},
-          "application/json": ""
+          "responseTemplates": "$${apiSuccessResponseTemplate}"
         }
       }
     }

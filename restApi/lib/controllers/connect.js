@@ -16,14 +16,11 @@ module.exports = function(event, cb) {
     }
 
     var url = github_client.getAuthorizeUrl({
-        'redirect_uri': Constants.lambda_endpoint + '/callback/github',
+        'redirect_uri': 'http://www.capsulecd.com/callback.html?service_type=github', //Constants.lambda_endpoint + '/callback/github',
         'scope': 'user:email,repo,write:repo_hook'
     });
 
-    var response = {
-        success: true,
-        data: url
-    };
+    var response = {url:url};
 
     return cb(null, response);
 };
