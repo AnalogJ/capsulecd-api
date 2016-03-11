@@ -112,7 +112,10 @@ module.exports = function(event, cb) {
         })
         .then(security.sign_token)
         .then(function(jwt){
-            return cb(null, {token:jwt})
+            return cb(null, {
+                token: jwt,
+                service_type: event.serviceType
+        })
         })
         .fail(Helpers.errorHandler(cb))
 };
