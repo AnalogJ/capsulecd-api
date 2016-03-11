@@ -2,7 +2,7 @@ var security = require('../security');
 //node-github client setup
 var GitHubApi = require("github");
 var q = require('q');
-
+var Helpers = require('../helpers')
 
 module.exports = function (event, cb) {
     var github = new GitHubApi({
@@ -52,7 +52,5 @@ module.exports = function (event, cb) {
             //return it to the callback
             return cb(null, payload)
         })
-        .fail(function(err){
-            return cb(err, null)
-        });
+        .fail(Helpers.errorHandler(cb))
 };

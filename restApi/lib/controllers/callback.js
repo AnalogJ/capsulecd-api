@@ -1,4 +1,5 @@
 var Constants = require('../constants');
+var Helpers = require('../helpers');
 var q = require('q');
 var security = require('../security');
 //Oauth client setup
@@ -113,7 +114,5 @@ module.exports = function(event, cb) {
         .then(function(jwt){
             return cb(null, {token:jwt})
         })
-        .fail(function(err){
-            return cb(err, null)
-        })
+        .fail(Helpers.errorHandler(cb))
 };

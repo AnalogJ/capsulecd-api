@@ -1,5 +1,6 @@
 var security = require('../security');
 var constants = require('../constants');
+var Helpers = require('../helpers');
 //node-github client setup
 var GitHubApi = require("github");
 var q = require('q');
@@ -42,9 +43,7 @@ var self = {
                 //return it to the callback
                 return cb(null, payload)
             })
-            .fail(function(err){
-                return cb(err, null)
-            });
+            .fail(Helpers.errorHandler(cb))
 
     },
     findAll: function(auth, event){

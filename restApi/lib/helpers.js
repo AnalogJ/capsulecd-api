@@ -1,4 +1,14 @@
 module.exports = {
+
+
+    /*
+    * Error handler can be used as follows:
+    * var Helpers = require('../helpers');
+    * Helpers.errorHandler(cb)(err)
+    * or
+    * Promise.fail(Helpers.errorHandler(cb))
+    *
+    * */
     errorHandler: function(cb){
         var _cb = cb;
         return function(err){

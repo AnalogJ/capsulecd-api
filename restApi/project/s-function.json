@@ -18,8 +18,11 @@
       "requestParameters": {},
       "requestTemplates": "$${apiRequestTemplate}",
       "responses": {
-        "400": {
-          "statusCode": "400"
+        ".*400.*": {
+          "statusCode": "400",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": "$${apiFailureResponseTemplate}"
         },
         "default": {
           "statusCode": "200",
@@ -37,8 +40,11 @@
       "requestParameters": {},
       "requestTemplates": "$${apiRequestTemplate}",
       "responses": {
-        "400": {
-          "statusCode": "400"
+        ".*400.*": {
+          "statusCode": "400",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": "$${apiFailureResponseTemplate}"
         },
         "default": {
           "statusCode": "200",
@@ -56,8 +62,11 @@
       "requestParameters": {},
       "requestTemplates": "$${apiRequestTemplate}",
       "responses": {
-        "400": {
-          "statusCode": "400"
+        ".*400.*": {
+          "statusCode": "400",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": "$${apiFailureResponseTemplate}"
         },
         "default": {
           "statusCode": "200",
@@ -75,8 +84,11 @@
       "requestParameters": {},
       "requestTemplates": "$${apiRequestTemplate}",
       "responses": {
-        "400": {
-          "statusCode": "400"
+        ".*400.*": {
+          "statusCode": "400",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": "$${apiFailureResponseTemplate}"
         },
         "default": {
           "statusCode": "200",
@@ -94,8 +106,11 @@
       "requestParameters": {},
       "requestTemplates": "$${apiRequestTemplate}",
       "responses": {
-        "400": {
-          "statusCode": "400"
+        ".*400.*": {
+          "statusCode": "400",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": "$${apiFailureResponseTemplate}"
         },
         "default": {
           "statusCode": "200",

@@ -1,4 +1,5 @@
 var security = require('../security');
+var Helpers = require('../helpers');
 var request = require('superagent');
 var q = require('q');
 
@@ -88,7 +89,5 @@ module.exports = function (event, cb) {
             //return it to the callback
             return cb(null, payload)
         })
-        .fail(function(err){
-            return cb(err, null)
-        });
+        .fail(Helpers.errorHandler(cb))
 };

@@ -23,7 +23,8 @@ module.exports = function(event, cb) {
 
     var response = {url:url};
 
-    var error = new Error('testing error response');
-    //var error = {message:'this is the error response status: 400', status:400};
-    return Helpers.errorHandler(cb)(error);
+    return cb(null, response)
+    //var error = new Error('testing error response');
+    ////var error = {message:'this is the error response status: 400', status:400};
+    //return Helpers.errorHandler(cb)(error);
 };
