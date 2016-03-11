@@ -61,7 +61,7 @@
   "custom": {
     "cors": {
       "allowOrigin": "*",
-      "allowHeaders": ["Content-Type", "X-Amz-Date", "Authorization", "X-Api-Key"]
+      "allowHeaders": ["Content-Type", "X-Amz-Date", "X-Capsulecd-Auth", "X-Api-Key"]
     }
   }
 }
