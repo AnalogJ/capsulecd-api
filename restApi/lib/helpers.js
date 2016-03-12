@@ -22,7 +22,7 @@ module.exports = {
             }
 
             if(!err.status){
-                err.status = 400;
+                err.code = 400;
             }
 
             var whitelisted_props = Object.getOwnPropertyNames(err)

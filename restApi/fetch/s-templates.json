@@ -5,7 +5,7 @@
       "orgId": "$input.params('orgId')",
       "repoId": "$input.params('repoId')",
       "page": "$input.params('page')",
-      "auth": "$input.params('X-CapsuleCD-Auth')"
+      "auth": "$input.params('auth')"
     }
   }
 }

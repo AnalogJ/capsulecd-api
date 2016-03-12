@@ -15,3 +15,18 @@ https://docs.docker.com/engine/reference/api/docker_remote_api_v1.22/#create-a-c
 docker rm $(docker ps -a -q)
 # Delete all images
 docker rmi $(docker images -q)
+
+
+Custom Heaeders
+
+	{
+	  "apiRequestTemplate": {
+		"application/json": {
+		  "serviceType": "$input.params('serviceType')",
+		  "orgId": "$input.params('orgId')",
+		  "repoId": "$input.params('repoId')",
+		  "page": "$input.params('page')",
+		  "auth": "$input.params().header.get('X-CapsuleCD-Auth')"
+		}
+	  }
+	}
