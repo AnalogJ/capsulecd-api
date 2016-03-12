@@ -9,6 +9,7 @@ module.exports = function (event, cb) {
         version: "3.0.0"
     });
 
+
     if(event.serviceType != 'github'){
         return cb('Service not supported', null);
     }
@@ -16,37 +17,42 @@ module.exports = function (event, cb) {
 
     return security.verify_token(event.auth)
         .then(function(decoded){
-            //retrieve data from github api.
+
             github.authenticate({
                 type: "oauth",
                 token: decoded.AccessToken
             });
 
-            var deferred = q.defer();
+            var chain = null;
 
             var page = page|0;
             if(event.orgId && event.repoId){
-                //repo and org specified, print the specific repo information
-                github.repos.get({user:event.orgId, repo:event.repoId}, function(err, data){
-                    if (err) return deferred.reject(err);
-                    return deferred.resolve(data);
-                })
+                chain = getRepo(github, event.orgId, event.repoId)
             }
             else if(event.orgId && !event.repoId){
-                //org specified find all repos
-                github.repos.getFromOrg({org:event.orgId, page:page}, function(err, data){
-                    if (err) return deferred.reject(err);
-                    return deferred.resolve(data);
-                })
+
+                if(event.orgId == decoded.Username){
+                    //look up the user's repos
+                    chain = getUserRepos(github,page)
+                }
+                else{
+                    chain = getOrgRepos(github, event.orgId, page)
+                }
             }
             else{
                 //no org specified, list all the orgs for this user.
-                github.user.getOrgs({page:page}, function(err, data){
-                    if (err) return deferred.reject(err);
-                    return deferred.resolve(data);
-                })
+                if(page){
+                    chain = getOrgs(github, page)
+                }
+                else{
+                    //chain = getOrgs(github, page)
+                    chain = q.spread([getUser(github), getOrgs(github, page)], function(user, orgs){
+                        orgs.unshift(user)
+                        return orgs
+                    })
+                }
             }
-            return deferred.promise
+            return chain
         })
         .then(function(payload){
             //return it to the callback
@@ -54,3 +60,51 @@ module.exports = function (event, cb) {
         })
         .fail(Helpers.errorHandler(cb))
 };
+
+
+function getUser(github){
+    var deferred = q.defer();
+
+    github.user.get({}, function(err, data){
+        if (err) return deferred.reject(err);
+        return deferred.resolve(data);
+    })
+    return deferred.promise
+}
+
+
+function getOrgs(github, page){
+    var deferred = q.defer();
+    github.user.getOrgs({page:page}, function(err, data){
+        if (err) return deferred.reject(err);
+        return deferred.resolve(data);
+    })
+    return deferred.promise
+}
+
+function getOrgRepos(github, orgId, page){
+    var deferred = q.defer();
+    github.repos.getFromOrg({org:orgId, page:page}, function(err, data){
+        if (err) return deferred.reject(err);
+        return deferred.resolve(data);
+    })
+    return deferred.promise
+}
+
+function getUserRepos(github, page){
+    var deferred = q.defer();
+    github.repos.getAll({page:page}, function(err, data){
+        if (err) return deferred.reject(err);
+        return deferred.resolve(data);
+    })
+    return deferred.promise
+}
+
+function getRepo(github, orgId, repoId ){
+    var deferred = q.defer();
+    github.repos.get({user:orgId, repo:repoId}, function(err, data){
+        if (err) return deferred.reject(err);
+        return deferred.resolve(data);
+    })
+    return deferred.promise
+}
