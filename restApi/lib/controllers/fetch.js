@@ -34,7 +34,7 @@ module.exports = function (event, cb) {
             }
             else if(event.orgId && !event.repoId){
                 //org specified find all repos
-                github.repos.get({user:event.orgId, page:page}, function(err, data){
+                github.repos.getFromOrg({org:event.orgId, page:page}, function(err, data){
                     if (err) return deferred.reject(err);
                     return deferred.resolve(data);
                 })
