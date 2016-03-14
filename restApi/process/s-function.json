@@ -1,8 +1,8 @@
 {
-  "name": "project_process",
+  "name": "process",
   "customName": false,
   "customRole": false,
-  "handler": "project_process/handler.handler",
+  "handler": "process/handler.handler",
   "timeout": 6,
   "memorySize": 128,
   "custom": {
@@ -11,7 +11,7 @@
   },
   "endpoints": [
     {
-      "path": "project/{serviceType}/{orgId}/{repoId}/process",
+      "path": "process/{serviceType}/{orgId}/{repoId}",
       "method": "POST",
       "type": "AWS",
       "authorizationType": "none",
