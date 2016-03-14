@@ -6,6 +6,11 @@ var GitHubApi = require("github");
 var q = require('q');
 
 var AWS = require("aws-sdk");
+AWS.config.apiVersions = {
+    dynamodb: '2012-08-10'
+    // other service API versions
+};
+
 var docClient = new AWS.DynamoDB.DocumentClient();
 var table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLESS_PROJECT_NAME + '-projects';
 
@@ -141,7 +146,42 @@ function createProject(auth, serviceType, orgId, repoId, event){
     //TODO: we should also add the CapsuleCD user as a collaborator to this repo so it can commit?
 }
 function updateProject(auth, serviceType, orgId, repoId, event){
-    throw new Error('unsupported action')
+
+    var updateExpression = '';
+    var expressionAttributeValues = {
+        ":owner": auth.Username
+    };
+
+    if(event.body.Settings){
+        updateExpression = "set Settings = :settings";
+        expressionAttributeValues[":settings"] = event.body.Settings;
+    }
+    else if(event.body.Secrets){
+
+        updateExpression = "set Secrets.:secretname = :secretvalue";
+        var secretname = event.body.Secrets.keys()[0]
+        expressionAttributeValues[':secretname'] = secretname;
+        expressionAttributeValues[':secretvalue'] = event.body.Secrets[secretname];
+    }
+
+    var params = {
+        TableName : table,
+        Key:{
+            "ServiceType": serviceType,
+            "Id": orgId + '/' + repoId
+        },
+        UpdateExpression: updateExpression,
+        ConditionExpression: "OwnerUsername = :owner",
+        ExpressionAttributeValues: expressionAttributeValues
+    };
+
+    var db_deferred = q.defer();
+    docClient.update(params, function(err, data) {
+        if (err)  return db_deferred.reject(err);
+        //TODO:for some reason this data is empty. We'll send entry for now.
+        return db_deferred.resolve(data);
+    });
+    return db_deferred.promise
 }
 function deleteProject(auth, serviceType, orgId, repoId, event){
     throw new Error('unsupported action')

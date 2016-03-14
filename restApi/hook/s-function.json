@@ -34,11 +34,5 @@
       }
     }
   ],
-  "events": [],
-  "custom": {
-    "cors": {
-      "allowOrigin": "*",
-      "allowHeaders": ["Content-Type", "X-Amz-Date", "Authorization", "X-Api-Key"]
-    }
-  }
+  "events": []
 }
