@@ -94,7 +94,8 @@ function createProject(auth, serviceType, orgId, repoId, event){
         "OrgId": orgId,
         "RepoId": repoId,
         "OwnerUsername": auth.Username,
-        "Secrets": {}
+        "Secrets": {},
+        "Settings": {}
     };
     //TODO: store the user's profile info
     var params = {
