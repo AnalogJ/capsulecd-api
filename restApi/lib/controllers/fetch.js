@@ -93,7 +93,7 @@ function getOrgRepos(github, orgId, page){
 
 function getUserRepos(github, page){
     var deferred = q.defer();
-    github.repos.getAll({page:page}, function(err, data){
+    github.repos.getAll({page: page}, function(err, data){
         if (err) return deferred.reject(err);
         return deferred.resolve(data);
     })
