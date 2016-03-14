@@ -4,6 +4,7 @@
   "OrgId": "String",
   "RepoId": "String",
   "Owner": "String - FK to User.Login",
-  "Secrets": "Hash"
+  "Settings": "Object - this should be an object that contains project settings used by the process endpoint",
+  "Secrets": "Object {name, last4, value}, last4 is plaintext, value is always encrypted with bcrypt?"
 
 }
