@@ -26,8 +26,11 @@ module.exports = function (event, cb) {
             var chain = null;
 
             var page = page|0;
-            if(event.orgId && event.repoId){
-                chain = getRepo(github, event.orgId, event.repoId)
+            if(event.orgId && event.repoId && event.prNumber) {
+                chain = getRepoPullrequest(github, event.orgId, event.repoId, event.prNumber)
+            }
+            else if(event.orgId && event.repoId){
+                chain = getRepoPullrequests(github, event.orgId, event.repoId, page)
             }
             else if(event.orgId && !event.repoId){
 
@@ -100,9 +103,18 @@ function getUserRepos(github, page){
     return deferred.promise
 }
 
-function getRepo(github, orgId, repoId ){
+function getRepoPullrequests(github, orgId, repoId, page){
     var deferred = q.defer();
-    github.repos.get({user:orgId, repo:repoId}, function(err, data){
+    github.pullRequests.getAll({user:orgId, repo:repoId, state: 'open', page:page}, function(err, data){
+        if (err) return deferred.reject(err);
+        return deferred.resolve(data);
+    })
+    return deferred.promise
+}
+
+function getRepoPullrequest(github, orgId, repoId, prNumber){
+    var deferred = q.defer();
+    github.pullRequests.get({user:orgId, repo:repoId, number:prNumber},function(err, data){
         if (err) return deferred.reject(err);
         return deferred.resolve(data);
     })

@@ -60,13 +60,35 @@
       }
     },
     {
-      "path": "fetch/{serviceType}/orgs/{orgId}/repos/{repoId}",
+      "path": "fetch/{serviceType}/orgs/{orgId}/repos/{repoId}/pullrequests",
       "method": "GET",
       "authorizationType": "none",
       "apiKeyRequired": false,
       "requestParameters": {
         "integration.request.querystring.page": "method.request.querystring.page"
       },
+      "requestTemplates": "$${apiRequestTemplate}",
+      "responses": {
+        ".*400.*": {
+          "statusCode": "400",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": "$${apiFailureResponseTemplate}"
+        },
+        "default": {
+          "statusCode": "200",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": "$${apiSuccessResponseTemplate}"
+        }
+      }
+    },
+    {
+      "path": "fetch/{serviceType}/orgs/{orgId}/repos/{repoId}/pullrequests/{prNumber}",
+      "method": "GET",
+      "authorizationType": "none",
+      "apiKeyRequired": false,
+      "requestParameters": {},
       "requestTemplates": "$${apiRequestTemplate}",
       "responses": {
         ".*400.*": {
