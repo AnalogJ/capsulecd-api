@@ -148,6 +148,7 @@ function createProject(auth, serviceType, orgId, repoId, event){
 function updateProject(auth, serviceType, orgId, repoId, event){
 
     var updateExpression = '';
+    var expressionAttributeNames = null;
     var expressionAttributeValues = {
         ":owner": auth.Username
     };
@@ -158,10 +159,14 @@ function updateProject(auth, serviceType, orgId, repoId, event){
     }
     else if(event.body.Secrets){
 
-        updateExpression = "set Secrets.:secretname = :secretvalue";
-        var secretname = event.body.Secrets.keys()[0]
-        expressionAttributeValues[':secretname'] = secretname;
-        expressionAttributeValues[':secretvalue'] = event.body.Secrets[secretname];
+        updateExpression = "set Secrets.#secretname = :secretvalue";
+        var secretname = Object.keys(event.body.Secrets)[0];
+        var secretvalue = event.body.Secrets[secretname];
+        expressionAttributeNames = {'#secretname': secretname};
+        expressionAttributeValues[':secretvalue'] = {
+            'enc_value': security.encrypt(secretvalue),
+            'last4': (secretvalue.length > 4) ? secretvalue.substr(secretvalue.length - 4) : secretvalue.substr(secretvalue.length - 2)
+        }
     }
 
     var params = {
@@ -172,6 +177,7 @@ function updateProject(auth, serviceType, orgId, repoId, event){
         },
         UpdateExpression: updateExpression,
         ConditionExpression: "OwnerUsername = :owner",
+        ExpressionAttributeNames: expressionAttributeNames,
         ExpressionAttributeValues: expressionAttributeValues
     };
 
