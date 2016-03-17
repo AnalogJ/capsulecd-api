@@ -25,7 +25,7 @@ module.exports = function (event, cb) {
 
             var chain = null;
 
-            var page = page|0;
+            var page = event.page|0;
             if(event.orgId && event.repoId && event.prNumber) {
                 chain = getRepoPullrequest(github, event.orgId, event.repoId, event.prNumber)
             }
