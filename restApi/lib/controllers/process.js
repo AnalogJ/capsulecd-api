@@ -65,7 +65,7 @@ module.exports = function (event, cb) {
                 .replace(/:/g,'-');
 
             var data = {
-                "name": date_prefix + '-' + event.serviceType + '-' + event.orgId + '-' + event.repoId,
+                "name": date_prefix + '-' + event.serviceType + '-' + event.orgId + '-' + event.repoId + '-' + event.prNumber,
                 "image": "analogj/capsulecd",
                 "target_num_containers": 1,
                 "autodestroy":"ALWAYS"
