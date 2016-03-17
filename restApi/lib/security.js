@@ -7,7 +7,7 @@ var crypto = require('crypto'),
     algorithm = 'aes-256-ctr',
     passphrase = process.env.ENCRYPTION_PASSPHRASE,
     jwt = require('jsonwebtoken'),
-    jwt_passphrase = process.env.ENCRYPTION_JWT_PASSPHRASE
+    jwt_passphrase = process.env.ENCRYPTION_JWT_PASSPHRASE;
 
 module.exports = {
     //API Token encryption/decryption
@@ -23,6 +23,31 @@ module.exports = {
         dec += decipher.final('utf8');
         return dec;
     },
+
+    //Bettter Encryption/Decryption (Unavailable because Lamda is using Node 10.36
+    // https://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html
+    // from: http://lollyrock.com/articles/nodejs-encryption/#use-gcm-for-authenticated-encryption
+    //encrypt: function(text) {
+    //    var iv = crypto.randomBytes(12);
+    //    var cipher = crypto.createCipheriv(algorithm, passphrase, iv);
+    //    var encrypted = cipher.update(text, 'utf8', 'hex');
+    //    encrypted += cipher.final('hex');
+    //    var tag = cipher.getAuthTag();
+    //    return {
+    //        content: encrypted,
+    //        tag: tag.toString('hex'),
+    //        iv: iv.toString('hex')
+    //    };
+    //},
+    //
+    //decrypt: function (encrypted) {
+    //    var decipher = crypto.createDecipheriv(algorithm, passphrase, new Buffer(encrypted.iv,'hex'));
+    //    decipher.setAuthTag(new Buffer(encrypted.tag, 'hex') );
+    //    var dec = decipher.update(encrypted.content, 'hex', 'utf8');
+    //    dec += decipher.final('utf8');
+    //    return dec;
+    //},
+
 
     //JWT methods
 
