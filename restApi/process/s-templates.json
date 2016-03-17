@@ -6,7 +6,7 @@
       "repoId": "$input.params('repoId')",
       "prNumber": "$input.params('prNumber')",
       "page": "$input.params('page')",
-      "auth": "$input.params('X-CapsuleCD-Auth')"
+      "auth": "$input.params('auth')"
     }
   }
 }
