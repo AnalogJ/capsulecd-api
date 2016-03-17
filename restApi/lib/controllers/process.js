@@ -47,7 +47,25 @@ function tutum_request(method, path, params, callback) {
     });
 };
 
+function findProject(auth, serviceType, orgId, repoId){
+    var params = {
+        TableName : table,
+        KeyConditionExpression: "ServiceType = :serviceType and Id = :id",
+        FilterExpression: "OwnerUsername = :owner",
+        ExpressionAttributeValues: {
+            ":serviceType":serviceType,
+            ":id":orgId + '/' + repoId,
+            ":owner": auth.Username
+        }
+    };
+    var db_deferred = q.defer();
+    docClient.query(params, function(err, data) {
+        if (err)  return db_deferred.reject(err);
 
+        return db_deferred.resolve(data.Items[0]);
+    });
+    return db_deferred.promise
+}
 
 module.exports = function (event, cb) {
 
@@ -58,15 +76,33 @@ module.exports = function (event, cb) {
 
 
     return security.verify_token(event.auth)
-        .then(function(){
+        .then(function(decoded){
+            return findProject(decoded, event.serviceType, event.orgId, event.repoId)
+        })
+        .then(function(project){
             var date_prefix = new Date().toISOString()
                 .replace(/T/, '-')      // replace T with a space
                 .replace(/\..+/, '')     // delete the dot and everything after
                 .replace(/:/g,'-');
 
+
+            var env_vars = [];
+            //loop through secrets, decrypt and set on the env.
+            var keys = Object.keys(project.Secrets);
+            for(var ndx in keys){
+                var key = keys[ndx];
+                if(key == 'CAPSULE_RUNNER_PULL_REQUEST' || key == 'CAPSULE_RUNNER_REPO_FULL_NAME'){ continue; }
+                env_vars.push({"key":key, "value":project.Secrets[key]});
+            }
+            //set values here
+            env_vars.push({"key":"CAPSULE_RUNNER_PULL_REQUEST","value":event.prNumber});
+            env_vars.push({"key":"CAPSULE_RUNNER_REPO_FULL_NAME","value":project.OrgId + '/' + project.RepoId});
+
             var data = {
                 "name": date_prefix + '-' + event.serviceType + '-' + event.orgId + '-' + event.repoId + '-' + event.prNumber,
-                "image": "analogj/capsulecd",
+                "image": project.Settings.dockerImage,
+                "run_command": "capsulecd start --source "+event.serviceType+" --package_type " + project.Settings.packageType,
+                "container_envvars": env_vars,
                 "target_num_containers": 1,
                 "autodestroy":"ALWAYS"
             };

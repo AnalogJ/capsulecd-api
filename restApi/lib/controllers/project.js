@@ -100,7 +100,10 @@ function createProject(auth, serviceType, orgId, repoId, event){
         "RepoId": repoId,
         "OwnerUsername": auth.Username,
         "Secrets": {},
-        "Settings": {}
+        "Settings": {
+            "dockerImage": "analogj/capsulecd",
+            "packageType": "default"
+        }
     };
     //TODO: store the user's profile info
     var params = {
