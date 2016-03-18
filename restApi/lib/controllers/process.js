@@ -97,7 +97,7 @@ module.exports = function (event, cb) {
             //set values here
             env_vars.push({"key":"CAPSULE_RUNNER_PULL_REQUEST","value":event.prNumber});
             env_vars.push({"key":"CAPSULE_RUNNER_REPO_FULL_NAME","value":project.OrgId + '/' + project.RepoId});
-            //TODO: this key should be dynamically created for each project, and removed automaticaly afterwards. 
+            //TODO: this key should be dynamically created for each project, and removed automaticaly afterwards.
             env_vars.push({"key":"CAPSULE_SOURCE_GITHUB_ACCESS_TOKEN","value":process.env.GITHUB_CAPSULECD_USER_TOKEN});
 
             var data = {

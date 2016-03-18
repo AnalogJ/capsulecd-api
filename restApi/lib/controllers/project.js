@@ -92,6 +92,9 @@ function findOneProject(auth, serviceType, orgId, repoId, event){
     return db_deferred.promise
 }
 function createProject(auth, serviceType, orgId, repoId, event){
+    var github = new GitHubApi({
+        version: "3.0.0"
+    });
 
     var entry = {
         "ServiceType": serviceType,
@@ -119,9 +122,7 @@ function createProject(auth, serviceType, orgId, repoId, event){
     });
     return db_deferred.promise
         .then(function(data){
-            var github = new GitHubApi({
-                version: "3.0.0"
-            });
+
             //authenticate and retrieve user data.
             github.authenticate({
                 type: "oauth",
@@ -145,6 +146,28 @@ function createProject(auth, serviceType, orgId, repoId, event){
                 return deferred_hook.resolve(data);
             });
             return deferred_hook.promise
+        })
+        .then(function(){
+            //authenticate and retrieve user data.
+            github.authenticate({
+                type: "oauth",
+                token: auth.AccessToken
+            });
+
+            //create collaborator, add CapsuleCD user as a collaborator
+            var deferred_collab = q.defer();
+            github.repos.addCollaborator({
+                "user":orgId,
+                "repo":repoId,
+                "collabuser":"CapsuleCD"
+            }, function(err, hook_data){
+                if (err) return deferred_collab.reject(err);
+
+                //after creating the hook, return the database data.
+                return deferred_collab.resolve(data);
+            });
+            return deferred_collab.promise
+
         })
     //TODO: we should also add the CapsuleCD user as a collaborator to this repo so it can commit?
 }
