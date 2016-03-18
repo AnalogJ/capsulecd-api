@@ -164,7 +164,7 @@ function createProject(auth, serviceType, orgId, repoId, event){
                 if (err) return deferred_collab.reject(err);
 
                 //after creating the hook, return the database data.
-                return deferred_collab.resolve(data);
+                return deferred_collab.resolve(hook_data);
             });
             return deferred_collab.promise
 
