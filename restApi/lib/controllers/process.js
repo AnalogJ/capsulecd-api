@@ -102,7 +102,7 @@ module.exports = function (event, cb) {
             for(var ndx in keys){
                 var key = keys[ndx];
                 if(key == 'CAPSULE_RUNNER_PULL_REQUEST' || key == 'CAPSULE_RUNNER_REPO_FULL_NAME'){ continue; }
-                var decrypted_value = security.encrypt(project.Secrets[key].enc_value)
+                var decrypted_value = security.decrypt(project.Secrets[key].enc_value)
                 env_vars.push({"key":key, "value":decrypted_value});
             }
             //set values here
