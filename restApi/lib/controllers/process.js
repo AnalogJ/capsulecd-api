@@ -3,6 +3,15 @@ var Helpers = require('../helpers');
 var request = require('superagent');
 var q = require('q');
 
+var AWS = require("aws-sdk");
+AWS.config.apiVersions = {
+    dynamodb: '2012-08-10'
+    // other service API versions
+};
+var docClient = new AWS.DynamoDB.DocumentClient();
+var table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLESS_PROJECT_NAME + '-projects';
+
+
 var configuration = {
     baseEndpoint: 'https://dashboard.tutum.co/api/v1',
     username: 'analogj',
@@ -10,6 +19,7 @@ var configuration = {
 };
 
 configuration.authorization = new Buffer(configuration.username+':'+configuration.apiKey).toString('base64');
+
 
 
 function tutum_request(method, path, params, callback) {
@@ -92,7 +102,8 @@ module.exports = function (event, cb) {
             for(var ndx in keys){
                 var key = keys[ndx];
                 if(key == 'CAPSULE_RUNNER_PULL_REQUEST' || key == 'CAPSULE_RUNNER_REPO_FULL_NAME'){ continue; }
-                env_vars.push({"key":key, "value":project.Secrets[key]});
+                var decrypted_value = security.encrypt(project.Secrets[key].enc_value)
+                env_vars.push({"key":key, "value":decrypted_value});
             }
             //set values here
             env_vars.push({"key":"CAPSULE_RUNNER_PULL_REQUEST","value":event.prNumber});
