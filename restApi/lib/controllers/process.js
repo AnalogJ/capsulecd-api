@@ -13,8 +13,8 @@ var table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLE
 
 
 var configuration = {
-    baseEndpoint: 'https://dashboard.tutum.co/api/v1',
-    username: 'analogj',
+    baseEndpoint: 'https://cloud.docker.com/api/app/v1',
+    username: 'jk17@ualberta.ca',
     apiKey: process.env.TUTUM_API_KEY
 };
 

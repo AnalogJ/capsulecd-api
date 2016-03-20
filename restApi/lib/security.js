@@ -62,7 +62,10 @@ module.exports = {
     verify_token: function(token){
         var deferred = q.defer();
         jwt.verify(token, jwt_passphrase, function(err, decoded) {
-            if (err) return deferred.reject(err);
+            if (err) {
+                err.code = 401
+                return deferred.reject(err);
+            }
             return deferred.resolve(decoded);
         });
         return deferred.promise
