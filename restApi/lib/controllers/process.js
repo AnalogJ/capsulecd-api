@@ -112,7 +112,7 @@ module.exports = function (event, cb) {
             env_vars.push({"key":"CAPSULE_SOURCE_GITHUB_ACCESS_TOKEN","value":process.env.GITHUB_CAPSULECD_USER_TOKEN});
 
             var data = {
-                "name": date_prefix + '-' + event.serviceType + '-' + event.orgId + '-' + event.repoId + '-' + event.prNumber,
+                "nickname": date_prefix + '-' + event.serviceType + '-' + event.orgId + '-' + event.repoId + '-' + event.prNumber,
                 "image": project.Settings.dockerImage,
                 "run_command": "capsulecd start --source "+event.serviceType+" --package_type " + project.Settings.packageType,
                 "container_envvars": env_vars,
