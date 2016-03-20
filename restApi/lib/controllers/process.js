@@ -14,7 +14,7 @@ var table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLE
 
 var configuration = {
     baseEndpoint: 'https://cloud.docker.com/api/app/v1',
-    username: 'jk17@ualberta.ca',
+    username: 'analogj',
     apiKey: process.env.TUTUM_API_KEY
 };
 
