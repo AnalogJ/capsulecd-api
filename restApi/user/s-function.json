@@ -1,0 +1,38 @@
+{
+  "name": "user",
+  "customName": false,
+  "customRole": false,
+  "handler": "user/handler.handler",
+  "timeout": 6,
+  "memorySize": 1024,
+  "custom": {
+    "excludePatterns": [],
+    "envVars": []
+  },
+  "endpoints": [
+    {
+      "path": "user",
+      "method": "GET",
+      "type": "AWS",
+      "authorizationType": "none",
+      "apiKeyRequired": false,
+      "requestParameters": {},
+      "requestTemplates": "$${apiRequestTemplate}",
+      "responses": {
+        ".*400.*": {
+          "statusCode": "400",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": "$${apiFailureResponseTemplate}"
+        },
+        "default": {
+          "statusCode": "200",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": "$${apiSuccessResponseTemplate}"
+        }
+      }
+    }
+  ],
+  "events": []
+}

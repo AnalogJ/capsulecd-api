@@ -14,7 +14,8 @@ module.exports = {
   //Authenticated Controllers (requires JWT Header)
   fetch: require('./controllers/fetch'),
   project: require('./controllers/project'),
-  process: require('./controllers/process')
+  process: require('./controllers/process'),
+  user: require('./controllers/user')
 
 };
 //
