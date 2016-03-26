@@ -32,7 +32,7 @@ function findUser(auth){
         KeyConditionExpression: "ServiceType = :serviceType and Username = :username",
         ExpressionAttributeValues: {
             ":serviceType":auth.ServiceType,
-            ":owner": auth.Username
+            ":username": auth.Username
         }
     };
     var db_deferred = q.defer();
