@@ -89,7 +89,7 @@ module.exports = function(event, cb) {
                 "Blog": user_data.user_profile.blog,
                 "Location": user_data.user_profile.location,
                 "AccessToken": security.encrypt(user_data.oauth_data.access_token),
-                "AvatarUrl": userdata.user_profile.avatar_url
+                "AvatarUrl": user_data.user_profile.avatar_url
             }
             //TODO: store the user's profile info
             var params = {
