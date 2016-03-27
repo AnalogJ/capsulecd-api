@@ -118,7 +118,7 @@ module.exports = function (event, cb) {
                     'Hi.',
                     '',
                     "I'm an automated pull request bot named [CapsuleCD](http://www.github.com/AnalogJ/capsulecd). I handle testing, versioning and package releases for this project. ",
-                    "- If you're the owner of this repo, you can click the button below to kick off the CapsuleCD build pipeline and create an automated release.'" +
+                    "- If you're the owner of this repo, you can click the button below to kick off the CapsuleCD build pipeline and create an automated release.'",
                     "- If not, don't worry, someone will be by shortly to check on your pull request. ",
                     '',
                     '[![CapsuleCD](https://img.shields.io/badge/CapsuleCD-%E2%96%BA-blue.svg)]('+constants.web_endpoint+'/#!/deploy/'+event.serviceType +'/'+ event.orgId +'/'+event.repoId+'/pullrequests/' + pr_number +')',
