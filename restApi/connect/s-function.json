@@ -3,6 +3,7 @@
   "customName": false,
   "customRole": false,
   "handler": "connect/handler.handler",
+  "runtime": "nodejs",
   "timeout": 6,
   "memorySize": 128,
   "custom": {

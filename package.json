@@ -7,7 +7,7 @@
     "name": "Jason Kulatunga <jason@thesparktree.com>"
   },
   "dependencies": {
-    "serverless-cors-plugin": "^0.3.1",
+    "serverless-cors-plugin": "0.4.1",
     "serverless-optimizer-plugin": "2.5.1"
   },
   "description": "The API for CapsuleCD web service",
