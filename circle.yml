@@ -26,5 +26,5 @@ test:
     - sls variables set -t stage -s dev -k tutumApiKey -v $TUTUM_API_KEY
     - sls variables set -t common -k domain -v capsulecd-stage
     - sls variables set -t common -k notificationEmail -v jason@thesparktree.com
-    - sls endpoint deploy -s dev -r us-east-1 -a
     - sls function deploy -s dev -r us-east-1 -a
+# we may need to include the endpoint deploy as well: - sls endpoint deploy -s dev -r us-east-1 -a
