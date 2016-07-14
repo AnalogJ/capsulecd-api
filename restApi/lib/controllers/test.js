@@ -17,8 +17,25 @@ function getFiles (dir, files_){
 module.exports = function(event, cb) {
     var payload = {
         'apiSha1': process.env.API_SHA1,
-        'files': getFiles('.'),
+        //'files': getFiles('.'),
         'event': event
     }
-    return cb(null, payload);
+
+
+    var exec = require('child_process').exec;
+    exec("./binaries/hyper version", function(error, stdout, stderr) {
+        // console.log('stdout: ', stdout);
+        // console.log('stderr: ', stderr);
+        // if (error !== null) {
+        //     console.log('exec error: ', error);
+        // }
+        payload['stddout'] = stdout;
+        payload['stderr'] = stderr
+        if (error !== null) {
+            payload['error'] = error;
+        }
+        return cb(null, payload);
+
+    });
+
 }
