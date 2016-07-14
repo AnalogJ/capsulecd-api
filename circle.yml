@@ -14,18 +14,17 @@ dependencies:
 
 test:
   override:
-    - sls project init -n serverless-starter -s dev -r us-east-1 --noExeCf
-    - sls variables set -t region -r us-east-1 -s dev -k resourcesStackName -v serverless-starter-dev-r
-    - sls variables set -t region -r us-east-1 -s dev -k iamRoleArnLambda -v arn:aws:iam::450541372000:role/serverless-starter-dev-r-IamRoleLambda-1MP4J6ITSHSV4
-    - sls variables set -t region -r us-east-1 -s dev -k apiGatewayApi -v serverless-starter
-    - sls variables set -t stage -s dev -k githubAppClientKey -v $GITHUB_APP_CLIENT_KEY
-    - sls variables set -t stage -s dev -k githubAppClientSecret -v $GITHUB_APP_CLIENT_SECRET
-    - sls variables set -t stage -s dev -k encryptionPassphrase -v $ENCRYPTION_PASSPHRASE
-    - sls variables set -t stage -s dev -k encryptionJwtPassphrase -v $ENCRYPTION_JWT_PASSPHRASE
-    - sls variables set -t stage -s dev -k githubCapsulecdUserToken -v $GITHUB_CAPSULECD_USER_TOKEN
-    - sls variables set -t stage -s dev -k tutumApiKey -v $TUTUM_API_KEY
+    - sls project init -n capsulecd-api -s prod -r us-east-1 --noExeCf
+    - sls variables set -t region -r us-east-1 -s prod -k iamRoleArnLambda -v arn:aws:iam::450541372000:role/capsulecd-api-prod-r-IamRoleLambda-1LQFJXZMPHURS
+    - sls variables set -t region -r us-east-1 -s prod -k apiGatewayApi -v capsulecd-api
+    - sls variables set -t stage -s prod -k githubAppClientKey -v $GITHUB_APP_CLIENT_KEY
+    - sls variables set -t stage -s prod -k githubAppClientSecret -v $GITHUB_APP_CLIENT_SECRET
+    - sls variables set -t stage -s prod -k encryptionPassphrase -v $ENCRYPTION_PASSPHRASE
+    - sls variables set -t stage -s prod -k encryptionJwtPassphrase -v $ENCRYPTION_JWT_PASSPHRASE
+    - sls variables set -t stage -s prod -k githubCapsulecdUserToken -v $GITHUB_CAPSULECD_USER_TOKEN
+    - sls variables set -t stage -s prod -k tutumApiKey -v $TUTUM_API_KEY
     - sls variables set -t common -k domain -v capsulecd-stage
     - sls variables set -t common -k notificationEmail -v jason@thesparktree.com
     - sls variables set -t common -k apiSha1 -v $CIRCLE_SHA1
-    - sls function deploy -s dev -r us-east-1 -a
-# we may need to include the endpoint deploy as well: - sls endpoint deploy -s dev -r us-east-1 -a
+    - sls function deploy -s prod -r us-east-1 -a
+    - sls endpoint deploy -s prod -r us-east-1 -a

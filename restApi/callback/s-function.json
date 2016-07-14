@@ -1,7 +1,7 @@
 {
   "name": "callback",
   "runtime": "nodejs",
-  "description": "Serverless Lambda function for project: serverless-starter",
+  "description": "Serverless Lambda function for project: capsulecd-api",
   "customName": false,
   "customRole": false,
   "handler": "callback/handler.handler",
@@ -44,7 +44,15 @@
   "environment": {
     "SERVERLESS_PROJECT": "${project}",
     "SERVERLESS_STAGE": "${stage}",
-    "SERVERLESS_REGION": "${region}"
+    "SERVERLESS_REGION": "${region}",
+    "SERVERLESS_DATA_MODEL_STAGE":"${stage}",
+    "GITHUB_APP_CLIENT_KEY":"${githubAppClientKey}",
+    "GITHUB_APP_CLIENT_SECRET":"${githubAppClientSecret}",
+    "ENCRYPTION_PASSPHRASE":"${encryptionPassphrase}",
+    "ENCRYPTION_JWT_PASSPHRASE":"${encryptionJwtPassphrase}",
+    "GITHUB_CAPSULECD_USER_TOKEN":"${githubCapsulecdUserToken}",
+    "TUTUM_API_KEY":"${tutumApiKey}",
+    "API_SHA1":"${apiSha1}"
   },
   "vpc": {
     "securityGroupIds": [],
