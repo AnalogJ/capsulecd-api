@@ -72,7 +72,7 @@ function findProject(auth, serviceType, orgId, repoId){
     docClient.query(params, function(err, data) {
         if (err)  return db_deferred.reject(err);
 
-        return db_deferred.resolve(data.Items[0]);
+        return db_deferred.resolve({project:data.Items[0], token: auth.AccessToken});
     });
     return db_deferred.promise
 }
@@ -89,7 +89,10 @@ module.exports = function (event, cb) {
         .then(function(decoded){
             return findProject(decoded, event.serviceType, event.orgId, event.repoId)
         })
-        .then(function(project){
+        .then(function(project_data){
+            var project = project_data.project;
+            var token = project_data.token;
+
             var date_prefix = new Date().toISOString()
                 .replace(/T/, '-')      // replace T with a space
                 .replace(/\..+/, '')     // delete the dot and everything after
@@ -109,7 +112,7 @@ module.exports = function (event, cb) {
             env_vars.push({"key":"CAPSULE_RUNNER_PULL_REQUEST","value":event.prNumber});
             env_vars.push({"key":"CAPSULE_RUNNER_REPO_FULL_NAME","value":project.OrgId + '/' + project.RepoId});
             //TODO: this key should be dynamically created for each project, and removed automaticaly afterwards.
-            env_vars.push({"key":"CAPSULE_SOURCE_GITHUB_ACCESS_TOKEN","value":process.env.GITHUB_CAPSULECD_USER_TOKEN});
+            env_vars.push({"key":"CAPSULE_SOURCE_GITHUB_ACCESS_TOKEN","value":token});
 
             var data = {
                 "nickname": date_prefix + '-' + event.serviceType + '-' + event.orgId + '-' + event.repoId + '-' + event.prNumber,
