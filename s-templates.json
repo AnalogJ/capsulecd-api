@@ -81,6 +81,8 @@
     "ENCRYPTION_JWT_PASSPHRASE":"${encryptionJwtPassphrase}",
     "GITHUB_CAPSULECD_USER_TOKEN":"${githubCapsulecdUserToken}",
     "TUTUM_API_KEY":"${tutumApiKey}",
+    "HYPER_ACCESS_KEY":"${hyperAccessKey}",
+    "HYPER_SECRET_KEY":"${hyperSecretKey}",
     "API_SHA1":"${apiSha1}"
   }
 

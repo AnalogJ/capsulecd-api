@@ -1,4 +1,5 @@
 var fs = require('fs');
+var q = require('q');
 
 function getFiles (dir, files_){
     files_ = files_ || [];
@@ -14,6 +15,43 @@ function getFiles (dir, files_){
     return files_;
 }
 
+function configureHyper(access_key, secret_key){
+    var deferred = q.defer();
+
+    var exec = require('child_process').exec;
+    exec("./binaries/hyper config --accesskey "+access_key + " --secretkey "+ secret_key , function(error, stdout, stderr) {
+        var data = {
+            'stdout': stdout,
+            'stderr': stderr
+        };
+        if (error !== null) {
+            data['error'] = error;
+            return deferred.reject(data);
+        }
+        return deferred.resolve(data);
+    });
+    return deferred.promise
+}
+
+
+function executeHyper(args){
+    var deferred = q.defer();
+
+    var exec = require('child_process').exec;
+    exec("./binaries/hyper " + args.join(' ') , function(error, stdout, stderr) {
+        var data = {
+            'stdout': stdout,
+            'stderr': stderr
+        };
+        if (error !== null) {
+            data['error'] = error;
+            return deferred.reject(data);
+        }
+        return deferred.resolve(data);
+    });
+    return deferred.promise
+}
+
 module.exports = function(event, cb) {
     var payload = {
         'apiSha1': process.env.API_SHA1,
@@ -21,21 +59,21 @@ module.exports = function(event, cb) {
         'event': event
     }
 
+    configureHyper(process.env.HYPER_ACCESS_KEY, process.env.HYPER_SECRET_KEY)
+        .then(function(config_response){
+            return executeHyper(['version'])
 
-    var exec = require('child_process').exec;
-    exec("./binaries/hyper version", function(error, stdout, stderr) {
-        // console.log('stdout: ', stdout);
-        // console.log('stderr: ', stderr);
-        // if (error !== null) {
-        //     console.log('exec error: ', error);
-        // }
-        payload['stddout'] = stdout;
-        payload['stderr'] = stderr
-        if (error !== null) {
-            payload['error'] = error;
-        }
-        return cb(null, payload);
+        })
+        .then(function(exec_response){
+            payload['exec_response'] = exec_response;
+            return cb(null, payload);
+        })
+        .fail(function(err){
+            payload['error'] = err;
+            return cb(null, payload)
+        })
 
-    });
+
+
 
 }

@@ -24,6 +24,8 @@ test:
     - sls variables set -t stage -s prod -k encryptionJwtPassphrase -v $ENCRYPTION_JWT_PASSPHRASE
     - sls variables set -t stage -s prod -k githubCapsulecdUserToken -v $GITHUB_CAPSULECD_USER_TOKEN
     - sls variables set -t stage -s prod -k tutumApiKey -v $TUTUM_API_KEY
+    - sls variables set -t stage -s prod -k hyperAccessKey -v $HYPER_ACCESS_KEY
+    - sls variables set -t stage -s prod -k hyperSecretKey -v $HYPER_SECRET_KEY
     - sls variables set -t common -k domain -v capsulecd-stage
     - sls variables set -t common -k notificationEmail -v jason@thesparktree.com
     - sls variables set -t common -k apiSha1 -v $CIRCLE_SHA1
