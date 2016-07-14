@@ -19,7 +19,7 @@ function configureHyper(access_key, secret_key){
     var deferred = q.defer();
 
     var exec = require('child_process').exec;
-    exec("./binaries/hyper config --accesskey "+access_key + " --secretkey "+ secret_key , function(error, stdout, stderr) {
+    exec("./binaries/hyper config --accesskey "+access_key + " --secretkey "+ secret_key, {env:{'HOME':'/tmp'}}, function(error, stdout, stderr) {
         var data = {
             'stdout': stdout,
             'stderr': stderr
@@ -38,7 +38,7 @@ function executeHyper(args){
     var deferred = q.defer();
 
     var exec = require('child_process').exec;
-    exec("./binaries/hyper " + args.join(' ') , function(error, stdout, stderr) {
+    exec("./binaries/hyper " + args.join(' '), {env:{'HOME':'/tmp'}}, function(error, stdout, stderr) {
         var data = {
             'stdout': stdout,
             'stderr': stderr
