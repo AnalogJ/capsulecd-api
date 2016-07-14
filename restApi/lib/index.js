@@ -4,8 +4,11 @@
 
 module.exports = {
   test: function(event, cb) {
-    event['apiSha1'] = process.env.API_SHA1;
-    return cb(null, event);
+    var payload = {
+      'apiSha1': process.env.API_SHA1,
+      'event': event
+    }
+    return cb(null, payload);
   },
 
   connect: require('./controllers/connect'),
