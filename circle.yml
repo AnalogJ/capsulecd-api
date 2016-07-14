@@ -14,4 +14,17 @@ dependencies:
 
 test:
   override:
-    - serverless function deploy -s dev -r us-east-1 -a
+    - sls project init -n serverless-starter -s dev -r us-east-1 --noExeCf
+    - sls variables set -t region -r us-east-1 -s dev -k resourcesStackName -v serverless-starter-dev-r
+    - sls variables set -t region -r us-east-1 -s dev -k iamRoleArnLambda -v arn:aws:iam::450541372000:role/serverless-starter-dev-r-IamRoleLambda-1MP4J6ITSHSV4
+    - sls variables set -t region -r us-east-1 -s dev -k apiGatewayApi -v serverless-starter
+    - sls variables set -t stage -s dev -k githubAppClientKey -v $GITHUB_APP_CLIENT_KEY
+    - sls variables set -t stage -s dev -k githubAppClientSecret -v $GITHUB_APP_CLIENT_SECRET
+    - sls variables set -t stage -s dev -k encryptionPassphrase -v $ENCRYPTION_PASSPHRASE
+    - sls variables set -t stage -s dev -k encryptionJwtPassphrase -v $ENCRYPTION_JWT_PASSPHRASE
+    - sls variables set -t stage -s dev -k githubCapsulecdUserToken -v $GITHUB_CAPSULECD_USER_TOKEN
+    - sls variables set -t stage -s dev -k tutumApiKey -v $TUTUM_API_KEY
+    - sls variables set -t common -k domain -v capsulecd-stage
+    - sls variables set -t common -k notificationEmail -v jason@thesparktree.com
+    - sls endpoint deploy -s dev -r us-east-1 -a
+    - sls function deploy -s dev -r us-east-1 -a

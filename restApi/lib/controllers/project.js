@@ -12,7 +12,7 @@ AWS.config.apiVersions = {
 };
 
 var docClient = new AWS.DynamoDB.DocumentClient();
-var table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLESS_PROJECT_NAME + '-projects';
+var table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLESS_PROJECT + '-projects';
 
 module.exports = function(event,cb){
         return security.verify_token(event.auth)

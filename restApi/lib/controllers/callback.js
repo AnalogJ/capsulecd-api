@@ -78,7 +78,7 @@ module.exports = function(event, cb) {
             //AccessToken
 
             //The table is keyed off of the ServiceType and Username.
-            var table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLESS_PROJECT_NAME + '-users';
+            var table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLESS_PROJECT + '-users';
             var entry = {
                 "ServiceType": 'github',
                 "ServiceId": '' + user_data.user_profile.id,

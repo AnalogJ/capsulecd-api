@@ -1,7 +1,7 @@
 var security = require('../security');
 var q = require('q');
 var Helpers = require('../helpers')
-var user_table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLESS_PROJECT_NAME + '-users';
+var user_table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLESS_PROJECT + '-users';
 var AWS = require("aws-sdk");
 AWS.config.apiVersions = {
     dynamodb: '2012-08-10'

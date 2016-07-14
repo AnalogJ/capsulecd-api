@@ -55,68 +55,67 @@
       }
     },
     "DynamoDBUser": {
-      "Type" : "AWS::DynamoDB::Table",
-      "DeletionPolicy" : "Retain",
-      "Properties" : {
-        "AttributeDefinitions" : [
+      "Type": "AWS::DynamoDB::Table",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "AttributeDefinitions": [
           {
-            "AttributeName" : "ServiceType",
-            "AttributeType" : "S"
+            "AttributeName": "ServiceType",
+            "AttributeType": "S"
           },
           {
-            "AttributeName" : "Username",
-            "AttributeType" : "S"
+            "AttributeName": "Username",
+            "AttributeType": "S"
           }
         ],
-        "KeySchema" : [
+        "KeySchema": [
           {
-            "AttributeName" : "ServiceType",
-            "KeyType" : "HASH"
+            "AttributeName": "ServiceType",
+            "KeyType": "HASH"
           },
           {
-            "AttributeName" : "Username",
-            "KeyType" : "RANGE"
+            "AttributeName": "Username",
+            "KeyType": "RANGE"
           }
         ],
-        "ProvisionedThroughput" : {
-          "ReadCapacityUnits" : "5",
-          "WriteCapacityUnits" : "5"
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": "5",
+          "WriteCapacityUnits": "5"
         },
-        "TableName" : "${stage}-${project}-users"
+        "TableName": "${stage}-${project}-users"
       }
     },
     "DynamoDBProject": {
-      "Type" : "AWS::DynamoDB::Table",
-      "DeletionPolicy" : "Retain",
-      "Properties" : {
-        "AttributeDefinitions" : [
+      "Type": "AWS::DynamoDB::Table",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "AttributeDefinitions": [
           {
-            "AttributeName" : "ServiceType",
-            "AttributeType" : "S"
+            "AttributeName": "ServiceType",
+            "AttributeType": "S"
           },
           {
-            "AttributeName" : "Id",
-            "AttributeType" : "S"
+            "AttributeName": "Id",
+            "AttributeType": "S"
           }
         ],
-        "KeySchema" : [
+        "KeySchema": [
           {
-            "AttributeName" : "ServiceType",
-            "KeyType" : "HASH"
+            "AttributeName": "ServiceType",
+            "KeyType": "HASH"
           },
           {
-            "AttributeName" : "Id",
-            "KeyType" : "RANGE"
+            "AttributeName": "Id",
+            "KeyType": "RANGE"
           }
         ],
-        "ProvisionedThroughput" : {
-          "ReadCapacityUnits" : "5",
-          "WriteCapacityUnits" : "5"
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": "5",
+          "WriteCapacityUnits": "5"
         },
-        "TableName" : "${stage}-${project}-projects"
+        "TableName": "${stage}-${project}-projects"
       }
     }
-
   },
   "Outputs": {
     "IamRoleArnLambda": {

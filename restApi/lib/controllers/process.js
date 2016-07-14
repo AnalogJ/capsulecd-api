@@ -9,7 +9,7 @@ AWS.config.apiVersions = {
     // other service API versions
 };
 var docClient = new AWS.DynamoDB.DocumentClient();
-var table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLESS_PROJECT_NAME + '-projects';
+var table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLESS_PROJECT + '-projects';
 
 
 var configuration = {

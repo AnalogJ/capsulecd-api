@@ -3,24 +3,18 @@
     "application/json": {
       "httpMethod": "$context.httpMethod",
       "body": "$input.json('$')",
-      "queryParams" : "$input.params().querystring",
-      "headerParams" : "$input.params().header",
-      "headerParamNames" : "$input.params().header.keySet()",
-      "contentTypeValue" : "$input.params().header.get('Content-Type')"
+      "queryParams": "$input.params().querystring",
+      "headerParams": "$input.params().header",
+      "headerParamNames": "$input.params().header.keySet()",
+      "contentTypeValue": "$input.params().header.get('Content-Type')"
     }
   },
-  "apiSuccessResponseTemplate":{
+  "apiSuccessResponseTemplate": {
     "application/json": "{\"success\":true, \"data\": $input.json('$') }"
   },
-  "apiFailureResponseTemplate":{
+  "apiFailureResponseTemplate": {
     "application/json": "#set($inputRoot = $input.path('$.errorMessage')){\"success\":false, \"error\": $inputRoot }"
   },
-
-
-
-
-
-
   "responsesForGet": {
     ".*400.*": "$${response400}",
     ".*Process exited.*": "$${response500}",
