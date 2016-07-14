@@ -14,7 +14,8 @@
     "ENCRYPTION_PASSPHRASE":"${encryptionPassphrase}",
     "ENCRYPTION_JWT_PASSPHRASE":"${encryptionJwtPassphrase}",
     "GITHUB_CAPSULECD_USER_TOKEN":"${githubCapsulecdUserToken}",
-    "TUTUM_API_KEY":"${tutumApiKey}"
+    "TUTUM_API_KEY":"${tutumApiKey}",
+    "API_SHA1":"${apiSha1}"
 
   }
 }

@@ -4,6 +4,7 @@
 
 module.exports = {
   test: function(event, cb) {
+    event['apiSha1'] = process.env.API_SHA1;
     return cb(null, event);
   },
 
