@@ -61,8 +61,8 @@ module.exports = function(event, cb) {
 
     configureHyper(process.env.HYPER_ACCESS_KEY, process.env.HYPER_SECRET_KEY)
         .then(function(config_response){
-            return executeHyper(['version'])
-
+            // return executeHyper(['version'])
+            return executeHyper(['run','-d','analogj/capsulecd:chef','ls', '-alt'])
         })
         .then(function(exec_response){
             payload['exec_response'] = exec_response;
