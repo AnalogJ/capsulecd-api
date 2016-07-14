@@ -3,7 +3,8 @@
   "custom": {},
   "plugins": [
     "serverless-optimizer-plugin",
-    "serverless-cors-plugin"
+    "serverless-cors-plugin",
+    "serverless-lambda-prune-plugin"
   ],
   "version": "0.0.1",
   "profile": "serverless-v0.1.1",

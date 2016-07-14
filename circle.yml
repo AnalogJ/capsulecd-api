@@ -31,3 +31,4 @@ test:
     - sls variables set -t common -k apiSha1 -v $CIRCLE_SHA1
     - sls function deploy -s prod -r us-east-1 -a
     - sls endpoint deploy -s prod -r us-east-1 -a
+    - sls function prune
