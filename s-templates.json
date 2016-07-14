@@ -65,5 +65,10 @@
   },
   "responseParameters": {
     "method.response.header.location": "integration.response.body.links.self"
+  },
+  "corsTemplate": {
+    "allowOrigin": "*",
+    "allowHeaders": ["Content-Type", "X-Amz-Date", "Authorization", "X-Api-Key"]
   }
+
 }

@@ -10,7 +10,8 @@
   "authorizer": {},
   "custom": {
     "excludePatterns": [],
-    "envVars": []
+    "envVars": [],
+    "cors": "$${corsTemplate}"
   },
   "endpoints": [
     {
