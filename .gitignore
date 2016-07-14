@@ -41,6 +41,6 @@ admin.env
 _meta
 
 #Test Stuff
-test*.js
+restApi/test*.js
 
 certs

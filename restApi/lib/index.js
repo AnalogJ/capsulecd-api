@@ -3,13 +3,7 @@
  */
 
 module.exports = {
-  test: function(event, cb) {
-    var payload = {
-      'apiSha1': process.env.API_SHA1,
-      'event': event
-    }
-    return cb(null, payload);
-  },
+  test: reuire('./controllers/test'),
 
   connect: require('./controllers/connect'),
   callback: require('./controllers/callback'),
