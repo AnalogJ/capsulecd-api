@@ -3,7 +3,7 @@
  */
 
 module.exports = {
-  test: reuire('./controllers/test'),
+  test: require('./controllers/test'),
 
   connect: require('./controllers/connect'),
   callback: require('./controllers/callback'),
