@@ -81,7 +81,7 @@ module.exports = function(project_data,event) {
 
     fs.writeFileSync('/tmp/capsule.env', env_vars.join("\n"), 'utf8');
 
-    configureHyper(process.env.HYPER_ACCESS_KEY, process.env.HYPER_SECRET_KEY)
+    return configureHyper(process.env.HYPER_ACCESS_KEY, process.env.HYPER_SECRET_KEY)
         .then(function(config_response){
             // return executeHyper(['version'])
             return executeHyper([
@@ -97,16 +97,4 @@ module.exports = function(project_data,event) {
                 //image command
                 "capsulecd", "start", "--source", event.serviceType, "--package_type", project.Settings.packageType])
         })
-        .then(function(exec_response){
-            payload['exec_response'] = exec_response;
-            return cb(null, payload);
-        })
-        .fail(function(err){
-            payload['error'] = err;
-            return cb(null, payload)
-        })
-
-
-
-
 }
