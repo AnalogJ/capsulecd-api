@@ -45,7 +45,9 @@ module.exports = function (event, cb) {
         .then(function(decoded){
             return findProject(decoded, event.serviceType, event.orgId, event.repoId)
         })
-        .then(require('../engines/dockercloud'))
+        .then(function(project_data){
+            return require('../engines/dockercloud')(project_data, event)
+        })
         .then(function(payload){
             //return it to the callback
             //TODO: we're sending back an empty object so we dont accidently leak tutum keys.

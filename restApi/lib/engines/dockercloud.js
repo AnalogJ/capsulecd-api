@@ -45,7 +45,7 @@ function tutum_request(method, path, params, callback) {
     });
 };
 
-module.exports = function (project_data) {
+module.exports = function (project_data, event) {
     var project = project_data.project;
     var token = project_data.token;
 
