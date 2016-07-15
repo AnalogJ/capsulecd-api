@@ -5,7 +5,7 @@
   "customName": false,
   "customRole": false,
   "handler": "process/handler.handler",
-  "timeout": 6,
+  "timeout": 60,
   "memorySize": 128,
   "authorizer": {},
   "custom": {
