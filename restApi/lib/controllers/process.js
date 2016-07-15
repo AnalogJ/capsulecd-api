@@ -46,7 +46,8 @@ module.exports = function (event, cb) {
             return findProject(decoded, event.serviceType, event.orgId, event.repoId)
         })
         .then(function(project_data){
-            return require('../engines/dockercloud')(project_data, event)
+            return require('../engines/hyper')(project_data, event)
+            // return require('../engines/dockercloud')(project_data, event)
         })
         .then(function(payload){
             //return it to the callback
