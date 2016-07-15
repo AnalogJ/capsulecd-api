@@ -90,8 +90,8 @@ module.exports = function(project_data,event) {
                 '-d',
                 '--env-file',
                 '/tmp/capsule.env',
-                '--name',
-                date_prefix + '-' + event.serviceType + '-' + event.orgId + '-' + event.repoId + '-' + event.prNumber,
+                // '--name',
+                // date_prefix + '-' + event.serviceType + '-' + event.orgId + '-' + event.repoId + '-' + event.prNumber,
                 // docker image
                 project.Settings.dockerImage,
                 //image command
