@@ -46,7 +46,7 @@ module.exports = function (event, cb) {
             return findProject(decoded, event.serviceType, event.orgId, event.repoId)
         })
         .then(function(project_data){
-            return require('../engines/hyper')(project_data, event)
+            return require('../engines/hyper')(project_data, event);
             // return require('../engines/dockercloud')(project_data, event)
         })
         .then(function(payload){
@@ -54,5 +54,8 @@ module.exports = function (event, cb) {
             //TODO: we're sending back an empty object so we dont accidently leak tutum keys.
             return cb(null, payload)
         })
-        .fail(Helpers.errorHandler(cb))
+        .then(function(err){
+            return cb(null, err)
+        })
+        //.fail(Helpers.errorHandler(cb))
 };
