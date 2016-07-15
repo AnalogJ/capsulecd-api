@@ -62,39 +62,41 @@ module.exports = function(project_data,event) {
         .replace(/\..+/, '')     // delete the dot and everything after
         .replace(/:/g,'-');
 
-    var env_vars = [];
+    var hyper_args = [
+        'run',
+        // docker/hyper cli options
+        '-d'
+    ];
     //loop through secrets, decrypt and set on the env.
     var keys = Object.keys(project.Secrets);
     for(var ndx in keys){
         var key = keys[ndx];
         if(key == 'CAPSULE_RUNNER_PULL_REQUEST' || key == 'CAPSULE_RUNNER_REPO_FULL_NAME'){ continue; }
         var decrypted_value = security.decrypt(project.Secrets[key].enc_value);
-        env_vars.push(key + '=' + decrypted_value);
+        hyper_args = hyper_args.concat(['-e',key + '=' + decrypted_value]);
     }
     //set values here
-    env_vars.push("CAPSULE_RUNNER_PULL_REQUEST=" +event.prNumber);
-    env_vars.push("CAPSULE_RUNNER_REPO_FULL_NAME="+project.OrgId + '/' + project.RepoId);
+    hyper_args = hyper_args.concat(['-e', "CAPSULE_RUNNER_PULL_REQUEST=" +event.prNumber]);
+    hyper_args = hyper_args.concat(['-e',"CAPSULE_RUNNER_REPO_FULL_NAME="+project.OrgId + '/' + project.RepoId]);
     //access token is unique for each user
-    env_vars.push("CAPSULE_SOURCE_GITHUB_ACCESS_TOKEN="+token);
+    hyper_args = hyper_args.concat(['-e',"CAPSULE_SOURCE_GITHUB_ACCESS_TOKEN="+token]);
 
 
 
-    fs.writeFileSync('/tmp/capsule.env', env_vars.join("\n"), 'utf8');
 
     return configureHyper(process.env.HYPER_ACCESS_KEY, process.env.HYPER_SECRET_KEY)
         .then(function(config_response){
             // return executeHyper(['version'])
-            return executeHyper([
-                'run',
-                // docker/hyper cli options
-                '-d',
-                '--env-file',
-                '/tmp/capsule.env',
+            hyper_args = hyper_args.concat([
                 // '--name',
                 // date_prefix + '-' + event.serviceType + '-' + event.orgId + '-' + event.repoId + '-' + event.prNumber,
                 // docker image
                 project.Settings.dockerImage,
                 //image command
-                "capsulecd", "start", "--source", event.serviceType, "--package_type", project.Settings.packageType])
+                "capsulecd", "start", "--source", event.serviceType, "--package_type", project.Settings.packageType
+            ]);
+
+
+            return executeHyper(hyper_args)
         })
 }
