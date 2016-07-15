@@ -54,7 +54,7 @@ module.exports = function (event, cb) {
             //TODO: we're sending back an empty object so we dont accidently leak tutum keys.
             return cb(null, payload)
         })
-        .then(function(err){
+        .fail(function(err){
             return cb(null, err)
         })
         //.fail(Helpers.errorHandler(cb))
