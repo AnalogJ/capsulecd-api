@@ -4,7 +4,7 @@
   "plugins": [
     "serverless-optimizer-plugin",
     "serverless-cors-plugin",
-    "serverless-lambda-prune-plugin"
+    "serverless-autoprune-plugin"
   ],
   "version": "0.0.1",
   "profile": "serverless-v0.1.1",
