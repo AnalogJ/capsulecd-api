@@ -52,7 +52,7 @@ module.exports = function (event, cb) {
         .then(function(payload){
             //return it to the callback
             //TODO: we're sending back an empty object so we dont accidently leak hyper keys.
-            return cb(null, {})
+            return cb(null, payload)
         })
         .fail(function(err){
             return cb(null, err)
