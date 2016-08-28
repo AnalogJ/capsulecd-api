@@ -46,13 +46,13 @@ module.exports = function (event, cb) {
             return findProject(decoded, event.serviceType, event.orgId, event.repoId)
         })
         .then(function(project_data){
-            //return require('../engines/hyper')(project_data, event);
-            return require('../engines/dockercloud')(project_data, event)
+            return require('../engines/hyper').start(project_data, event);
+            // return require('../engines/dockercloud')(project_data, event)
         })
         .then(function(payload){
             //return it to the callback
-            //TODO: we're sending back an empty object so we dont accidently leak tutum keys.
-            return cb(null, payload)
+            //TODO: we're sending back an empty object so we dont accidently leak hyper keys.
+            return cb(null, {})
         })
         .fail(function(err){
             return cb(null, err)

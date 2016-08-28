@@ -1,102 +1,61 @@
 var fs = require('fs');
 var q = require('q');
 var security = require('../security');
+var hyper = require('hyper.js');
 
-function getFiles (dir, files_){
-    files_ = files_ || [];
-    var files = fs.readdirSync(dir);
-    for (var i in files){
-        var name = dir + '/' + files[i];
-        if (fs.statSync(name).isDirectory()){
-            getFiles(name, files_);
-        } else {
-            files_.push(name);
-        }
-    }
-    return files_;
-}
+module.exports = {
+    start: function(project_data,event){
+        var project = project_data.project;
+        var token = project_data.token;
 
-function configureHyper(access_key, secret_key){
-    var deferred = q.defer();
+        var date_prefix = new Date().toISOString()
+            .replace(/T/, '-')      // replace T with a space
+            .replace(/\..+/, '')     // delete the dot and everything after
+            .replace(/:/g,'-');
 
-    var exec = require('child_process').exec;
-    exec("./binaries/hyper config --accesskey "+access_key + " --secretkey "+ secret_key, {env:{'HOME':'/tmp'}}, function(error, stdout, stderr) {
-        var data = {
-            'stdout': stdout,
-            'stderr': stderr
+        //TODO: setup aws logging to cloudwatch.
+        var createContainerOpts = {
+            Image: project.Settings.dockerImage,
+            name: date_prefix + '-' + event.serviceType + '-' + event.orgId + '-' + event.repoId + '-' + event.prNumber,
+            Env: [],
+            Cmd: ["capsulecd", "start", "--source", event.serviceType, "--package_type", project.Settings.packageType],
+            Labels: {
+                "sh_hyper_instancetype": "s1"
+            }
         };
-        if (error !== null) {
-            data['error'] = error;
-            return deferred.reject(data);
+
+        //loop through secrets, decrypt and set on the container options Env.
+        var keys = Object.keys(project.Secrets);
+        for(var ndx in keys){
+            var key = keys[ndx];
+            if(key == 'CAPSULE_RUNNER_PULL_REQUEST' || key == 'CAPSULE_RUNNER_REPO_FULL_NAME'){ continue; }
+            var decrypted_value = security.decrypt(project.Secrets[key].enc_value);
+            createContainerOpts.Env.push(key + '=' + decrypted_value);
         }
-        return deferred.resolve(data);
-    });
-    return deferred.promise
-}
+        //set values here
+        createContainerOpts.Env.push("CAPSULE_RUNNER_PULL_REQUEST=" +event.prNumber);
+        createContainerOpts.Env.push("CAPSULE_RUNNER_REPO_FULL_NAME="+project.OrgId + '/' + project.RepoId);
+        //access token is unique for each user
+        createContainerOpts.Env.push("CAPSULE_SOURCE_GITHUB_ACCESS_TOKEN="+token);
 
 
-function executeHyper(args){
-    var deferred = q.defer();
 
-    var exec = require('child_process').exec;
-    exec("./binaries/hyper " + args.join(' '), {env:{'HOME':'/tmp'}}, function(error, stdout, stderr) {
-        var data = {
-            'stdout': stdout,
-            'stderr': stderr
-        };
-        if (error !== null) {
-            data['error'] = error;
-            return deferred.reject(data);
-        }
-        return deferred.resolve(data);
-    });
-    return deferred.promise
-}
-
-module.exports = function(project_data,event) {
-    var project = project_data.project;
-    var token = project_data.token;
-
-    var date_prefix = new Date().toISOString()
-        .replace(/T/, '-')      // replace T with a space
-        .replace(/\..+/, '')     // delete the dot and everything after
-        .replace(/:/g,'-');
-
-    var hyper_args = [
-        'run',
-        // docker/hyper cli options
-        '-d'
-    ];
-    //loop through secrets, decrypt and set on the env.
-    var keys = Object.keys(project.Secrets);
-    for(var ndx in keys){
-        var key = keys[ndx];
-        if(key == 'CAPSULE_RUNNER_PULL_REQUEST' || key == 'CAPSULE_RUNNER_REPO_FULL_NAME'){ continue; }
-        var decrypted_value = security.decrypt(project.Secrets[key].enc_value);
-        hyper_args = hyper_args.concat(['-e',key + '=' + decrypted_value]);
+        //create a new container on Hyper
+        var hyper = new Hyper();
+        var service_deferred = q.defer();
+        hyper.createContainer(createContainerOpts, function (err, container) {
+            if (err)  return service_deferred.reject(err);
+            container.start(function (err, data) {
+                if (err)  return service_deferred.reject(err);
+                return service_deferred.resolve(data);
+            });
+        });
     }
-    //set values here
-    hyper_args = hyper_args.concat(['-e', "CAPSULE_RUNNER_PULL_REQUEST=" +event.prNumber]);
-    hyper_args = hyper_args.concat(['-e',"CAPSULE_RUNNER_REPO_FULL_NAME="+project.OrgId + '/' + project.RepoId]);
-    //access token is unique for each user
-    hyper_args = hyper_args.concat(['-e',"CAPSULE_SOURCE_GITHUB_ACCESS_TOKEN="+token]);
-
-
-
-
-    return configureHyper(process.env.HYPER_ACCESS_KEY, process.env.HYPER_SECRET_KEY)
-        .then(function(config_response){
-            // return executeHyper(['version'])
-            hyper_args = hyper_args.concat([
-                // '--name',
-                // date_prefix + '-' + event.serviceType + '-' + event.orgId + '-' + event.repoId + '-' + event.prNumber,
-                // docker image
-                project.Settings.dockerImage,
-                //image command
-                "capsulecd", "start", "--source", event.serviceType, "--package_type", project.Settings.packageType
-            ]);
-
-
-            return executeHyper(hyper_args)
-        })
+    //TODO: pull the image when the project is created.
+    //TODO: add a timed task to pull the lastest image for all containers, every 1 hour?
+    // pullImage: function(){
+    //     hyper.pull('analogj/capsulecd', function (err, stream) {
+    //         // console.log(stream)
+    //     });
+    // }
 }
