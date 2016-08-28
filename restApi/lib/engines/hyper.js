@@ -20,7 +20,7 @@ module.exports = {
             Env: [],
             Cmd: ["capsulecd", "start", "--source", event.serviceType, "--package_type", project.Settings.packageType],
             Labels: {
-                "sh_hyper_instancetype": "s3"
+                "sh_hyper_instancetype": "s4"
             }
         };
 
