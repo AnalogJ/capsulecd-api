@@ -210,8 +210,13 @@ function updateProject(auth, serviceType, orgId, repoId, event){
     var db_deferred = q.defer();
     docClient.update(params, function(err, data) {
         if (err)  return db_deferred.reject(err);
-        //TODO:for some reason this data is empty. We'll send entry for now.
-        return db_deferred.resolve(data);
+        return db_deferred.resolve({});
+    })
+    .then(function(data){
+        return require('../engines/hyper').pullImage(event.body.Settings.dockerImage);
+    })
+    .then(function(){
+        return {}
     });
     return db_deferred.promise
 }

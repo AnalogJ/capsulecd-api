@@ -38,8 +38,6 @@ module.exports = {
         //access token is unique for each user
         createContainerOpts.Env.push("CAPSULE_SOURCE_GITHUB_ACCESS_TOKEN="+token);
 
-        console.log("CONTAINER OPTIONS:". createContainerOpts);
-
         //create a new container on Hyper
         var hyper = new Hyper();
         var service_deferred = q.defer();
@@ -51,12 +49,15 @@ module.exports = {
             });
         });
         return service_deferred.promise
-    }
-    //TODO: pull the image when the project is created.
+    },
     //TODO: add a timed task to pull the lastest image for all containers, every 1 hour?
-    // pullImage: function(){
-    //     hyper.pull('analogj/capsulecd', function (err, stream) {
-    //         // console.log(stream)
-    //     });
-    // }
+    pullImage: function(dockerImage){
+        var hyper = new Hyper();
+        var service_deferred = q.defer();
+        hyper.pull(dockerImage, function (err, stream) {
+            if (err)  return service_deferred.reject(err);
+            return service_deferred.resolve({});
+        });
+        return service_deferred.promise
+    }
 }
