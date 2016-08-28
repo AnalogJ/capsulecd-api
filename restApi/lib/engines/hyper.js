@@ -16,7 +16,7 @@ module.exports = {
         //TODO: setup aws logging to cloudwatch.
         var createContainerOpts = {
             Image: project.Settings.dockerImage,
-            name: date_prefix + '-' + event.serviceType + '-' + event.orgId + '-' + event.repoId + '-' + event.prNumber,
+            name: (date_prefix + '-' + event.serviceType + '-' + event.orgId + '-' + event.repoId + '-' + event.prNumber).toLowerCase(),
             Env: [],
             Cmd: ["capsulecd", "start", "--source", event.serviceType, "--package_type", project.Settings.packageType],
             Labels: {
