@@ -50,6 +50,7 @@ module.exports = {
                 return service_deferred.resolve(data);
             });
         });
+        return service_deferred.promise
     }
     //TODO: pull the image when the project is created.
     //TODO: add a timed task to pull the lastest image for all containers, every 1 hour?
