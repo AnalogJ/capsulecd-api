@@ -55,7 +55,7 @@ module.exports = function (event, cb) {
             return cb(null, payload)
         })
         .fail(function(err){
-            return cb(null, err)
+            return cb(err, null)
         })
         //.fail(Helpers.errorHandler(cb))
 };

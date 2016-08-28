@@ -1,7 +1,7 @@
 var fs = require('fs');
 var q = require('q');
 var security = require('../security');
-var hyper = require('hyper.js');
+var Hyper = require('hyper.js');
 
 module.exports = {
     start: function(project_data,event){
@@ -38,7 +38,7 @@ module.exports = {
         //access token is unique for each user
         createContainerOpts.Env.push("CAPSULE_SOURCE_GITHUB_ACCESS_TOKEN="+token);
 
-
+        console.log("CONTAINER OPTIONS:". createContainerOpts);
 
         //create a new container on Hyper
         var hyper = new Hyper();
