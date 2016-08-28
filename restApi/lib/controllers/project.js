@@ -108,7 +108,6 @@ function createProject(auth, serviceType, orgId, repoId, event){
             "packageType": "default"
         }
     };
-    //TODO: store the user's profile info
     var params = {
         TableName:table,
         Item: entry
@@ -154,7 +153,7 @@ function createProject(auth, serviceType, orgId, repoId, event){
                 token: auth.AccessToken
             });
 
-            //create collaborator, add CapsuleCD user as a collaborator
+            //TODO: does CapsuleCD need to be a collaborator anymore?
             var deferred_collab = q.defer();
             github.repos.addCollaborator({
                 "user":orgId,
@@ -169,7 +168,6 @@ function createProject(auth, serviceType, orgId, repoId, event){
             return deferred_collab.promise
 
         })
-    //TODO: we should also add the CapsuleCD user as a collaborator to this repo so it can commit?
 }
 function updateProject(auth, serviceType, orgId, repoId, event){
 

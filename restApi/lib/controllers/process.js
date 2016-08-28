@@ -38,8 +38,6 @@ module.exports = function (event, cb) {
     //TODO: verify that this repo is owned by the user specified int he auth token.
     //TODO: retrieve config data,
     //TODO: create a new SINGLE USE TOKEN for this job.
-    //TODO: set environmental variables.
-
 
     return security.verify_token(event.auth)
         .then(function(decoded){
@@ -50,12 +48,8 @@ module.exports = function (event, cb) {
             // return require('../engines/dockercloud')(project_data, event)
         })
         .then(function(payload){
-            //return it to the callback
-            //TODO: we're sending back an empty object so we dont accidently leak hyper keys.
-            return cb(null, payload)
+            //we're sending back an empty object so we dont accidently leak hyper keys.
+            return cb(null, {})
         })
-        .fail(function(err){
-            return cb(err, null)
-        })
-        //.fail(Helpers.errorHandler(cb))
+        .fail(Helpers.errorHandler(cb))
 };
