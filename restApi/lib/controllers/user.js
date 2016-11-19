@@ -13,7 +13,7 @@ var docClient = new AWS.DynamoDB.DocumentClient();
 module.exports = function (event, cb) {
 
 
-    return security.verify_token(event.auth)
+    return security.verify_token(event.token || event.auth)
         .then(function(decoded){
 
             return findUser(decoded)

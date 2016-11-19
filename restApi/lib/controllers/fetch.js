@@ -15,7 +15,7 @@ module.exports = function (event, cb) {
     }
 
 
-    return security.verify_token(event.auth)
+    return security.verify_token(event.token || event.auth)
         .then(function(decoded){
 
             github.authenticate({

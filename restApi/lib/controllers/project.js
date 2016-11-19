@@ -15,7 +15,7 @@ var docClient = new AWS.DynamoDB.DocumentClient();
 var table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLESS_PROJECT + '-projects';
 
 module.exports = function(event,cb){
-        return security.verify_token(event.auth)
+        return security.verify_token(event.token || event.auth)
             .then(function(auth){
                 if(!event.serviceType){
                     return findAllProject(auth, event)

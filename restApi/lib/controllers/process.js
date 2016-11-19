@@ -39,7 +39,7 @@ module.exports = function (event, cb) {
     //TODO: retrieve config data,
     //TODO: create a new SINGLE USE TOKEN for this job.
 
-    return security.verify_token(event.auth)
+    return security.verify_token(event.token || event.auth)
         .then(function(decoded){
             return findProject(decoded, event.serviceType, event.orgId, event.repoId)
         })
