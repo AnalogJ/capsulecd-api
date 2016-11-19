@@ -5,7 +5,7 @@
       "orgId": "$input.params('orgId')",
       "repoId": "$input.params('repoId')",
       "page": "$input.params('page')",
-      "auth": "#set($token = $input.params().header.get('Authorization') ? $input.params().header.get('Authorization').split(' ')[1] : $input.params('auth'))$token"
+      "auth": "$input.params().header.get('Authorization').split(' ')[1]"
     }
   }
 }
