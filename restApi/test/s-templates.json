@@ -5,7 +5,7 @@
       "orgId": "$input.params('orgId')",
       "repoId": "$input.params('repoId')",
       "page": "$input.params('page')",
-      "auth": "$input.params('X-Capsulecd-Auth')"
+      "auth": "$input.params().header.get('Authorization') ? $input.params().header.get('Authorization').split(' ')[1] : $input.params('auth')"
     }
   }
 }
