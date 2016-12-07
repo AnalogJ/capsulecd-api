@@ -38,7 +38,7 @@ function updateProjectProcess(auth, serviceType, orgId, repoId, prNumb, containe
     var expressionAttributeValues = {
         ":owner": auth.Username
     };
-    updateExpression = "set Process.#prnumb = :containerid";
+    updateExpression = "set Pending.#prnumb = :containerid";
     expressionAttributeNames = {'#prnumb': prNumb};
     expressionAttributeValues[':containerid'] = containerId
 
