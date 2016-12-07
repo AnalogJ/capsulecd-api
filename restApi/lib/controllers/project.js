@@ -210,13 +210,13 @@ function updateProject(auth, serviceType, orgId, repoId, event){
         if (err)  return db_deferred.reject(err);
         return db_deferred.resolve({});
     })
-    .then(function(data){
-        return require('../engines/hyper').pullImage(event.body.Settings.dockerImage);
-    })
-    .then(function(){
-        return {}
-    });
     return db_deferred.promise
+        .then(function(data){
+            return require('../engines/hyper').pullImage(event.body.Settings.dockerImage);
+        })
+        .then(function(){
+            return {}
+        });
 }
 function deleteProject(auth, serviceType, orgId, repoId, event){
     throw new Error('unsupported action')

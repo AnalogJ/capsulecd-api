@@ -59,10 +59,10 @@ function updateProjectProcess(auth, serviceType, orgId, repoId, prNumb, containe
         if (err)  return db_deferred.reject(err);
         return db_deferred.resolve({});
     })
+    return db_deferred.promise
         .then(function(){
             return {}
         });
-    return db_deferred.promise
 }
 
 
