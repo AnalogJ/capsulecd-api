@@ -40,7 +40,7 @@ function updateProjectProcess(auth, serviceType, orgId, repoId, prNumb, containe
     };
     updateExpression = "set Process.#prnumb = :containerid";
     expressionAttributeNames = {'#prnumb': prNumb};
-    expressionAttributeValues[':secretvalue'] = containerId
+    expressionAttributeValues[':containerid'] = containerId
 
     var params = {
         TableName : table,
