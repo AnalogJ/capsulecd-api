@@ -13,10 +13,15 @@ module.exports = {
             .replace(/\..+/, '')     // delete the dot and everything after
             .replace(/:/g,'-');
 
+        var container_name = (date_prefix + '-' + event.serviceType + '-' + event.orgId + '-' + event.repoId + '-' + event.prNumber)
+            .toLowerCase() //all chars should be lowercase
+            .replace(/[^a-z0-9]/gmi, " ").replace(/\s+/g, "-"); // makesure we match hyper.js internal regex: [a-z0-9]([-a-z0-9]*[a-z0-9])?
+
+
         //TODO: setup aws logging to cloudwatch.
         var createContainerOpts = {
             Image: project.Settings.dockerImage,
-            name: (date_prefix + '-' + event.serviceType + '-' + event.orgId + '-' + event.repoId + '-' + event.prNumber).toLowerCase(),
+            name: container_name,
             Env: [],
             Cmd: ["capsulecd", "start", "--source", event.serviceType, "--package_type", project.Settings.packageType],
             Labels: {
