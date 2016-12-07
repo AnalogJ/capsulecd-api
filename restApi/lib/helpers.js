@@ -30,6 +30,7 @@ module.exports = {
                 whitelisted_props = ["message","status"]
             }
 
+            console.error("Inside Error Handler:");
             console.dir(err) //make sure we log the full error message
             return _cb(JSON.stringify(err, whitelisted_props),null);
         }
