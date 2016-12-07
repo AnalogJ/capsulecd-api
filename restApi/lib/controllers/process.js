@@ -33,6 +33,39 @@ function findProject(auth, serviceType, orgId, repoId){
     return db_deferred.promise
 }
 
+function updateProjectProcess(auth, serviceType, orgId, repoId, prNumb, containerId){
+
+    var expressionAttributeValues = {
+        ":owner": auth.Username
+    };
+    updateExpression = "set Process.#prnumb = :containerid";
+    expressionAttributeNames = {'#prnumb': prNumb};
+    expressionAttributeValues[':secretvalue'] = containerId
+
+    var params = {
+        TableName : table,
+        Key:{
+            "ServiceType": serviceType,
+            "Id": orgId + '/' + repoId
+        },
+        UpdateExpression: updateExpression,
+        ConditionExpression: "OwnerUsername = :owner",
+        ExpressionAttributeNames: expressionAttributeNames,
+        ExpressionAttributeValues: expressionAttributeValues
+    };
+
+    var db_deferred = q.defer();
+    docClient.update(params, function(err, data) {
+        if (err)  return db_deferred.reject(err);
+        return db_deferred.resolve({});
+    })
+        .then(function(){
+            return {}
+        });
+    return db_deferred.promise
+}
+
+
 module.exports = function (event, cb) {
 
     //TODO: verify that this repo is owned by the user specified int he auth token.
@@ -42,14 +75,17 @@ module.exports = function (event, cb) {
     return security.verify_token(event.token || event.auth)
         .then(function(decoded){
             return findProject(decoded, event.serviceType, event.orgId, event.repoId)
-        })
-        .then(function(project_data){
-            return require('../engines/hyper').start(project_data, event);
-            // return require('../engines/dockercloud')(project_data, event)
+                .then(function(project_data){
+                    return require('../engines/hyper').start(project_data, event);
+                    // return require('../engines/dockercloud')(project_data, event)
+                })
+                .then(function(containerId){
+                    return updateProjectProcess(decoded, event.serviceType, event.orgId, event.repoId, event.prNumber, containerId)
+                })
         })
         .then(function(payload){
-            //we're sending back an empty object so we dont accidently leak hyper keys.
-            return cb(null, {})
+            //update the project so we know its currently being processed.
+            return cb(null, payload)
         })
         .fail(Helpers.errorHandler(cb))
 };

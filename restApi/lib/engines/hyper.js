@@ -50,7 +50,7 @@ module.exports = {
             if (err)  return service_deferred.reject(err);
             container.start(function (err, data) {
                 if (err)  return service_deferred.reject(err);
-                return service_deferred.resolve(data);
+                return service_deferred.resolve(container.id);
             });
         });
         return service_deferred.promise
