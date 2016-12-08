@@ -1,0 +1,12 @@
+{
+  "apiRequestTemplate": {
+    "application/json": {
+      "serviceType": "$input.params('serviceType')",
+      "orgId": "$input.params('orgId')",
+      "repoId": "$input.params('repoId')",
+      "prNumber": "$input.params('prNumber')",
+      "page": "$input.params('page')",
+      "auth": "$input.params('auth')"
+    }
+  }
+}
