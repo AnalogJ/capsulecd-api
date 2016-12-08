@@ -78,7 +78,7 @@ module.exports = {
                 slashes: true,
                 hostname: 'us-west-1.hyper.sh'
                 // pathname: options.path // this will incorrectly encode the '?' character.
-            }) + '/v1.23/containers/'+project_data.Pending[event.prNumber]+'/logs?stream=true&follow=1&stderr=1&stdout=1&tail=1';
+            }) + '/v1.23/containers/'+project_data.project.Pending[event.prNumber]+'/logs?stream=true&follow=1&stderr=1&stdout=1&tail=1';
 
         var headers = aws4.sign({
             url: request_url,
