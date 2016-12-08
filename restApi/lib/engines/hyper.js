@@ -70,6 +70,34 @@ module.exports = {
         });
         return service_deferred.promise
     },
+
+    logs: function(project_data, event){
+
+
+        var hyper = new Hyper();
+        var logs_deferred = q.defer();
+        var container = hyper.getContainer(project_data.project.Pending[event.prNumber])
+        container.logs({
+            stderr:true,
+            stdout: true
+        }, function(err, stream){
+            if (err)  return logs_deferred.reject(err);
+
+
+            const chunks = [];
+            stream.on("data", function (chunk) {
+                chunks.push(chunk);
+            });
+            // Send the buffer or you can put it into a var
+            stream.on("end", function () {
+                logs_deferred.resolve(Buffer.concat(chunks).toString());
+            });
+
+        })
+        return logs_deferred.promise
+
+
+    },
     sign: function(project_data,event){
         //generate the url from the modem & _config options
 
