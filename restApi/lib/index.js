@@ -13,8 +13,9 @@ module.exports = {
   fetch: require('./controllers/fetch'),
   project: require('./controllers/project'),
   process: require('./controllers/process'),
-  user: require('./controllers/user')
+  user: require('./controllers/user'),
 
+  logs: require('./controllers/logs')
 };
 //
 //

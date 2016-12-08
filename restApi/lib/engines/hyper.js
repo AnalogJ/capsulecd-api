@@ -2,6 +2,8 @@ var fs = require('fs');
 var q = require('q');
 var security = require('../security');
 var Hyper = require('hyper.js');
+var aws4 = require('hyper-aws4');
+var url = require('url');
 
 module.exports = {
     start: function(project_data,event){
@@ -40,6 +42,8 @@ module.exports = {
         //set values here
         createContainerOpts.Env.push("CAPSULE_RUNNER_PULL_REQUEST=" +event.prNumber);
         createContainerOpts.Env.push("CAPSULE_RUNNER_REPO_FULL_NAME="+project.OrgId + '/' + project.RepoId);
+        createContainerOpts.Env.push("CAPSULE_ENGINE_VERSION_BUMP_TYPE=" +event.prNumber);
+
         //access token is unique for each user
         createContainerOpts.Env.push("CAPSULE_SOURCE_GITHUB_ACCESS_TOKEN="+token);
 
@@ -64,5 +68,33 @@ module.exports = {
             return service_deferred.resolve({});
         });
         return service_deferred.promise
+    },
+    sign: function(project_data,event){
+        //generate the url from the modem & _config options
+
+        var request_url = url.format({
+                protocol: 'https',
+                slashes: true,
+                hostname: 'us-west-1.hyper.sh'
+                // pathname: options.path // this will incorrectly encode the '?' character.
+            }) + '/v1.23/containers/'+project_data.Pending[event.prNumber]+'/logs?stream=true&follow=1&stderr=1&stdout=1&tail=1';
+
+        var headers = aws4.sign({
+            url: request_url,
+            method: 'GET',
+            credential: {
+                accessKey: process.env.HYPER_ACCESS_KEY,
+                secretKey:  process.env.HYPER_SECRET_KEY
+            },
+            headers: {},
+            body: ''
+        });
+
+
+        return {
+            url:request_url,
+            signedHeaders: headers
+        }
+
     }
 }
