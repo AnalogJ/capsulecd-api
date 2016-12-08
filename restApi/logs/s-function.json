@@ -1,5 +1,5 @@
 {
-  "name": "process",
+  "name": "logs",
   "runtime": "nodejs",
   "description": "Serverless Lambda function for project: capsulecd-api",
   "customName": false,
