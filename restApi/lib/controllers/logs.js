@@ -40,6 +40,7 @@ module.exports = function (event, cb) {
         .then(function(decoded){
             return findProject(decoded, event.serviceType, event.orgId, event.repoId)
                 .then(function(project_data){
+                    console.log("FOUND PROJECT", project_data)
                     return require('../engines/hyper').sign(project_data, event);
                     // return require('../engines/dockercloud')(project_data, event)
                 })
