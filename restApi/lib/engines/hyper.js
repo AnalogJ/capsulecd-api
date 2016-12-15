@@ -91,15 +91,20 @@ module.exports = {
     },
 
     logs: function(project_data, event){
-
-
         var hyper = new Hyper();
         var logs_deferred = q.defer();
         var container = hyper.getContainer(project_data.project.Pending[event.prNumber])
-        container.logs({
+
+        var logs_settings = {
             stderr:true,
             stdout: true
-        }, function(err, stream){
+        }
+
+        if(event.since){
+            logs_settings.since = event.since
+        }
+
+        container.logs(logs_settings, function(err, stream){
             if (err)  return logs_deferred.reject(err);
 
             const chunks = [];

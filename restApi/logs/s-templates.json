@@ -5,7 +5,7 @@
       "orgId": "$input.params('orgId')",
       "repoId": "$input.params('repoId')",
       "prNumber": "$input.params('prNumber')",
-      "page": "$input.params('page')",
+      "since": "$input.params('since')",
       "auth": "$input.params('auth')"
     }
   }
