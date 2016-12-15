@@ -10,7 +10,8 @@ function cleanLogs(docker_logs){
     var docker_log_array = docker_logs.split("\n")
 
     var cleaned_log_array = [];
-    for(let docker_log_line of docker_log_array){
+    for(var ndx in docker_log_array){
+        var  docker_log_line = docker_log_array[ndx]
         if(!docker_log_line){
             continue;
         }
