@@ -21,7 +21,9 @@
       "authorizationType": "none",
       "authorizerFunction": false,
       "apiKeyRequired": false,
-      "requestParameters": {},
+      "requestParameters": {
+        "integration.request.querystring.since": "method.request.querystring.since"
+      },
       "requestTemplates": "$${apiRequestTemplate}",
       "responses": {
         ".*400.*": {
