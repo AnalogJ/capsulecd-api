@@ -5,6 +5,24 @@ var Hyper = require('hyper.js');
 var aws4 = require('hyper-aws4');
 var url = require('url');
 
+function cleanLogs(docker_logs){
+    //https://github.com/docker/docker/issues/7375
+    var docker_log_array = docker_logs.split("\n")
+
+    var cleaned_log_array = [];
+    for(let docker_log_line of docker_log_array){
+        if(!docker_log_line){
+            continue;
+        }
+        cleaned_log_array.push({
+            stream: (docker_log_line.charCodeAt(0) == 1) ? 'stdout' : 'stderr',
+            line: docker_log_line.substring(8)
+        });
+    }
+    return cleaned_log_array
+}
+
+
 module.exports = {
     start: function(project_data,event){
         var project = project_data.project;
@@ -83,14 +101,13 @@ module.exports = {
         }, function(err, stream){
             if (err)  return logs_deferred.reject(err);
 
-
             const chunks = [];
             stream.on("data", function (chunk) {
                 chunks.push(chunk);
             });
             // Send the buffer or you can put it into a var
             stream.on("end", function () {
-                logs_deferred.resolve(Buffer.concat(chunks).toString());
+                logs_deferred.resolve(cleanLogs(Buffer.concat(chunks).toString()));
             });
 
         })
