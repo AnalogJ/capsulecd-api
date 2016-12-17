@@ -95,28 +95,41 @@ module.exports = {
         var logs_deferred = q.defer();
         var container = hyper.getContainer(project_data.project.Pending[event.prNumber])
 
-        var logs_settings = {
-            stderr:true,
-            stdout: true
-        }
+        //event.since is a UNIX timestamp in seconds (not milliseconds)
 
-        if(event.since){
-            logs_settings.since = event.since
-        }
+        //1. check if the container is already dead.
+        container.inspect(function (err, data) {
+            if(err) return logs_deferred.reject(err);
 
-        container.logs(logs_settings, function(err, stream){
-            if (err)  return logs_deferred.reject(err);
+            if(event.since && !data.State.Running && (Date.parse(data.State.FinishedAt) /1000) < parseInt(event.since)){
+                return logs_deferred.resolve([]) //empty array because no container logs will be found after this time.
+            }
 
-            const chunks = [];
-            stream.on("data", function (chunk) {
-                chunks.push(chunk);
-            });
-            // Send the buffer or you can put it into a var
-            stream.on("end", function () {
-                logs_deferred.resolve(cleanLogs(Buffer.concat(chunks).toString()));
-            });
+            var logs_settings = {
+                stderr:true,
+                stdout: true
+            }
 
-        })
+            if(event.since){
+                logs_settings.since = event.since
+            }
+
+            container.logs(logs_settings, function(err, stream){
+                if (err)  return logs_deferred.reject(err);
+
+                const chunks = [];
+                stream.on("data", function (chunk) {
+                    chunks.push(chunk);
+                });
+                // Send the buffer or you can put it into a var
+                stream.on("end", function () {
+                    logs_deferred.resolve(cleanLogs(Buffer.concat(chunks).toString()));
+                });
+
+            })
+
+        });
+
         return logs_deferred.promise
 
 
