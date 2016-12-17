@@ -95,14 +95,22 @@ module.exports = {
         var logs_deferred = q.defer();
         var container = hyper.getContainer(project_data.project.Pending[event.prNumber])
 
+
+
         //event.since is a UNIX timestamp in seconds (not milliseconds)
 
         //1. check if the container is already dead.
-        container.inspect(function (err, data) {
+        container.inspect(function (err, inspectData) {
             if(err) return logs_deferred.reject(err);
 
-            if(event.since && !data.State.Running && (Date.parse(data.State.FinishedAt) /1000) < parseInt(event.since)){
-                return logs_deferred.resolve([]) //empty array because no container logs will be found after this time.
+            var logsResponse = {
+                State: inspectData.State,
+                Lines: []
+            }
+
+
+            if(event.since && !inspectData.State.Running && (Date.parse(inspectData.State.FinishedAt) /1000) < parseInt(event.since)){
+                return logs_deferred.resolve(logsResponse) //empty array because no container logs will be found after this time.
             }
 
             var logs_settings = {
@@ -123,7 +131,8 @@ module.exports = {
                 });
                 // Send the buffer or you can put it into a var
                 stream.on("end", function () {
-                    logs_deferred.resolve(cleanLogs(Buffer.concat(chunks).toString()));
+                    logsResponse.Lines = cleanLogs(Buffer.concat(chunks).toString())
+                    logs_deferred.resolve(logsResponse);
                 });
 
             })
