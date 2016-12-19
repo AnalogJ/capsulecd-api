@@ -61,8 +61,7 @@ module.exports = {
         //set values here
         createContainerOpts.Env.push("CAPSULE_RUNNER_PULL_REQUEST=" +event.prNumber);
         createContainerOpts.Env.push("CAPSULE_RUNNER_REPO_FULL_NAME="+project.OrgId + '/' + project.RepoId);
-        //TODO: this value needs to be passed as a paramter/post data.
-        //TODO: createContainerOpts.Env.push("CAPSULE_ENGINE_VERSION_BUMP_TYPE=" +event.prNumber);
+        createContainerOpts.Env.push("CAPSULE_ENGINE_VERSION_BUMP_TYPE=" + (event.body.versionIncr || 'patch'));
 
         //access token is unique for each user
         createContainerOpts.Env.push("CAPSULE_SOURCE_GITHUB_ACCESS_TOKEN="+token);
