@@ -8,6 +8,7 @@ module.exports = {
   connect: require('./controllers/connect'),
   callback: require('./controllers/callback'),
   hook: require('./controllers/hook'),
+  cleanup: require('./controllers/cleanup'),
 
   //Authenticated Controllers (requires JWT Header)
   fetch: require('./controllers/fetch'),
