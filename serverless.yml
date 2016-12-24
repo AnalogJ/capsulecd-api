@@ -1,0 +1,96 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: capsulecd-api # NOTE: update this with your service name
+
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  timeout: 40 # optional, default is 6
+  memorySize: 128
+  stage: 'beta'
+  region: 'us-east-1'
+
+
+custom:
+  variables:
+    API_VERSION: ${opt:stage, 'v1'}
+    DOMAIN: api.capsulecd.com
+    DEPLOY_SHA: ${env:CIRCLE_SHA1}
+    STAGE: ${opt:stage, self:provider.stage}
+    ENCRYPTION_PASSPHRASE: ${env:${opt:stage, self:provider.stage}_ENCRYPTION_PASSPHRASE, env:ENCRYPTION_PASSPHRASE}
+    ENCRYPTION_JWT_PASSPHRASE: ${env:${opt:stage, self:provider.stage}_ENCRYPTION_JWT_PASSPHRASE, env:ENCRYPTION_JWT_PASSPHRASE}
+    GITHUB_APP_CLIENT_KEY: ${env:${opt:stage, self:provider.stage}_GITHUB_APP_CLIENT_KEY, env:GITHUB_APP_CLIENT_KEY}
+    GITHUB_APP_CLIENT_SECRET: ${env:${opt:stage, self:provider.stage}_GITHUB_APP_CLIENT_SECRET, env:GITHUB_APP_CLIENT_SECRET}
+    HYPER_ACCESS_KEY: ${env:${opt:stage, self:provider.stage}_HYPER_ACCESS_KEY, env:HYPER_ACCESS_KEY}
+    HYPER_SECRET_KEY: ${env:${opt:stage, self:provider.stage}_HYPER_SECRET_KEY, env:HYPER_SECRET_KEY}
+  writeEnvVars:
+    API_VERSION: ${self:custom.variables.API_VERSION}
+    DOMAIN: ${self:custom.variables.DOMAIN}
+    DEPLOY_SHA: ${self:custom.variables.DEPLOY_SHA}
+    STAGE: ${self:custom.variables.STAGE}
+    ENCRYPTION_PASSPHRASE: ${self:custom.variables.ENCRYPTION_PASSPHRASE}
+    ENCRYPTION_JWT_PASSPHRASE: ${self:custom.variables.ENCRYPTION_JWT_PASSPHRASE}
+    GITHUB_APP_CLIENT_KEY: ${self:custom.variables.GITHUB_APP_CLIENT_KEY}
+    GITHUB_APP_CLIENT_SECRET: ${self:custom.variables.GITHUB_APP_CLIENT_SECRET}
+    HYPER_ACCESS_KEY: ${self:custom.variables.HYPER_ACCESS_KEY}
+    HYPER_SECRET_KEY: ${self:custom.variables.HYPER_SECRET_KEY}
+
+# you can add packaging information here
+package:
+  # only the following paths will be included in the resulting artifact which will be uploaded. Without specific include everything in the current folder will be included
+  include:
+    - src
+    - functions
+  # The following paths will be excluded from the resulting artifact. If both include and exclude are defined we first apply the include, then the exclude so files are guaranteed to be excluded
+  exclude:
+    - tmp
+    - .git
+
+functions:
+  test:
+    handler: src/test.handler
+    events:
+      - http: GET test
+
+#
+## you can overwrite defaults here
+##  stage: dev
+##  region: us-east-1
+#
+## you can add statements to the Lambda function's IAM Role here
+##  iamRoleStatements:
+##    - Effect: "Allow"
+##      Action:
+##        - "s3:ListBucket"
+##      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+##    - Effect: "Allow"
+##      Action:
+##        - "s3:PutObject"
+##      Resource:
+##        Fn::Join:
+##          - ""
+##          - - "arn:aws:s3:::"
+##            - "Ref" : "ServerlessDeploymentBucket"
+
+resources:
+  Resources:
+    $ref: ./cloudformation-resources.json
+
+plugins:
+   - serverless-plugin-write-env-vars

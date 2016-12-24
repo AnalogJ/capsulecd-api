@@ -26,7 +26,7 @@ module.exports = {
             }
 
             var whitelisted_props = Object.getOwnPropertyNames(err)
-            if (process.env.SERVERLESS_STAGE != 'dev'){
+            if (process.env.STAGE != 'beta'){
                 whitelisted_props = ["message","status"]
             }
 

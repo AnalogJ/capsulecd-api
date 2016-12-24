@@ -44,3 +44,5 @@ _meta
 restApi/test*.js
 
 certs
+
+.serverless
