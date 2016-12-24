@@ -1,3 +1,4 @@
+require('dotenv').config();
 var Constants = require('./common/constants');
 var Helpers = require('./common/helpers');
 var security = require('./common/security');
@@ -22,7 +23,7 @@ var docClient = new AWS.DynamoDB.DocumentClient();
 module.exports = {
     connect: function(event, cb) {
 
-        if(event.serviceType != 'github'){
+        if(event.path.serviceType != 'github'){
             return cb('Service not supported', null);
         }
 
@@ -43,14 +44,14 @@ module.exports = {
             version: "3.0.0"
         });
 
-        if(event.serviceType != 'github'){
+        if(event.path.serviceType != 'github'){
             throw 'Service not supported'
         }
 
         //trade for access token
         var deferred = q.defer();
         github_client.getOAuthAccessToken(
-            event.code,
+            event.query.code,
             {},
             function (err, access_token, refresh_token, results) {
                 if (err) return deferred.reject(err);
@@ -89,7 +90,7 @@ module.exports = {
                 //AccessToken
 
                 //The table is keyed off of the ServiceType and Username.
-                var table = process.env.SERVERLESS_DATA_MODEL_STAGE + '-' + process.env.SERVERLESS_PROJECT + '-users';
+                var table = process.env.STAGE + '-capsulecd-api-users';
                 var entry = {
                     "ServiceType": 'github',
                     "ServiceId": '' + user_data.user_profile.id,
@@ -124,7 +125,7 @@ module.exports = {
             .then(function(jwt){
                 return cb(null, {
                     token: jwt,
-                    service_type: event.serviceType
+                    service_type: event.path.serviceType
                 })
             })
             .fail(Helpers.errorHandler(cb))

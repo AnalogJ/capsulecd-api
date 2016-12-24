@@ -6,6 +6,8 @@ module.exports.handler = (event, context, callback) => {
         body: JSON.stringify({
             message: 'Go Serverless v1.0! Your function executed successfully!',
             input: event,
+            'apiSha1': process.env.API_SHA1
+
         }),
     };
 

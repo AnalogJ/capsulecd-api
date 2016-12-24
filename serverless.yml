@@ -28,8 +28,13 @@ provider:
 
 
 custom:
+  authRequestTemplate: "{\"httpMethod\": \"$context.httpMethod\", \"token\": \"$input.params().header.get('Authorization').split(' ')[1]\"}"
   standardResponseTemplate: "{\"success\":true, \"data\": $input.json('$') }"
   errorResponseTemplate: "#set($inputRoot = $input.path('$.errorMessage')){\"success\":false, \"error\": $inputRoot }"
+
+  authRequests:
+    template:
+      application/json: ${self:custom.authRequestTemplate}
   standardResponses:
     headers:
       Content-Type: "'application/json'"
@@ -101,7 +106,135 @@ functions:
           response: ${self:custom.standardResponses}
           integration: lambda
           cors: true
+          request:
+            parameters:
+              querystrings:
+                code: true # code querystring parameter is required.
 
+  connect:
+    handler: src/link.connect
+    events:
+      - http:
+          path: connect/{serviceType}
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+
+  hook:
+    handler: src/hook.index
+    events:
+      - http:
+          path: hook/{serviceType}/{orgId}/{repoId}
+          method: post
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+
+
+  fetch:
+    handler: src/fetch.index
+    events:
+      - http:
+          path: fetch/{serviceType}/orgs
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+      - http:
+          path: fetch/{serviceType}/orgs/{orgId}/repos
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+      - http:
+          path: fetch/{serviceType}/orgs/{orgId}/repos/{repoId}/pullrequests
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+      - http:
+          path: fetch/{serviceType}/orgs/{orgId}/repos/{repoId}/pullrequests/{prNumber}
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+
+  logs:
+    handler: src/logs.index
+    events:
+      - http:
+          path: logs/{serviceType}/{orgId}/{repoId}/{prNumber}
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+
+  publish:
+    handler: src/publish.index
+    events:
+      - http:
+          path: publish/{serviceType}/{orgId}/{repoId}/{prNumber}
+          method: post
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+
+  project:
+    handler: src/project.index
+    events:
+      - http:
+          path: project
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+      - http:
+          path: project/{serviceType}/{orgId}/{repoId}
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+      - http:
+          path: project/{serviceType}/{orgId}/{repoId}
+          method: put
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+      - http:
+          path: project/{serviceType}/{orgId}/{repoId}
+          method: post
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+      - http:
+          path: project/{serviceType}/{orgId}/{repoId}
+          method: delete
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+
+  user:
+    handler: src/user.index
+    events:
+      - http:
+          path: user
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
 #
 ## you can overwrite defaults here
 ##  stage: dev

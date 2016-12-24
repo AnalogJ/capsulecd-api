@@ -21,8 +21,9 @@
     "github": "~0.2.4",
     "hyper-aws4": "^1.1.1",
     "hyper.js": "^1.1.0",
-    "jsonwebtoken": "^5.7.0",
-    "oauth": "^0.9.12",
+    "dotenv": "^2.0.0",
+    "jsonwebtoken": "^7.1.9",
+    "oauth": "^0.9.14",
     "q": "^1.0.1",
     "serverless-plugin-write-env-vars": "^1.0.1"
   }
