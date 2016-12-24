@@ -11,6 +11,7 @@ general:
 dependencies:
   override:
     - npm install -g serverless
+    - npm install
     - npm ls
 
 test:

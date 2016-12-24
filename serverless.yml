@@ -28,6 +28,30 @@ provider:
 
 
 custom:
+  standardResponseTemplate: "{\"success\":true, \"data\": $input.json('$') }"
+  errorResponseTemplate: "#set($inputRoot = $input.path('$.errorMessage')){\"success\":false, \"error\": $inputRoot }"
+  standardResponses:
+    headers:
+      Content-Type: "'application/json'"
+    template: ${self:custom.standardResponseTemplate}
+    statusCodes:
+      200:
+        pattern: ''
+        template:
+          application/json: ${self:custom.standardResponseTemplate}
+      400:
+        template:
+          application/json: ${self:custom.errorResponseTemplate}
+        pattern: '.*\[400\].*'
+      404:
+        template:
+          application/json: ${self:custom.errorResponseTemplate}
+        pattern: '.*\[404\].*'
+      500:
+        template:
+          application/json: ${self:custom.errorResponseTemplate}
+        pattern: '.*\[500\].*'
+
   variables:
     API_VERSION: ${opt:stage, 'v1'}
     DOMAIN: api.capsulecd.com
@@ -67,6 +91,16 @@ functions:
     handler: src/test.handler
     events:
       - http: GET test
+
+  callback:
+    handler: src/link.callback
+    events:
+      - http:
+          path: callback/{serviceType}
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
 
 #
 ## you can overwrite defaults here
