@@ -58,7 +58,6 @@ custom:
         pattern: '.*\[500\].*'
 
   variables:
-    API_VERSION: ${opt:stage, 'v1'}
     DOMAIN: api.capsulecd.com
     DEPLOY_SHA: ${env:CIRCLE_SHA1}
     STAGE: ${opt:stage, self:provider.stage}
@@ -69,7 +68,6 @@ custom:
     HYPER_ACCESS_KEY: ${env:${opt:stage, self:provider.stage}_HYPER_ACCESS_KEY, env:HYPER_ACCESS_KEY}
     HYPER_SECRET_KEY: ${env:${opt:stage, self:provider.stage}_HYPER_SECRET_KEY, env:HYPER_SECRET_KEY}
   writeEnvVars:
-    API_VERSION: ${self:custom.variables.API_VERSION}
     DOMAIN: ${self:custom.variables.DOMAIN}
     DEPLOY_SHA: ${self:custom.variables.DEPLOY_SHA}
     STAGE: ${self:custom.variables.STAGE}
@@ -235,6 +233,18 @@ functions:
           integration: lambda
           cors: true
           request: ${self:custom.authRequests}
+
+  certs:
+    handler: src/certs.renew
+    runtime: python2.7 # optional overwrite, default is provider runtime
+    events:
+      - http:
+          path: renew
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+
 #
 ## you can overwrite defaults here
 ##  stage: dev
