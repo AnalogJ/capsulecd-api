@@ -90,6 +90,7 @@ package:
     - .git
 
 functions:
+# UNAUTHENTICATED METHODS
   test:
     handler: src/test.handler
     events:
@@ -129,7 +130,24 @@ functions:
           integration: lambda
           cors: true
 
+  cleanup:
+    handler: src/cleanup.index
+    events:
+      - schedule:
+          rate: rate(1 day)
+          enabled: ${self:custom.variables.STAGE == 'master'}
+#  certs:
+#    handler: src/certs.renew
+#    runtime: python2.7 # optional overwrite, default is provider runtime
+#    events:
+#      - http:
+#          path: certs
+#          method: get
+#          response: ${self:custom.standardResponses}
+#          integration: lambda
+#          cors: true
 
+## AUTHENTICATED METHODS
   fetch:
     handler: src/fetch.index
     events:
@@ -234,16 +252,7 @@ functions:
           cors: true
           request: ${self:custom.authRequests}
 
-  certs:
-    handler: src/certs.renew
-    runtime: python2.7 # optional overwrite, default is provider runtime
-    events:
-      - http:
-          path: certs
-          method: get
-          response: ${self:custom.standardResponses}
-          integration: lambda
-          cors: true
+#
 
 #
 ## you can overwrite defaults here
