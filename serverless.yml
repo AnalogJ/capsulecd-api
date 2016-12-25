@@ -59,7 +59,9 @@ custom:
 
   variables:
     master:
-      events_enabled: true
+      cleanup_enabled: true
+    beta:
+      cleanup_enabled: false
     DOMAIN: api.capsulecd.com
     DEPLOY_SHA: ${env:CIRCLE_SHA1}
     STAGE: ${opt:stage, self:provider.stage}
@@ -137,7 +139,8 @@ functions:
     events:
       - schedule:
           rate: rate(1 day)
-          enabled: ${self:custom.variables.${self:custom.variables.STAGE}.events_enabled, 'false'}
+          enabled: ${self:custom.variables.${self:custom.variables.STAGE}.cleanup_enabled}
+          
 #  certs:
 #    handler: src/certs.renew
 #    runtime: python2.7 # optional overwrite, default is provider runtime
