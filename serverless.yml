@@ -239,7 +239,7 @@ functions:
     runtime: python2.7 # optional overwrite, default is provider runtime
     events:
       - http:
-          path: renew
+          path: certs
           method: get
           response: ${self:custom.standardResponses}
           integration: lambda
