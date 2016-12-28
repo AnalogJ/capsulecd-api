@@ -28,7 +28,7 @@ module.exports = {
         }
 
         var url = github_client.getAuthorizeUrl({
-            'redirect_uri': 'http://www.capsulecd.com/callback.html?service_type=github', //Constants.lambda_endpoint + '/callback/github',
+            'redirect_uri': Constants.web_endpoint + '/auth/callback/github', //Constants.lambda_endpoint + '/callback/github',
             'scope': 'user:email,repo,write:repo_hook'
         });
 
