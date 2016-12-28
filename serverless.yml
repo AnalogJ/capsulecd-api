@@ -110,10 +110,10 @@ functions:
           response: ${self:custom.standardResponses}
           integration: lambda
           cors: true
-          request:
-            parameters:
-              querystrings:
-                code: true # code querystring parameter is required.
+#          request:
+#            parameters:
+#              querystrings:
+#                code: true # code querystring parameter is required.
 
   connect:
     handler: src/link.connect
