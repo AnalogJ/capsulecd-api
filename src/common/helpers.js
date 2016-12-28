@@ -32,6 +32,10 @@ module.exports = {
 
             console.error("Inside Error Handler:");
             console.dir(err) //make sure we log the full error message
+
+            //prepend the error code infront of the message, so that it will be caught by the
+            //serverless/lambda regex for errors
+            err.message = `[${err.code}] ${err.message}`
             return _cb(JSON.stringify(err, whitelisted_props),null);
         }
     }
