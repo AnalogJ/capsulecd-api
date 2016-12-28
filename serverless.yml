@@ -92,6 +92,7 @@ package:
   exclude:
     - tmp
     - .git
+    - .idea
 
 functions:
 # UNAUTHENTICATED METHODS
@@ -140,7 +141,7 @@ functions:
       - schedule:
           rate: rate(1 day)
           enabled: ${self:custom.variables.${self:custom.variables.STAGE}.cleanup_enabled}
-          
+
 #  certs:
 #    handler: src/certs.renew
 #    runtime: python2.7 # optional overwrite, default is provider runtime

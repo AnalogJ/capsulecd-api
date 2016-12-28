@@ -136,7 +136,7 @@ function createProject(auth, serviceType, orgId, repoId, event){
                 "repo":repoId,
                 "name":"web",
                 "config": {
-                    "url": constants.lambda_endpoint + '/hook/github/' + orgId + '/' + repoId,
+                    "url": constants.lambda_endpoint + '/' + process.env.STAGE + '/hook/github/' + orgId + '/' + repoId,
                     "content_type": "json"
                 },
                 "events":["pull_request"]
