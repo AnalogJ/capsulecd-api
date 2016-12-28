@@ -1,4 +1,5 @@
 require('dotenv').config();
+var q = require('q');
 var Constants = require('./common/constants');
 var Helpers = require('./common/helpers');
 var security = require('./common/security');
