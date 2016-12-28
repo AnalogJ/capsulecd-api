@@ -15,7 +15,7 @@ AWS.config.apiVersions = {
 var docClient = new AWS.DynamoDB.DocumentClient();
 var table = process.env.STAGE + '-capsulecd-api-projects';
 
-module.exports.index = function(event,cb){
+module.exports.index = function(event, context, cb){
         return security.verify_token(event.token)
             .then(function(auth){
                 if(!event.path.serviceType){

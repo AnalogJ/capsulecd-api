@@ -13,7 +13,7 @@ var user_table = process.env.STAGE + '-capsulecd-api-users';
 var AWS = require("aws-sdk");
 var docClient = new AWS.DynamoDB.DocumentClient();
 
-module.exports.index = function (event, cb) {
+module.exports.index = function (event, context, cb) {
     var github = new GitHubApi({
         version: "3.0.0"
     });

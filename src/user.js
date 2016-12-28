@@ -11,7 +11,7 @@ AWS.config.apiVersions = {
 
 var docClient = new AWS.DynamoDB.DocumentClient();
 
-module.exports.index = function (event, cb) {
+module.exports.index = function (event, context, cb) {
 
 
     return security.verify_token(event.token)

@@ -67,7 +67,7 @@ function updateProjectStatus(auth, serviceType, orgId, repoId, prNumb, container
 }
 
 
-module.exports.index = function (event, cb) {
+module.exports.index = function(event, context, cb) {
 
     //TODO: verify that this repo is owned by the user specified int he auth token.
     //TODO: retrieve config data,

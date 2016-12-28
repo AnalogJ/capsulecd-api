@@ -35,7 +35,7 @@ function findProject(auth, serviceType, orgId, repoId){
 }
 
 
-module.exports.index = function (event, cb) {
+module.exports.index = function (event, context, cb) {
 
     return security.verify_token(event.token)
         .then(function(decoded){

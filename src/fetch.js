@@ -5,7 +5,7 @@ var GitHubApi = require("github");
 var q = require('q');
 var Helpers = require('./common/helpers')
 
-module.exports.index = function (event, cb) {
+module.exports.index = function (event, context, cb) {
     var github = new GitHubApi({
         version: "3.0.0"
     });

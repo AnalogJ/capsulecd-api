@@ -21,7 +21,7 @@ var docClient = new AWS.DynamoDB.DocumentClient();
 
 
 module.exports = {
-    connect: function(event, cb) {
+    connect: function(event, context, cb) {
 
         if(event.path.serviceType != 'github'){
             return cb('Service not supported', null);
@@ -39,7 +39,7 @@ module.exports = {
         ////var error = {message:'this is the error response status: 400', status:400};
         //return Helpers.errorHandler(cb)(error);
     },
-    callback: function(event, cb) {
+    callback: function(event, context, cb) {
         var github = new GitHubApi({
             version: "3.0.0"
         });
