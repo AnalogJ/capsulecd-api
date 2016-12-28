@@ -44,6 +44,7 @@ module.exports = {
         var github = new GitHubApi({
             version: "3.0.0"
         });
+        console.log(event)
 
         if(event.path.serviceType != 'github'){
             throw 'Service not supported'
