@@ -18,7 +18,7 @@ var table = process.env.STAGE + '-capsulecd-api-projects';
 module.exports.index = function(event, context, cb){
         return security.verify_token(event.token)
             .then(function(auth){
-                if(!event.path.serviceType){
+                if(!event.path || !event.path.serviceType){
                     return findAllProject(auth, event)
                 }
                 else if(event.path.serviceType != 'github'){
