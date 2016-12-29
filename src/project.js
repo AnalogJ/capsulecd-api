@@ -215,7 +215,7 @@ function updateProject(auth, serviceType, orgId, repoId, event){
     })
     return db_deferred.promise
         .then(function(data){
-            return require('../engines/hyper').pullImage(event.body.Settings.dockerImage);
+            return require('./engines/hyper').pullImage(event.body.Settings.dockerImage);
         })
         .then(function(){
             return {}
