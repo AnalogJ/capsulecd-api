@@ -65,6 +65,8 @@ module.exports = {
 
         return deferred.promise
             .then(function(oauth_data){
+                console.log("OAUTH_DATA", oauth_data)
+
                 //authenticate and retrieve user data.
                 github.authenticate({
                     type: "oauth",
@@ -79,6 +81,7 @@ module.exports = {
                 return deferred_user.promise
             })
             .then(function(user_data){
+                console.log("USER_DATA", user_data)
                 //store in dynamo db.
                 //The following properties are stored in the User table:
                 //ServiceType
