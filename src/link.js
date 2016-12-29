@@ -2,7 +2,7 @@ require('dotenv').config();
 var q = require('q');
 var Constants = require('./common/constants');
 var Helpers = require('./common/helpers');
-var security = require('./common/security');
+var Security = require('./common/security');
 var OAuth = require('oauth');
 var OAuth2 = OAuth.OAuth2;
 var github_client = new OAuth2(
@@ -105,7 +105,7 @@ module.exports = {
                     "Company": user_data.user_profile.company,
                     "Blog": user_data.user_profile.blog,
                     "Location": user_data.user_profile.location,
-                    "AccessToken": security.encrypt(user_data.oauth_data.access_token),
+                    "AccessToken": Security.encrypt(user_data.oauth_data.access_token),
                     "AvatarUrl": user_data.user_profile.avatar_url
                 };
                 var params = {
@@ -126,8 +126,9 @@ module.exports = {
                 });
                 return db_deferred.promise
             })
-            .then(security.sign_token)
+            .then(Security.sign_token)
             .then(function(jwt){
+                console.log(jwt)
                 return cb(null, {
                     token: jwt,
                     service_type: event.path.serviceType

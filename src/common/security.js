@@ -54,7 +54,11 @@ module.exports = {
     sign_token: function(payload){
         //TODO: put a reasonable expiry date here, 24h? 48?
         var deferred = q.defer();
-        jwt.sign(payload, jwt_passphrase,{}, function(token) {
+        jwt.sign(payload, jwt_passphrase,{}, function(err, token) {
+            if (err) {
+                err.code = 401
+                return deferred.reject(err);
+            }
             return deferred.resolve(token);
         });
         return deferred.promise
