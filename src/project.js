@@ -106,7 +106,8 @@ function createProject(auth, serviceType, orgId, repoId, event){
         "Secrets": {},
         "Settings": {
             "dockerImage": "analogj/capsulecd",
-            "packageType": "default"
+            "packageType": "default",
+            "versionIncr": "patch"
         },
         "Pending": {}
     };
