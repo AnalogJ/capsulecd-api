@@ -36,9 +36,9 @@ function updateProjectStatus(auth, serviceType, orgId, repoId, prNumb, container
     var expressionAttributeValues = {
         ":owner": auth.Username
     };
-    updateExpression = "set Pending.#prnumb = :containerid";
-    expressionAttributeNames = {'#prnumb': prNumb};
-    expressionAttributeValues[':containerid'] = containerId
+    var updateExpression = "set Pending.#prnumb = :containerid";
+    var expressionAttributeNames = {'#prnumb': prNumb};
+    expressionAttributeValues[':containerid'] = containerId;
 
     var params = {
         TableName : Constants.projects_table,
