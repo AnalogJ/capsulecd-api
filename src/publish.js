@@ -9,7 +9,7 @@ AWS.config.apiVersions = {
     // other service API versions
 };
 var docClient = new AWS.DynamoDB.DocumentClient();
-var table = process.env.STAGE + '-capsule-api-projects';
+var table = process.env.STAGE + '-capsulecd-api-projects';
 
 
 
