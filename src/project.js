@@ -214,7 +214,11 @@ function updateProject(auth, serviceType, orgId, repoId, event){
     })
     return db_deferred.promise
         .then(function(data){
-            return require('./engines/hyper').pullImage(event.body.Settings.dockerImage);
+            //only pull the docker image if we're making changes to the settings, not secrets
+            if(event.body.Settings) {
+                return require('./engines/hyper').pullImage(event.body.Settings.dockerImage);
+            }
+            return {}
         })
         .then(function(){
             return {}
