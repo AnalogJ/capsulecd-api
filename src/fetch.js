@@ -10,7 +10,7 @@ module.exports.index = function (event, context, cb) {
         version: "3.0.0"
     });
 
-    if(event.path.serviceType != 'github'){
+    if(!event.path || event.path.serviceType != 'github'){
         return cb('Service not supported', null);
     }
 
