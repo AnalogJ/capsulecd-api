@@ -1,6 +1,6 @@
 require('dotenv').config();
 var security = require('./common/security');
-var constants = require('./common/constants');
+var Constants = require('./common/constants');
 var Helpers = require('./common/helpers');
 //node-github client setup
 var GitHubApi = require("github");
@@ -13,7 +13,6 @@ AWS.config.apiVersions = {
 };
 
 var docClient = new AWS.DynamoDB.DocumentClient();
-var table = process.env.STAGE + '-capsulecd-api-projects';
 
 module.exports.index = function(event, context, cb){
         return security.verify_token(event.token)
@@ -56,7 +55,7 @@ module.exports.index = function(event, context, cb){
 
 function findAllProject(auth, event){
     var params = {
-        TableName : table,
+        TableName : Constants.projects_table,
         FilterExpression: "OwnerUsername = :owner and ServiceType = :serviceType",
         ExpressionAttributeValues: {
             ":owner":auth.Username,
@@ -75,7 +74,7 @@ function findAllProject(auth, event){
 }
 function findOneProject(auth, serviceType, orgId, repoId, event){
     var params = {
-        TableName : table,
+        TableName : Constants.projects_table,
         KeyConditionExpression: "ServiceType = :serviceType and Id = :id",
         FilterExpression: "OwnerUsername = :owner",
         ExpressionAttributeValues: {
@@ -112,7 +111,7 @@ function createProject(auth, serviceType, orgId, repoId, event){
         "Pending": {}
     };
     var params = {
-        TableName:table,
+        TableName:Constants.projects_table,
         Item: entry
     };
 
@@ -137,7 +136,7 @@ function createProject(auth, serviceType, orgId, repoId, event){
                 "repo":repoId,
                 "name":"web",
                 "config": {
-                    "url": constants.lambda_endpoint + '/hook/github/' + orgId + '/' + repoId,
+                    "url": Constants.lambda_endpoint + '/hook/github/' + orgId + '/' + repoId,
                     "content_type": "json"
                 },
                 "events":["pull_request"]
@@ -197,7 +196,7 @@ function updateProject(auth, serviceType, orgId, repoId, event){
     }
 
     var params = {
-        TableName : table,
+        TableName : Constants.projects_table,
         Key:{
             "ServiceType": serviceType,
             "Id": orgId + '/' + repoId

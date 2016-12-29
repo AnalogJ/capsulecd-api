@@ -2,6 +2,7 @@ require('dotenv').config();
 var security = require('./common/security');
 var Helpers = require('./common/helpers');
 var q = require('q');
+var Constants = require('./common/constants');
 
 var AWS = require("aws-sdk");
 AWS.config.apiVersions = {
@@ -9,14 +10,10 @@ AWS.config.apiVersions = {
     // other service API versions
 };
 var docClient = new AWS.DynamoDB.DocumentClient();
-var table = process.env.STAGE + '-capsulecd-api-projects';
-
-
-
 
 function findProject(auth, serviceType, orgId, repoId){
     var params = {
-        TableName : table,
+        TableName : Constants.projects_table,
         KeyConditionExpression: "ServiceType = :serviceType and Id = :id",
         FilterExpression: "OwnerUsername = :owner",
         ExpressionAttributeValues: {
@@ -44,7 +41,7 @@ function updateProjectStatus(auth, serviceType, orgId, repoId, prNumb, container
     expressionAttributeValues[':containerid'] = containerId
 
     var params = {
-        TableName : table,
+        TableName : Constants.projects_table,
         Key:{
             "ServiceType": serviceType,
             "Id": orgId + '/' + repoId

@@ -2,7 +2,7 @@ require('dotenv').config();
 var q = require('q');
 var Constants = require('./common/constants');
 var Helpers = require('./common/helpers');
-var Security = require('./common/security');
+var security = require('./common/security');
 var OAuth = require('oauth');
 var OAuth2 = OAuth.OAuth2;
 var github_client = new OAuth2(
@@ -95,7 +95,6 @@ module.exports = {
                 //AccessToken
 
                 //The table is keyed off of the ServiceType and Username.
-                var table = process.env.STAGE + '-capsulecd-api-users';
                 var entry = {
                     "ServiceType": 'github',
                     "ServiceId": '' + user_data.user_profile.id,
@@ -105,11 +104,11 @@ module.exports = {
                     "Company": user_data.user_profile.company,
                     "Blog": user_data.user_profile.blog,
                     "Location": user_data.user_profile.location,
-                    "AccessToken": Security.encrypt(user_data.oauth_data.access_token),
+                    "AccessToken": security.encrypt(user_data.oauth_data.access_token),
                     "AvatarUrl": user_data.user_profile.avatar_url
                 };
                 var params = {
-                    TableName:table,
+                    TableName:Constants.users_table,
                     Item: entry
                 };
 
@@ -126,9 +125,8 @@ module.exports = {
                 });
                 return db_deferred.promise
             })
-            .then(Security.sign_token)
+            .then(security.sign_token)
             .then(function(jwt){
-                console.log(jwt)
                 return cb(null, {
                     token: jwt,
                     service_type: event.path.serviceType

@@ -2,7 +2,7 @@ require('dotenv').config();
 var security = require('./common/security');
 var q = require('q');
 var Helpers = require('./common/helpers')
-var user_table = process.env.STAGE + '-capsulecd-api-users';
+var Constants = require('./common/constants');
 var AWS = require("aws-sdk");
 AWS.config.apiVersions = {
     dynamodb: '2012-08-10'
@@ -29,7 +29,7 @@ module.exports.index = function (event, context, cb) {
 
 function findUser(auth){
     var params = {
-        TableName : user_table,
+        TableName : Constants.users_table,
         KeyConditionExpression: "ServiceType = :serviceType and Username = :username",
         ExpressionAttributeValues: {
             ":serviceType":auth.ServiceType,

@@ -5,9 +5,6 @@ var Helpers = require('./common/helpers');
 var q = require('q');
 var GitHubApi = require("github");
 
-var project_table = process.env.STAGE + '-capsulecd-api-projects';
-var user_table = process.env.STAGE + '-capsulecd-api-users';
-
 
 //Dynamodb client setup
 var AWS = require("aws-sdk");
@@ -35,7 +32,7 @@ module.exports.index = function (event, context, cb) {
 
     // 1 - query project table
     var params = {
-        TableName : project_table,
+        TableName : constants.projects_table,
         KeyConditionExpression: "ServiceType = :serviceType and Id = :id",
         ExpressionAttributeValues: {
             ":serviceType": event.path.serviceType,
@@ -54,7 +51,7 @@ module.exports.index = function (event, context, cb) {
         // 2 - query the user table for api key
         .then(function(project){
             var params = {
-                TableName : user_table,
+                TableName : constants.users_table,
                 KeyConditionExpression: "ServiceType = :serviceType and Username = :username",
                 ExpressionAttributeValues: {
                     ":serviceType": event.path.serviceType,
