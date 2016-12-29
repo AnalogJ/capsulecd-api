@@ -1,6 +1,6 @@
 require('dotenv').config();
 var security = require('./common/security');
-var Helpers = require('./commmon/helpers');
+var Helpers = require('./common/helpers');
 var q = require('q');
 
 var AWS = require("aws-sdk");
