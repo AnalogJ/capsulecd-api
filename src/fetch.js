@@ -9,6 +9,7 @@ module.exports.index = function (event, context, cb) {
     var github = new GitHubApi({
         version: "3.0.0"
     });
+    console.log("DEBUG:: PRINT EVENT", event)
 
     if(!event.path || event.path.serviceType != 'github'){
         return cb('Service not supported', null);
