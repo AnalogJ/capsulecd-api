@@ -1,6 +1,6 @@
 var request = require('superagent');
 var q = require('q');
-var security = require('../security');
+var security = require('../common/security');
 
 var configuration = {
     baseEndpoint: 'https://cloud.docker.com/api/app/v1',

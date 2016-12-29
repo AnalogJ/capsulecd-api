@@ -1,7 +1,7 @@
 require('dotenv').config();
-var security = require('../security');
+var security = require('./common/security');
 var q = require('q');
-var Helpers = require('../helpers')
+var Helpers = require('./common/helpers')
 var user_table = process.env.STAGE + '-capsulecd-api-users';
 var AWS = require("aws-sdk");
 AWS.config.apiVersions = {

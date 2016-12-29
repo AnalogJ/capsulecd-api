@@ -1,6 +1,6 @@
 var fs = require('fs');
 var q = require('q');
-var security = require('../security');
+var security = require('../common/security');
 var Hyper = require('hyper.js');
 var aws4 = require('hyper-aws4');
 var url = require('url');
