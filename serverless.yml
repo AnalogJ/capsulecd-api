@@ -28,7 +28,7 @@ provider:
 
 
 custom:
-  authRequestTemplate: "{\"httpMethod\": \"$context.httpMethod\", \"token\": \"$input.params().header.get('Authorization').split(' ')[1]\"}"
+  authRequestTemplate: {"httpMethod": "$context.httpMethod", "token": "$input.params().header.get('Authorization').split(' ')[1]"}"
   standardResponseTemplate: "{\"success\":true, \"data\": $input.json('$') }"
   errorResponseTemplate: "#set($inputRoot = $input.path('$.errorMessage')){\"success\":false, \"error\": $inputRoot }"
 
