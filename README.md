@@ -3,7 +3,6 @@
 - https://github.com/ryanfitz/vogels
 - https://docs.aws.amazon.com/amazondynamodb/latest/gettingstartedguide/GettingStarted.NodeJs.01.html
 
-
 /usr/local/Cellar/curl/7.47.1/bin/curl https://us-east-1.docker.joyent.com:2376/info --cert cert.pem --key key.pem --cacert ca.pem
 https://apidocs.joyent.com/docker/commands/run
 https://github.com/apocas/dockerode/issues/106
