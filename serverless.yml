@@ -1,0 +1,325 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: capsulecd-api # NOTE: update this with your service name
+
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  timeout: 40 # optional, default is 6
+  memorySize: 128
+  stage: 'beta'
+  region: 'us-east-1'
+
+
+custom:
+  # overridden from https://github.com/serverless/serverless/blob/03cc50b246c656183110669126a632735ea46b15/lib/plugins/aws/deploy/compile/events/apiGateway/lib/method/integration.js#L106-L140
+  authRequestTemplate: >-
+    #define( $loop )
+      {
+      #foreach($key in $map.keySet())
+          #set( $k = $util.escapeJavaScript($key) )
+          #set( $v = $util.escapeJavaScript($map.get($key)).replaceAll("\\\\'", "'") )
+          "$k":
+            "$v"
+            #if( $foreach.hasNext ) , #end
+      #end
+      }
+    #end
+    {
+      "body": $input.json("$"),
+      "method": "$context.httpMethod",
+      "principalId": "$context.authorizer.principalId",
+      "stage": "$context.stage",
+      #set( $map = $input.params().header )
+      "headers": $loop,
+      #set( $map = $input.params().querystring )
+      "query": $loop,
+      #set( $map = $input.params().path )
+      "path": $loop,
+      #set( $map = $context.identity )
+      "identity": $loop,
+      #set( $map = $stageVariables )
+      "stageVariables": $loop,
+
+      "httpMethod": "$context.httpMethod",
+      "token": "$input.params().header.get('Authorization').split(' ')[1]"
+    }
+  standardResponseTemplate: "{\"success\":true, \"data\": $input.json('$') }"
+  errorResponseTemplate: "#set($inputRoot = $input.path('$.errorMessage')){\"success\":false, \"error\": $inputRoot }"
+
+  authRequests:
+    template:
+      application/json: ${self:custom.authRequestTemplate}
+  standardResponses:
+    headers:
+      Content-Type: "'application/json'"
+    template: ${self:custom.standardResponseTemplate}
+    statusCodes:
+      200:
+        pattern: ''
+        template:
+          application/json: ${self:custom.standardResponseTemplate}
+      400:
+        template:
+          application/json: ${self:custom.errorResponseTemplate}
+        pattern: '.*\[400\].*'
+      404:
+        template:
+          application/json: ${self:custom.errorResponseTemplate}
+        pattern: '.*\[404\].*'
+      500:
+        template:
+          application/json: ${self:custom.errorResponseTemplate}
+        pattern: '.*\[500\].*'
+
+  variables:
+    master:
+      cleanup_enabled: true
+    beta:
+      cleanup_enabled: false
+    DOMAIN: api.capsulecd.com
+    DEPLOY_SHA: ${env:CIRCLE_SHA1}
+    STAGE: ${opt:stage, self:provider.stage}
+    ENCRYPTION_PASSPHRASE: ${env:${opt:stage, self:provider.stage}_ENCRYPTION_PASSPHRASE, env:ENCRYPTION_PASSPHRASE}
+    ENCRYPTION_JWT_PASSPHRASE: ${env:${opt:stage, self:provider.stage}_ENCRYPTION_JWT_PASSPHRASE, env:ENCRYPTION_JWT_PASSPHRASE}
+    GITHUB_APP_CLIENT_KEY: ${env:${opt:stage, self:provider.stage}_GITHUB_APP_CLIENT_KEY, env:GITHUB_APP_CLIENT_KEY}
+    GITHUB_APP_CLIENT_SECRET: ${env:${opt:stage, self:provider.stage}_GITHUB_APP_CLIENT_SECRET, env:GITHUB_APP_CLIENT_SECRET}
+    HYPER_ACCESS_KEY: ${env:${opt:stage, self:provider.stage}_HYPER_ACCESS_KEY, env:HYPER_ACCESS_KEY}
+    HYPER_SECRET_KEY: ${env:${opt:stage, self:provider.stage}_HYPER_SECRET_KEY, env:HYPER_SECRET_KEY}
+  writeEnvVars:
+    DOMAIN: ${self:custom.variables.DOMAIN}
+    DEPLOY_SHA: ${self:custom.variables.DEPLOY_SHA}
+    STAGE: ${self:custom.variables.STAGE}
+    ENCRYPTION_PASSPHRASE: ${self:custom.variables.ENCRYPTION_PASSPHRASE}
+    ENCRYPTION_JWT_PASSPHRASE: ${self:custom.variables.ENCRYPTION_JWT_PASSPHRASE}
+    GITHUB_APP_CLIENT_KEY: ${self:custom.variables.GITHUB_APP_CLIENT_KEY}
+    GITHUB_APP_CLIENT_SECRET: ${self:custom.variables.GITHUB_APP_CLIENT_SECRET}
+    HYPER_ACCESS_KEY: ${self:custom.variables.HYPER_ACCESS_KEY}
+    HYPER_SECRET_KEY: ${self:custom.variables.HYPER_SECRET_KEY}
+
+# you can add packaging information here
+package:
+  # only the following paths will be included in the resulting artifact which will be uploaded. Without specific include everything in the current folder will be included
+  include:
+    - src
+    - functions
+  # The following paths will be excluded from the resulting artifact. If both include and exclude are defined we first apply the include, then the exclude so files are guaranteed to be excluded
+  exclude:
+    - tmp
+    - .git
+    - .idea
+    - no
+
+functions:
+# UNAUTHENTICATED METHODS
+  version:
+    handler: src/version.handler
+    events:
+      - http:
+          path: version
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+
+  callback:
+    handler: src/link.callback
+    events:
+      - http:
+          path: callback/{serviceType}
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                code: true # code querystring parameter is required.
+
+  connect:
+    handler: src/link.connect
+    events:
+      - http:
+          path: connect/{serviceType}
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+
+  hook:
+    handler: src/hook.index
+    events:
+      - http:
+          path: hook/{serviceType}/{orgId}/{repoId}
+          method: post
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+
+  cleanup:
+    handler: src/cleanup.index
+    events:
+      - schedule:
+          rate: rate(6 hours)
+          enabled: ${self:custom.variables.${self:custom.variables.STAGE}.cleanup_enabled}
+
+#  certs:
+#    handler: src/certs.renew
+#    runtime: python2.7 # optional overwrite, default is provider runtime
+#    events:
+#      - http:
+#          path: certs
+#          method: get
+#          response: ${self:custom.standardResponses}
+#          integration: lambda
+#          cors: true
+
+## AUTHENTICATED METHODS
+  fetch:
+    handler: src/fetch.index
+    events:
+      - http:
+          path: fetch/{serviceType}/orgs
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+      - http:
+          path: fetch/{serviceType}/orgs/{orgId}/repos
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+      - http:
+          path: fetch/{serviceType}/orgs/{orgId}/repos/{repoId}/pullrequests
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+      - http:
+          path: fetch/{serviceType}/orgs/{orgId}/repos/{repoId}/pullrequests/{prNumber}
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+
+  logs:
+    handler: src/logs.index
+    events:
+      - http:
+          path: logs/{serviceType}/{orgId}/{repoId}/{prNumber}
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+
+  publish:
+    handler: src/publish.index
+    events:
+      - http:
+          path: publish/{serviceType}/{orgId}/{repoId}/{prNumber}
+          method: post
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+
+  project:
+    handler: src/project.index
+    events:
+      - http:
+          path: project
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+      - http:
+          path: project/{serviceType}/{orgId}/{repoId}
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+      - http:
+          path: project/{serviceType}/{orgId}/{repoId}
+          method: put
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+      - http:
+          path: project/{serviceType}/{orgId}/{repoId}
+          method: post
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+      - http:
+          path: project/{serviceType}/{orgId}/{repoId}
+          method: delete
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+
+  user:
+    handler: src/user.index
+    events:
+      - http:
+          path: user
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
+          request: ${self:custom.authRequests}
+
+#
+
+#
+## you can overwrite defaults here
+##  stage: dev
+##  region: us-east-1
+#
+## you can add statements to the Lambda function's IAM Role here
+##  iamRoleStatements:
+##    - Effect: "Allow"
+##      Action:
+##        - "s3:ListBucket"
+##      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+##    - Effect: "Allow"
+##      Action:
+##        - "s3:PutObject"
+##      Resource:
+##        Fn::Join:
+##          - ""
+##          - - "arn:aws:s3:::"
+##            - "Ref" : "ServerlessDeploymentBucket"
+
+resources:
+  Resources:
+    $ref: ./cloudformation-resources.json
+
+plugins:
+   - serverless-plugin-write-env-vars
