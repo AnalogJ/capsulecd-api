@@ -131,7 +131,12 @@ functions:
   version:
     handler: src/version.handler
     events:
-      - http: GET version
+      - http:
+          path: version
+          method: get
+          response: ${self:custom.standardResponses}
+          integration: lambda
+          cors: true
 
   callback:
     handler: src/link.callback
