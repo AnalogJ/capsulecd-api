@@ -142,6 +142,56 @@ module.exports = {
 
 
     },
+    cleanupContainers: function(){
+
+        var hyper = new Hyper();
+        var cleanup_deferred = q.defer();
+
+
+        function cleanupContainer(hyper, containerInfo){
+
+            var container_deferred = q.defer();
+            console.log("Cleaning up: " + containerInfo.Names[0])
+            var container = hyper.getContainer(containerInfo.Id);
+            container.stop(function(){
+                container.remove({force:true, v: true},function(remove_err, remove_data){
+                    if(remove_err){ return container_deferred.reject(remove_err)}
+                    return container_deferred.resolve(remove_data)
+                })
+            })
+
+            return container_deferred.promise
+        }
+
+
+        //list all containers,
+        // find all containers which are more than 30 minutes old
+        hyper.listContainers({all: true},function (err, containers) {
+            if(err){
+                return console.log(err)
+            }
+            //filter all containers older than 30 minutes
+            var timestamp_now = Math.round((+ new Date())/1000) - (60*30)
+            containers = containers.filter(function(containerInfo){
+                return containerInfo.Created < timestamp_now
+            })
+
+
+            return cleanup_deferred.resolve(containers)
+        });
+
+        return cleanup_deferred.promise.then(function(containers){
+            var cleanup_promises = containers.map(function(containerInfo){
+                // stop all containers which running and pass filter condition.
+                // remove all containers
+                return cleanupContainer(hyper, containerInfo)
+            })
+
+            return q.allSettled(cleanup_promises)
+        })
+    },
+
+
     sign: function(project_data,event){
         //generate the url from the modem & _config options
 

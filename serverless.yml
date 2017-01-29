@@ -128,10 +128,10 @@ package:
 
 functions:
 # UNAUTHENTICATED METHODS
-  test:
-    handler: src/test.handler
+  version:
+    handler: src/version.handler
     events:
-      - http: GET test
+      - http: GET version
 
   callback:
     handler: src/link.callback
@@ -171,7 +171,7 @@ functions:
     handler: src/cleanup.index
     events:
       - schedule:
-          rate: rate(1 day)
+          rate: rate(6 hours)
           enabled: ${self:custom.variables.${self:custom.variables.STAGE}.cleanup_enabled}
 
 #  certs:
