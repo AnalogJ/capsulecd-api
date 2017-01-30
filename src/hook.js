@@ -96,7 +96,7 @@ module.exports.index = function (event, context, cb) {
         // 5 - add a new comment to the PR if needed
         .then(function(user){
             //Assume that the CapsuleCD comment is always the first one. If the PR has atleast one comment, theres no need to write a new CapsuleCD one.
-            if(pullrequest.comments > 0) return null;
+            // if(pullrequest.comments > 0) return null;
 
             var capsulecd_github = new GitHubApi({
                 version: "3.0.0"
