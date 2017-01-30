@@ -102,6 +102,7 @@ custom:
     GITHUB_APP_CLIENT_SECRET: ${env:${opt:stage, self:provider.stage}_GITHUB_APP_CLIENT_SECRET, env:GITHUB_APP_CLIENT_SECRET}
     HYPER_ACCESS_KEY: ${env:${opt:stage, self:provider.stage}_HYPER_ACCESS_KEY, env:HYPER_ACCESS_KEY}
     HYPER_SECRET_KEY: ${env:${opt:stage, self:provider.stage}_HYPER_SECRET_KEY, env:HYPER_SECRET_KEY}
+    GITHUB_CAPSULECD_USER_TOKEN: ${env:${opt:stage, self:provider.stage}_GITHUB_CAPSULECD_USER_TOKEN, env:GITHUB_CAPSULECD_USER_TOKEN}
   writeEnvVars:
     DOMAIN: ${self:custom.variables.DOMAIN}
     DEPLOY_SHA: ${self:custom.variables.DEPLOY_SHA}
@@ -112,6 +113,7 @@ custom:
     GITHUB_APP_CLIENT_SECRET: ${self:custom.variables.GITHUB_APP_CLIENT_SECRET}
     HYPER_ACCESS_KEY: ${self:custom.variables.HYPER_ACCESS_KEY}
     HYPER_SECRET_KEY: ${self:custom.variables.HYPER_SECRET_KEY}
+    GITHUB_CAPSULECD_USER_TOKEN: ${self:custom.variables.GITHUB_CAPSULECD_USER_TOKEN}
 
 # you can add packaging information here
 package:
