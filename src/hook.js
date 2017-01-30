@@ -70,6 +70,7 @@ module.exports.index = function (event, context, cb) {
         // 3 - find the pull request by querying the github api, validate the pull request status (open)
         .then(function(user){
             //authenticate and retrieve user data.
+
             github.authenticate({
                 type: "oauth",
                 token: security.decrypt(user.AccessToken)
@@ -83,7 +84,7 @@ module.exports.index = function (event, context, cb) {
             }, function(err, data){
                 if (err) return deferred_user.reject(err);
                 if (data.state != "open") return deferred_user.reject(new Error('This pull request is closed.'));
-                return deferred_user.resolve(data);
+                return deferred_user.resolve(user);
             });
             return deferred_user.promise
         })
@@ -93,7 +94,7 @@ module.exports.index = function (event, context, cb) {
         //    return pullrequest.comments > 0 ? false : findCapsuleCDComment(github, event.orgId, event.repoId, pr_number));
         //})
         // 5 - add a new comment to the PR if needed
-        .then(function(pullrequest){
+        .then(function(user){
             //Assume that the CapsuleCD comment is always the first one. If the PR has atleast one comment, theres no need to write a new CapsuleCD one.
             if(pullrequest.comments > 0) return null;
 
@@ -104,7 +105,7 @@ module.exports.index = function (event, context, cb) {
             //we have to write this comment as the CapsuleCD user.
             capsulecd_github.authenticate({
                 type: "oauth",
-                token: process.env.GITHUB_CAPSULECD_USER_TOKEN
+                token: security.decrypt(user.AccessToken)
             });
 
             var deferred_comment = q.defer();
@@ -115,14 +116,14 @@ module.exports.index = function (event, context, cb) {
                 body: [
                     'Hi.',
                     '',
-                    "I'm an automated pull request bot named [CapsuleCD](http://www.github.com/AnalogJ/capsulecd). I handle testing, versioning and package releases for this project. ",
+                    "I'm an automated pull request bot named [CapsuleCD]("+constants.web_endpoint+"). I handle testing, versioning and package releases for this project. ",
                     "- If you're the owner of this repo, you can click the button below to kick off the CapsuleCD build pipeline and create an automated release.'",
                     "- If not, don't worry, someone will be by shortly to check on your pull request. ",
                     '',
                     '[![CapsuleCD](https://img.shields.io/badge/CapsuleCD-%E2%96%BA-blue.svg)]('+constants.web_endpoint+'/deploy/'+event.path.serviceType +'/'+ event.path.orgId +'/'+event.path.repoId+'/pullrequests/' + pr_number +')',
                     '',
                     '---',
-                    "If you're interested in learning more about [CapsuleCD](http://www.github.com/AnalogJ/capsulecd), or adding it to your project, you can check it out [here](http://www.github.com/AnalogJ/capsulecd)"
+                    "If you're interested in learning more about [CapsuleCD](http://www.github.com/AnalogJ/capsulecd), or adding it to your project, you can check it out [here]("+constants.web_endpoint+")"
                 ].join('\n')
             }, function(err, data){
                 if (err) return deferred_comment.reject(err);
