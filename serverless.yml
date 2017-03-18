@@ -25,6 +25,7 @@ provider:
   memorySize: 128
   stage: 'beta'
   region: 'us-east-1'
+  cfLogs: true
 
 
 custom:
