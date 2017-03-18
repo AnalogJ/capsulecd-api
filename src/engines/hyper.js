@@ -38,6 +38,7 @@ module.exports = {
             .toLowerCase() //all chars should be lowercase
             .replace(/[^a-z0-9]/gmi, " ").replace(/\s+/g, "-") // makesure we match hyper.js internal regex: [a-z0-9]([-a-z0-9]*[a-z0-9])?
             .substring(0,48)//hyper doesnt like it if the container name is too long.
+            .replace(/-$/, '') //hyper doesnt like it if the last character is a '-'
 
         //TODO: setup aws logging to cloudwatch.
         var createContainerOpts = {
