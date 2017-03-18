@@ -327,7 +327,7 @@ functions:
 
 resources:
   Resources:
-    $ref: ./cloudformation-resources.json
+    $ref: ./cloudformation-resources.yaml
 
 plugins:
    - serverless-plugin-write-env-vars
