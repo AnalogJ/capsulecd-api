@@ -120,7 +120,7 @@ module.exports.index = function (event, context, cb) {
                     "- If you're the owner of this repo, you can click the button below to kick off the CapsuleCD build pipeline and create an automated release.'",
                     "- If not, don't worry, someone will be by shortly to check on your pull request. ",
                     '',
-                    '[![CapsuleCD](https://img.shields.io/badge/CapsuleCD-%E2%96%BA-blue.svg)]('+constants.web_endpoint+'/deploy/'+event.path.serviceType +'/'+ event.path.orgId +'/'+event.path.repoId+'/pullrequests/' + pr_number +')',
+                    '[![CapsuleCD](https://img.shields.io/badge/CapsuleCD-%E2%96%BA-blue.svg)]('+constants.web_endpoint+'/project/'+event.path.serviceType +'/'+ event.path.orgId +'/'+event.path.repoId+'/pullrequests/' + pr_number +')',
                     '',
                     '---',
                     "If you're interested in learning more about [CapsuleCD](http://www.github.com/AnalogJ/capsulecd), or adding it to your project, you can check it out [here]("+constants.web_endpoint+")"
