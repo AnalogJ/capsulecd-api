@@ -1,0 +1,37 @@
+---
+DynamoDBUser:
+  Type: AWS::DynamoDB::Table
+  DeletionPolicy: Retain
+  Properties:
+    AttributeDefinitions:
+    - AttributeName: ServiceType
+      AttributeType: S
+    - AttributeName: Username
+      AttributeType: S
+    KeySchema:
+    - AttributeName: ServiceType
+      KeyType: HASH
+    - AttributeName: Username
+      KeyType: RANGE
+    ProvisionedThroughput:
+      ReadCapacityUnits: '5'
+      WriteCapacityUnits: '5'
+    TableName: "${opt:stage, self:provider.stage}-${self:service}-users"
+DynamoDBProject:
+  Type: AWS::DynamoDB::Table
+  DeletionPolicy: Retain
+  Properties:
+    AttributeDefinitions:
+    - AttributeName: ServiceType
+      AttributeType: S
+    - AttributeName: Id
+      AttributeType: S
+    KeySchema:
+    - AttributeName: ServiceType
+      KeyType: HASH
+    - AttributeName: Id
+      KeyType: RANGE
+    ProvisionedThroughput:
+      ReadCapacityUnits: '5'
+      WriteCapacityUnits: '5'
+    TableName: "${opt:stage, self:provider.stage}-${self:service}-projects"
