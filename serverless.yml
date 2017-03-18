@@ -131,7 +131,7 @@ package:
 
 functions:
 # UNAUTHENTICATED METHODS
-  version:
+  versionNew:
     handler: src/version.handler
     events:
       - http:
@@ -141,7 +141,7 @@ functions:
           integration: lambda
           cors: true
 
-  callback:
+  callbackNew:
     handler: src/link.callback
     events:
       - http:
@@ -155,7 +155,7 @@ functions:
               querystrings:
                 code: true # code querystring parameter is required.
 
-  connect:
+  connectNew:
     handler: src/link.connect
     events:
       - http:
@@ -165,7 +165,7 @@ functions:
           integration: lambda
           cors: true
 
-  hook:
+  hookNew:
     handler: src/hook.index
     events:
       - http:
@@ -175,7 +175,7 @@ functions:
           integration: lambda
           cors: true
 
-  cleanup:
+  cleanupNew:
     handler: src/cleanup.index
     events:
       - schedule:
@@ -194,7 +194,7 @@ functions:
 #          cors: true
 
 ## AUTHENTICATED METHODS
-  fetch:
+  fetchNew:
     handler: src/fetch.index
     events:
       - http:
@@ -226,7 +226,7 @@ functions:
           cors: true
           request: ${self:custom.authRequests}
 
-  logs:
+  logsNew:
     handler: src/logs.index
     events:
       - http:
@@ -237,7 +237,7 @@ functions:
           cors: true
           request: ${self:custom.authRequests}
 
-  publish:
+  publishNew:
     handler: src/publish.index
     events:
       - http:
@@ -248,7 +248,7 @@ functions:
           cors: true
           request: ${self:custom.authRequests}
 
-  project:
+  projectNew:
     handler: src/project.index
     events:
       - http:
@@ -287,7 +287,7 @@ functions:
           cors: true
           request: ${self:custom.authRequests}
 
-  user:
+  userNew:
     handler: src/user.index
     events:
       - http:
