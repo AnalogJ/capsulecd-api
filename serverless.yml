@@ -292,7 +292,7 @@ functions:
           cors: true
           request: ${self:custom.authRequests}
 
-  userNew2:
+  user:
     handler: src/user.index
     events:
       - http:
