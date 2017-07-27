@@ -45,7 +45,7 @@ module.exports = {
             Image: project.Settings.dockerImage,
             name: container_name,
             Env: [],
-            Cmd: ["capsulecd", "start", "--source", event.path.serviceType, "--package_type", project.Settings.packageType],
+            Cmd: ["capsulecd", "start", "--scm", event.path.serviceType, "--package_type", project.Settings.packageType],
             Labels: {
                 "sh_hyper_instancetype": "s4"
             }
@@ -55,17 +55,17 @@ module.exports = {
         var keys = Object.keys(project.Secrets);
         for(var ndx in keys){
             var key = keys[ndx];
-            if(key == 'CAPSULE_RUNNER_PULL_REQUEST' || key == 'CAPSULE_RUNNER_REPO_FULL_NAME'){ continue; }
+            if(key == 'CAPSULE_SCM_PULL_REQUEST' || key == 'CAPSULE_SCM_REPO_FULL_NAME'){ continue; }
             var decrypted_value = security.decrypt(project.Secrets[key].enc_value);
             createContainerOpts.Env.push(key + '=' + decrypted_value);
         }
         //set values here
-        createContainerOpts.Env.push("CAPSULE_RUNNER_PULL_REQUEST=" +event.path.prNumber);
-        createContainerOpts.Env.push("CAPSULE_RUNNER_REPO_FULL_NAME="+project.OrgId + '/' + project.RepoId);
+        createContainerOpts.Env.push("CAPSULE_SCM_PULL_REQUEST=" +event.path.prNumber);
+        createContainerOpts.Env.push("CAPSULE_SCM_REPO_FULL_NAME="+project.OrgId + '/' + project.RepoId);
         createContainerOpts.Env.push("CAPSULE_ENGINE_VERSION_BUMP_TYPE=" + (event.body.versionIncr || 'patch'));
 
         //access token is unique for each user
-        createContainerOpts.Env.push("CAPSULE_SOURCE_GITHUB_ACCESS_TOKEN="+token);
+        createContainerOpts.Env.push("CAPSULE_SCM_GITHUB_ACCESS_TOKEN="+token);
 
         //create a new container on Hyper
         var hyper = new Hyper();
