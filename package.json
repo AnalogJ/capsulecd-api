@@ -18,10 +18,11 @@
   "homepage": "https://github.com/AnalogJ/capsulecd-api#readme",
   "dependencies": {
     "aws-sdk": "^2.5.3",
+    "bitbucket": "^1.1.0",
+    "dotenv": "^2.0.0",
     "github": "~0.2.4",
     "hyper-aws4": "^1.1.1",
     "hyper.js": "^1.1.0",
-    "dotenv": "^2.0.0",
     "jsonwebtoken": "^7.1.9",
     "oauth": "^0.9.14",
     "q": "^1.0.1",

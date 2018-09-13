@@ -46,3 +46,6 @@ restApi/test*.js
 certs
 
 .serverless
+
+
+test.js
