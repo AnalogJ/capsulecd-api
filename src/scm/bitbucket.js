@@ -22,7 +22,7 @@ module.exports = {
         return oauth_client.getAuthorizeUrl({response_type: 'code'});
     },
     swapOAuthToken: function(code){
-        var bitbucket_client = new BitbucketApi()
+        var bitbucket_client = new BitbucketApi();
 
         //function should swap code for OAuth token and user data.
         //trade for access token
@@ -56,6 +56,25 @@ module.exports = {
                 });
                 return deferred_user.promise
             })
+            .then(function(user_data){
+                var deferred_email = q.defer();
+                bitbucket_client.user.listEmails({}, function(err, result_data){
+                    if (err) return deferred_email.reject(err);
+
+                    var primary_email;
+                    for(var ndx in result_data.data.values){
+                        var current_email = result_data.data.values[ndx];
+                        if(current_email.is_primary){
+                            primary_email = current_email.email;
+                            break
+                        }
+                    }
+
+                    user_data.user_profile.email = primary_email;
+                    return deferred_email.resolve(user_data);
+                });
+                return deferred_email.promise
+            })
             .then(function(data){
                 console.log("USER_DATA", data)
                 //store in dynamo db.
@@ -76,7 +95,7 @@ module.exports = {
                     "ServiceId": '' + data.user_profile.account_id,
                     "Username": data.user_profile.username,
                     "Name": data.user_profile.display_name,
-                    "Email": "",
+                    "Email": data.user_profile.email,
                     "Company": data.user_profile.website,
                     "Blog": "",
                     "Location": data.user_profile.location,
