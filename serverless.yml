@@ -106,6 +106,8 @@ custom:
     ENCRYPTION_JWT_PASSPHRASE: ${env:${opt:stage, self:provider.stage}_ENCRYPTION_JWT_PASSPHRASE, env:ENCRYPTION_JWT_PASSPHRASE}
     GITHUB_APP_CLIENT_KEY: ${env:${opt:stage, self:provider.stage}_GITHUB_APP_CLIENT_KEY, env:GITHUB_APP_CLIENT_KEY}
     GITHUB_APP_CLIENT_SECRET: ${env:${opt:stage, self:provider.stage}_GITHUB_APP_CLIENT_SECRET, env:GITHUB_APP_CLIENT_SECRET}
+    BITBUCKET_APP_CLIENT_KEY: ${env:${opt:stage, self:provider.stage}_BITBUCKET_APP_CLIENT_KEY, env:BITBUCKET_APP_CLIENT_KEY}
+    BITBUCKET_APP_CLIENT_SECRET: ${env:${opt:stage, self:provider.stage}_BITBUCKET_APP_CLIENT_SECRET, env:BITBUCKET_APP_CLIENT_SECRET}
     HYPER_ACCESS_KEY: ${env:${opt:stage, self:provider.stage}_HYPER_ACCESS_KEY, env:HYPER_ACCESS_KEY}
     HYPER_SECRET_KEY: ${env:${opt:stage, self:provider.stage}_HYPER_SECRET_KEY, env:HYPER_SECRET_KEY}
     GITHUB_CAPSULECD_USER_TOKEN: ${env:${opt:stage, self:provider.stage}_GITHUB_CAPSULECD_USER_TOKEN, env:GITHUB_CAPSULECD_USER_TOKEN}
@@ -117,6 +119,8 @@ custom:
     ENCRYPTION_JWT_PASSPHRASE: ${self:custom.variables.ENCRYPTION_JWT_PASSPHRASE}
     GITHUB_APP_CLIENT_KEY: ${self:custom.variables.GITHUB_APP_CLIENT_KEY}
     GITHUB_APP_CLIENT_SECRET: ${self:custom.variables.GITHUB_APP_CLIENT_SECRET}
+    BITBUCKET_APP_CLIENT_KEY: ${self:custom.variables.BITBUCKET_APP_CLIENT_KEY}
+    BITBUCKET_APP_CLIENT_SECRET: ${self:custom.variables.BITBUCKET_APP_CLIENT_SECRET}
     HYPER_ACCESS_KEY: ${self:custom.variables.HYPER_ACCESS_KEY}
     HYPER_SECRET_KEY: ${self:custom.variables.HYPER_SECRET_KEY}
     GITHUB_CAPSULECD_USER_TOKEN: ${self:custom.variables.GITHUB_CAPSULECD_USER_TOKEN}
