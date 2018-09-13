@@ -20,7 +20,7 @@ service: capsulecd-api # NOTE: update this with your service name
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
   timeout: 30 # optional, default is 6
   memorySize: 128
   stage: 'beta'
