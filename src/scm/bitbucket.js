@@ -41,7 +41,7 @@ module.exports = {
 
         return deferred.promise
             .then(function(oauth_data){
-                console.log("OAUTH_DATA", oauth_data)
+                console.log("[DEBUG]OAUTH_DATA", oauth_data)
 
                 //authenticate and retrieve user data.
                 bitbucket_client.authenticate({
@@ -76,7 +76,6 @@ module.exports = {
                 return deferred_email.promise
             })
             .then(function(data){
-                console.log("USER_DATA", data)
                 //store in dynamo db.
                 //The following properties are stored in the User table:
                 //ServiceType
@@ -92,16 +91,16 @@ module.exports = {
                 //The table is keyed off of the ServiceType and Username.
                 var entry = {
                     "ServiceType": 'bitbucket',
-                    "ServiceId": '' + data.user_profile.account_id,
+                    "ServiceId": data.user_profile.account_id,
                     "Username": data.user_profile.username,
-                    "Name": data.user_profile.display_name,
+                    "Name": data.user_profile.display_name || '',
                     "Email": data.user_profile.email,
-                    "Company": data.user_profile.website,
+                    "Company": data.user_profile.website || '',
                     "Blog": "",
-                    "Location": data.user_profile.location,
+                    "Location": data.user_profile.location || '',
                     "AccessToken": security.encrypt(data.oauth_data.access_token),
                     "RefreshToken": security.encrypt(data.oauth_data.refresh_token),
-                    "AvatarUrl": data.user_profile.links.avatar.href
+                    "AvatarUrl": ''+data.user_profile.links.avatar.href
                 };
                 return entry
             })

@@ -50,6 +50,8 @@ module.exports = {
 
         return swapTokenPromise
             .then(function(entry){
+                console.log("[DEBUG]ENTRY", entry)
+
                 var params = {
                     TableName: Constants.users_table,
                     Item: entry
