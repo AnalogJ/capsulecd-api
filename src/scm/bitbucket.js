@@ -1,3 +1,4 @@
+'use strict';
 var Constants = require('../common/constants');
 var q = require('q');
 
