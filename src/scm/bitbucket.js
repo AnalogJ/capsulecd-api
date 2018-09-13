@@ -1,6 +1,7 @@
 'use strict';
 var Constants = require('../common/constants');
 var q = require('q');
+var security = require('../common/security');
 
 var OAuth = require('oauth');
 var OAuth2 = OAuth.OAuth2;
