@@ -9,7 +9,9 @@ var bitbucketScm = require('./scm/bitbucket')
 
 //Dynamodb client setup
 var AWS = require("aws-sdk");
-var docClient = new AWS.DynamoDB.DocumentClient();
+var docClient = new AWS.DynamoDB.DocumentClient({
+    convertEmptyValues: true
+});
 
 
 module.exports = {
