@@ -56,7 +56,7 @@
     {
         "scope": "https://api.bitbucket.org:443",
         "method": "GET",
-        "path": "/2.0/repositories/sparktree?access_token=placeholder_access_token&role=contributor",
+        "path": "/2.0/repositories/sparktree?access_token=placeholder_access_token&role=contributor&sort=slug",
         "body": "",
         "status": 200,
         "response": [
