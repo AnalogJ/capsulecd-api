@@ -79,7 +79,7 @@ var githubScm = {
 
                 //The table is keyed off of the ServiceType and Username.
                 user_data.ServiceType = 'github';
-                user_data.AccessToken = security.encrypt(oauth_data.AccessToken);
+                user_data.AccessToken = oauth_data.AccessToken;
 
                 return user_data
             })

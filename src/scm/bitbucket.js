@@ -87,8 +87,8 @@ var bitbucketScm = {
                 //The table is keyed off of the ServiceType and Username.
 
                 user_data.ServiceType = 'bitbucket';
-                user_data.AccessToken = security.encrypt(oauth_data.AccessToken);
-                user_data.RefreshToken = security.encrypt(oauth_data.RefreshToken);
+                user_data.AccessToken = oauth_data.AccessToken;
+                user_data.RefreshToken = oauth_data.RefreshToken;
 
                 return user_data
             })

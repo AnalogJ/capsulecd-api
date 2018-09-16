@@ -54,6 +54,18 @@ module.exports = {
             .then(function(entry){
                 console.log("[DEBUG]ENTRY", entry)
 
+                var unencrypted_accessToken = entry.AccessToken;
+                var unencrypted_refreshToken = entry.RefreshToken;
+
+                if(unencrypted_accessToken){
+                    entry.AccessToken = security.encrypt(unencrypted_accessToken)
+                }
+
+                if(unencrypted_refreshToken){
+                    entry.RefreshToken = security.encrypt(unencrypted_refreshToken)
+                }
+
+
                 var params = {
                     TableName: Constants.users_table,
                     Item: entry
@@ -67,8 +79,8 @@ module.exports = {
                         "ServiceId": entry.ServiceId,
                         "Username": entry.Username,
                         "Name": entry.Name,
-                        "AccessToken": entry.AccessToken,
-                        "RefreshToken": entry.RefreshToken
+                        "AccessToken": unencrypted_accessToken,
+                        "RefreshToken": unencrypted_refreshToken
                     });
                 });
                 return db_deferred.promise
