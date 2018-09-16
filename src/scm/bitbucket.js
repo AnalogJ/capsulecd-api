@@ -36,6 +36,17 @@ var bitbucketScm = {
             })
     },
 
+    getCapsuleClient: function(){
+        var bitbucket_client = new BitbucketApi();
+
+        bitbucket_client.authenticate({
+            type: "apppassword",
+            username: 'capsulecd',
+            password: nconf.get('BITBUCKET_CAPSULECD_USER_TOKEN')
+        });
+        return q(bitbucket_client)
+    },
+
     //Link functions
     authorizeUrl: function(){
         return oauth_client.getAuthorizeUrl({response_type: 'code'});
@@ -243,7 +254,7 @@ var bitbucketScm = {
                     //transform
                     var ScmPullRequest = require('../models/scm_pullrequest')
                     var prs = data.data.values.map(function(pr){
-                        return new ScmPullRequest(pr.id, pr.title, pr.summary.raw, pr.links.html.href, pr.author.username, pr.author.links.html.href, pr.updated_on)
+                        return new ScmPullRequest(pr.id, pr.title, pr.summary.raw, pr.links.html.href, pr.author.username, pr.author.links.html.href, pr.updated_on, pr.state.toLowerCase())
                     })
 
                     return deferred.resolve(prs);
@@ -261,13 +272,26 @@ var bitbucketScm = {
 
                     //transform
                     var ScmPullRequest = require('../models/scm_pullrequest')
-                    var pr = new ScmPullRequest(data.data.id, data.data.title, data.data.summary.raw, data.data.links.html.href, data.data.author.username, data.data.author.links.html.href, data.data.updated_on)
+                    var pr = new ScmPullRequest(data.data.id, data.data.title, data.data.summary.raw, data.data.links.html.href, data.data.author.username, data.data.author.links.html.href, data.data.updated_on, data.data.state.toLowerCase())
 
                     return deferred.resolve(pr);
                 })
                 return deferred.promise
             })
 
+    },
+
+    // Hook Functions
+    createPRComment: function(bitbucketClientPromise, orgId, repoId, prNumber, commentBody){
+        return bitbucketClientPromise
+            .then(function(bitbucket_client){
+                var deferred = q.defer();
+                bitbucket_client.repositories.createPullRequestComment({username:orgId, repo_slug:repoId, pull_request_id:prNumber, _body:{ content: {"raw": commentBody}}},function(err, data){
+                    if (err) return deferred.reject(err);
+                    return deferred.resolve(data.data);
+                })
+                return deferred.promise
+            })
     }
 };
 module.exports = bitbucketScm;

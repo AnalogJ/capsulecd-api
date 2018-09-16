@@ -1,4 +1,4 @@
-function ScmPullRequest (prNumber, prTitle, prBody, prLink, prUsername, prUserLink, prUpdatedAt) {
+function ScmPullRequest (prNumber, prTitle, prBody, prLink, prUsername, prUserLink, prUpdatedAt, prState) {
     return {
         number: prNumber || '',
         title: prTitle || '',
@@ -8,7 +8,8 @@ function ScmPullRequest (prNumber, prTitle, prBody, prLink, prUsername, prUserLi
             login: prUsername || '',
             html_url: prUserLink || '',
         },
-        updated_at: prUpdatedAt || ''
+        updated_at: prUpdatedAt || '',
+        state: prState || ''
     }
 }
 module.exports = ScmPullRequest

@@ -30,6 +30,17 @@ var githubScm = {
         return q(github_client)
     },
 
+    getCapsuleClient: function(){
+        var github_client = new GitHubApi({
+            version: "3.0.0"
+        });
+        github_client.authenticate({
+            type: "oauth",
+            token: nconf.get('GITHUB_CAPSULECD_USER_TOKEN')
+        });
+        return q(github_client)
+    },
+
     //Link function
 
     authorizeUrl: function(){
@@ -195,7 +206,7 @@ var githubScm = {
                     //transform
                     var PullRequest = require('../models/scm_pullrequest')
                     var prs = data.map(function (pr) {
-                        return new PullRequest(pr.number, pr.title, pr.body, pr.html_url, pr.user.login, pr.user.html_url, pr.updated_at)
+                        return new PullRequest(pr.number, pr.title, pr.body, pr.html_url, pr.user.login, pr.user.html_url, pr.updated_at, pr.state.toLowerCase())
                     })
 
                     return deferred.resolve(prs);
@@ -213,9 +224,21 @@ var githubScm = {
 
                     //transform
                     var PullRequest = require('../models/scm_pullrequest')
-                    var pr = new PullRequest(data.number, data.title, data.body, data.html_url, data.user.login, data.user.html_url, data.updated_at)
+                    var pr = new PullRequest(data.number, data.title, data.body, data.html_url, data.user.login, data.user.html_url, data.updated_at, data.state.toLowerCase())
 
                     return deferred.resolve(pr);
+                })
+                return deferred.promise
+            })
+    },
+    // Hook Functions
+    createPRComment: function(githubClientPromise, orgId, repoId, prNumber, commentBody){
+        return githubClientPromise
+            .then(function(github_client){
+                var deferred = q.defer();
+                github_client.issues.createComment({user:orgId, repo:repoId, number:prNumber, body:commentBody}, function(err, data){
+                    if (err) return deferred.reject(err);
+                    return deferred.resolve(data);
                 })
                 return deferred.promise
             })

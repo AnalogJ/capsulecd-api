@@ -70,7 +70,8 @@ describe('bitbucket', function () {
                             login: 'sparktree',
                             html_url: 'https://bitbucket.org/sparktree/'
                         },
-                        updated_at: '2018-08-29T18:23:52.073299+00:00'
+                        updated_at: '2018-08-29T18:23:52.073299+00:00',
+                        state: "open"
                     })
                 })
                 .then(done)
@@ -93,8 +94,23 @@ describe('bitbucket', function () {
                             login: 'sparktree',
                             html_url: 'https://bitbucket.org/sparktree/'
                         },
-                        updated_at: '2018-08-29T18:23:52.073299+00:00'
+                        updated_at: '2018-08-29T18:23:52.073299+00:00',
+                        state: "open"
                     })
+                })
+                .then(done)
+                .fail(done)
+        });
+    })
+
+    describe('#createPRComment() @nock', function () {
+        it('Should correctly create a comment on a pull request in scm as CapsuleCD user', function (done) {
+            var bitbucket_client = bitbucketScm.getCapsuleClient()
+
+            bitbucketScm.createPRComment(bitbucket_client, 'sparktree', 'gem_analogj_test', '3', 'this is a test comment [body](http://www.google.com)')
+                .then(function(prs){
+                    prs.user.username.toLowerCase().should.eql('capsulecd')
+                    prs.content.raw.should.eql('this is a test comment [body](http://www.google.com)')
                 })
                 .then(done)
                 .fail(done)

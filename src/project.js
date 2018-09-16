@@ -20,7 +20,7 @@ module.exports.index = function(event, context, cb){
                 if(!event.path || !event.path.serviceType){
                     return findAllProject(auth, event)
                 }
-                else if(event.path.serviceType != 'github'){
+                else if(event.path.serviceType != 'github' && event.path.serviceType != 'bitbucket'){
                     throw new Error('Service not supported');
                 }
                 else if(!event.path.orgId || !event.path.repoId){

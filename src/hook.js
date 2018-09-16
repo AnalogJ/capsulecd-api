@@ -3,7 +3,6 @@ var security = require('./common/security');
 var constants = require('./common/constants');
 var Helpers = require('./common/helpers');
 var q = require('q');
-var GitHubApi = require("github");
 
 
 //Dynamodb client setup
@@ -11,16 +10,22 @@ var AWS = require("aws-sdk");
 var docClient = new AWS.DynamoDB.DocumentClient();
 
 module.exports.index = function (event, context, cb) {
-    var github = new GitHubApi({
-        version: "3.0.0"
-    });
 
     if(!event.path.serviceType || !event.path.orgId || !event.path.repoId){
         return cb(new Error('service, org and repo are all required'))
     }
-    if(event.path.serviceType != 'github'){
-        return cb('Service not supported', null);
+    var scm;
+    switch(event.path.serviceType) {
+        case 'github':
+            scm = githubScm
+            break;
+        case 'bitbucket':
+            scm = bitbucketScm
+            break;
+        default:
+            return cb('Service not supported', null);
     }
+
     var pr_number = event.body.number;
     if(event.body.action != "opened" && event.body.action != "reopened"){
         return cb(null, {
@@ -71,22 +76,13 @@ module.exports.index = function (event, context, cb) {
         .then(function(user){
             //authenticate and retrieve user data.
 
-            github.authenticate({
-                type: "oauth",
-                token: security.decrypt(user.AccessToken)
-            });
+            var scmClientPromise = scm.getClient(user)
 
-            var deferred_user = q.defer();
-            github.pullRequests.get({
-                user: event.path.orgId,
-                repo: event.path.repoId,
-                number: pr_number
-            }, function(err, data){
-                if (err) return deferred_user.reject(err);
-                if (data.state != "open") return deferred_user.reject(new Error('This pull request is closed.'));
-                return deferred_user.resolve(user);
-            });
-            return deferred_user.promise
+            return scm.getRepoPullrequest(scmClientPromise, event.path.orgId, event.path.repoId, pr_number)
+                .then(function(pr){
+                    if (pr.state != "open") return q.reject(new Error('This pull request is closed.'));
+                    return {}
+                })
         })
         // 4 - query the existing comments on the github pull request (if this is a reopened PR)
         //.then(function(pullrequest){
@@ -98,22 +94,10 @@ module.exports.index = function (event, context, cb) {
             //Assume that the CapsuleCD comment is always the first one. If the PR has atleast one comment, theres no need to write a new CapsuleCD one.
             // if(pullrequest.comments > 0) return null;
 
-            var capsulecd_github = new GitHubApi({
-                version: "3.0.0"
-            });
+            var capsuleClientPromise = scm.getCapsuleClient()
 
-            //we have to write this comment as the CapsuleCD user.
-            capsulecd_github.authenticate({
-                type: "oauth",
-                token: nconf.get('GITHUB_CAPSULECD_USER_TOKEN')
-            });
-
-            var deferred_comment = q.defer();
-            capsulecd_github.issues.createComment({
-                user: event.path.orgId,
-                repo: event.path.repoId,
-                number: pr_number,
-                body: [
+            return scm.createPRComment(capsuleClientPromise, event.path.orgId,event.path.repoId, pr_number,
+                [
                     'Hi.',
                     '',
                     "I'm an automated pull request bot named [CapsuleCD]("+constants.web_endpoint+"). I handle testing, versioning and package releases for this project. ",
@@ -125,11 +109,8 @@ module.exports.index = function (event, context, cb) {
                     '---',
                     "If you're interested in learning more about [CapsuleCD](http://www.github.com/AnalogJ/capsulecd), or adding it to your project, you can check it out [here]("+constants.web_endpoint+")"
                 ].join('\n')
-            }, function(err, data){
-                if (err) return deferred_comment.reject(err);
-                return deferred_comment.resolve(data);
-            });
-            return deferred_comment.promise
+
+            )
         })
         .then(function(payload){
             //return it to the callback

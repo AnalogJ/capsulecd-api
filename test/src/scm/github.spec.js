@@ -65,7 +65,8 @@ describe('github', function () {
                         body: 'Some providers do not respect the contract API in Lexicon, and do not provide an id for each returned record during a list action. This leads the generation of the table, which is the default output for a list action, to fail the process and return nothing. See #283.\r\n\r\nThis PR corrects that by returning an empty string if a given key do not exists in the records given by a provider.',
                         html_url: 'https://github.com/AnalogJ/lexicon/pull/284',
                         user: { login: 'adferrand', html_url: 'https://github.com/adferrand' },
-                        updated_at: '2018-09-04T19:40:02Z'
+                        updated_at: '2018-09-04T19:40:02Z',
+                        state: "open"
                     })
                 })
                 .then(done)
@@ -85,8 +86,23 @@ describe('github', function () {
                         body: 'Some providers do not respect the contract API in Lexicon, and do not provide an id for each returned record during a list action. This leads the generation of the table, which is the default output for a list action, to fail the process and return nothing. See #283.\r\n\r\nThis PR corrects that by returning an empty string if a given key do not exists in the records given by a provider.',
                         html_url: 'https://github.com/AnalogJ/lexicon/pull/284',
                         user: { login: 'adferrand', html_url: 'https://github.com/adferrand' },
-                        updated_at: '2018-09-04T19:40:02Z'
+                        updated_at: '2018-09-04T19:40:02Z',
+                        state: "open"
                     })
+                })
+                .then(done)
+                .fail(done)
+        });
+    })
+
+    describe('#createPRComment() @nock', function () {
+        it('Should correctly create a comment on a pull request in scm as CapsuleCD user', function (done) {
+            var github_client = githubScm.getCapsuleClient()
+
+            githubScm.createPRComment(github_client, 'AnalogJ', 'npm_analogj_test', '14', 'this is a test comment body')
+                .then(function(prs){
+                    prs.user.login.toLowerCase().should.eql('capsulecd')
+                    prs.body.should.eql('this is a test comment body')
                 })
                 .then(done)
                 .fail(done)
