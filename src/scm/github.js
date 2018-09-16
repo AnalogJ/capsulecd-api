@@ -243,7 +243,6 @@ var githubScm = {
                 return deferred.promise
             })
     },
-    validPRPayload: function()
 
     //Project Functions
     addRepoWebhook: function(githubClientPromise, orgId, repoId){
