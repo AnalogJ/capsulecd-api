@@ -97,7 +97,7 @@ describe('github', function () {
 
     describe('#addPRComment() @nock', function () {
         it('Should correctly create a comment on a pull request in scm as CapsuleCD user', function (done) {
-            var github_client = githubScm.getCapsuleClient()
+            var github_client = githubScm.getCapsuleClient('capsulecd_user_access_token');
 
             githubScm.addPRComment(github_client, 'AnalogJ', 'npm_analogj_test', '14', 'this is a test comment body')
                 .then(function(prs){

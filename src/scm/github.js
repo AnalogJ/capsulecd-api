@@ -30,13 +30,13 @@ var githubScm = {
         return q(github_client)
     },
 
-    getCapsuleClient: function(){
+    getCapsuleClient: function(token){
         var github_client = new GitHubApi({
             version: "3.0.0"
         });
         github_client.authenticate({
             type: "oauth",
-            token: nconf.get('GITHUB_CAPSULECD_USER_TOKEN')
+            token: token || nconf.get('GITHUB_CAPSULECD_USER_TOKEN')
         });
         return q(github_client)
     },

@@ -1,6 +1,5 @@
 var nconf = require('./common/nconf');
 var security = require('./common/security');
-//node-github client setup
 var q = require('q');
 var Helpers = require('./common/helpers')
 
