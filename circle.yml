@@ -16,7 +16,7 @@ dependencies:
 
 test:
   override:
-    - echo "skipping, no tests"
+    - npm test
 
 deployment:
   deploy:

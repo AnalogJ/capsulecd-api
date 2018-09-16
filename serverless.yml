@@ -26,11 +26,32 @@ provider:
   stage: 'beta'
   region: 'us-east-1'
   cfLogs: true
-
   iamRoleStatements:
     - Effect: Allow
       Action: dynamodb:*
       Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:*/${opt:stage,self:provider.stage}-${self:service}-*
+  environment:
+    # general
+    DOMAIN: api.capsulecd.com
+    DEPLOY_SHA: ${env:CIRCLE_SHA1}
+    STAGE: ${opt:stage, self:provider.stage}
+    DEBUG: ${self:custom.variables.${opt:stage, self:provider.stage}.debug}
+    NODE_ENV: production
+    ENCRYPTION_PASSPHRASE: ${env:${opt:stage, self:provider.stage}_ENCRYPTION_PASSPHRASE, env:ENCRYPTION_PASSPHRASE}
+    ENCRYPTION_JWT_PASSPHRASE: ${env:${opt:stage, self:provider.stage}_ENCRYPTION_JWT_PASSPHRASE, env:ENCRYPTION_JWT_PASSPHRASE}
+
+    # scm
+    GITHUB_APP_CLIENT_KEY: ${env:${opt:stage, self:provider.stage}_GITHUB_APP_CLIENT_KEY, env:GITHUB_APP_CLIENT_KEY}
+    GITHUB_APP_CLIENT_SECRET: ${env:${opt:stage, self:provider.stage}_GITHUB_APP_CLIENT_SECRET, env:GITHUB_APP_CLIENT_SECRET}
+    GITHUB_CAPSULECD_USER_TOKEN: ${env:${opt:stage, self:provider.stage}_GITHUB_CAPSULECD_USER_TOKEN, env:GITHUB_CAPSULECD_USER_TOKEN}
+
+    BITBUCKET_APP_CLIENT_KEY: ${env:${opt:stage, self:provider.stage}_BITBUCKET_APP_CLIENT_KEY, env:BITBUCKET_APP_CLIENT_KEY}
+    BITBUCKET_APP_CLIENT_SECRET: ${env:${opt:stage, self:provider.stage}_BITBUCKET_APP_CLIENT_SECRET, env:BITBUCKET_APP_CLIENT_SECRET}
+    BITBUCKET_CAPSULECD_USER_TOKEN: ${env:${opt:stage, self:provider.stage}_BITBUCKET_CAPSULECD_USER_TOKEN, env:BITBUCKET_CAPSULECD_USER_TOKEN}
+
+    # engines
+    HYPER_ACCESS_KEY: ${env:${opt:stage, self:provider.stage}_HYPER_ACCESS_KEY, env:HYPER_ACCESS_KEY}
+    HYPER_SECRET_KEY: ${env:${opt:stage, self:provider.stage}_HYPER_SECRET_KEY, env:HYPER_SECRET_KEY}
 
 
 custom:
@@ -97,33 +118,10 @@ custom:
   variables:
     master:
       cleanup_enabled: true
+      debug: ''
     beta:
       cleanup_enabled: false
-    DOMAIN: api.capsulecd.com
-    DEPLOY_SHA: ${env:CIRCLE_SHA1}
-    STAGE: ${opt:stage, self:provider.stage}
-    ENCRYPTION_PASSPHRASE: ${env:${opt:stage, self:provider.stage}_ENCRYPTION_PASSPHRASE, env:ENCRYPTION_PASSPHRASE}
-    ENCRYPTION_JWT_PASSPHRASE: ${env:${opt:stage, self:provider.stage}_ENCRYPTION_JWT_PASSPHRASE, env:ENCRYPTION_JWT_PASSPHRASE}
-    GITHUB_APP_CLIENT_KEY: ${env:${opt:stage, self:provider.stage}_GITHUB_APP_CLIENT_KEY, env:GITHUB_APP_CLIENT_KEY}
-    GITHUB_APP_CLIENT_SECRET: ${env:${opt:stage, self:provider.stage}_GITHUB_APP_CLIENT_SECRET, env:GITHUB_APP_CLIENT_SECRET}
-    BITBUCKET_APP_CLIENT_KEY: ${env:${opt:stage, self:provider.stage}_BITBUCKET_APP_CLIENT_KEY, env:BITBUCKET_APP_CLIENT_KEY}
-    BITBUCKET_APP_CLIENT_SECRET: ${env:${opt:stage, self:provider.stage}_BITBUCKET_APP_CLIENT_SECRET, env:BITBUCKET_APP_CLIENT_SECRET}
-    HYPER_ACCESS_KEY: ${env:${opt:stage, self:provider.stage}_HYPER_ACCESS_KEY, env:HYPER_ACCESS_KEY}
-    HYPER_SECRET_KEY: ${env:${opt:stage, self:provider.stage}_HYPER_SECRET_KEY, env:HYPER_SECRET_KEY}
-    GITHUB_CAPSULECD_USER_TOKEN: ${env:${opt:stage, self:provider.stage}_GITHUB_CAPSULECD_USER_TOKEN, env:GITHUB_CAPSULECD_USER_TOKEN}
-  writeEnvVars:
-    DOMAIN: ${self:custom.variables.DOMAIN}
-    DEPLOY_SHA: ${self:custom.variables.DEPLOY_SHA}
-    STAGE: ${self:custom.variables.STAGE}
-    ENCRYPTION_PASSPHRASE: ${self:custom.variables.ENCRYPTION_PASSPHRASE}
-    ENCRYPTION_JWT_PASSPHRASE: ${self:custom.variables.ENCRYPTION_JWT_PASSPHRASE}
-    GITHUB_APP_CLIENT_KEY: ${self:custom.variables.GITHUB_APP_CLIENT_KEY}
-    GITHUB_APP_CLIENT_SECRET: ${self:custom.variables.GITHUB_APP_CLIENT_SECRET}
-    BITBUCKET_APP_CLIENT_KEY: ${self:custom.variables.BITBUCKET_APP_CLIENT_KEY}
-    BITBUCKET_APP_CLIENT_SECRET: ${self:custom.variables.BITBUCKET_APP_CLIENT_SECRET}
-    HYPER_ACCESS_KEY: ${self:custom.variables.HYPER_ACCESS_KEY}
-    HYPER_SECRET_KEY: ${self:custom.variables.HYPER_SECRET_KEY}
-    GITHUB_CAPSULECD_USER_TOKEN: ${self:custom.variables.GITHUB_CAPSULECD_USER_TOKEN}
+      debug: capsulecd:*
 
 # you can add packaging information here
 package:
@@ -334,4 +332,5 @@ resources:
     $ref: ./cloudformation-resources.yaml
 
 plugins:
-   - serverless-plugin-write-env-vars
+  - serverless-prune-plugin
+  - serverless-mocha-plugin

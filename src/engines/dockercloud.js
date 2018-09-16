@@ -1,11 +1,12 @@
 var request = require('superagent');
 var q = require('q');
 var security = require('../common/security');
+var nconf = require('../common/nconf');
 
 var configuration = {
     baseEndpoint: 'https://cloud.docker.com/api/app/v1',
     username: 'analogj',
-    apiKey: process.env.TUTUM_API_KEY
+    apiKey: nconf.get('TUTUM_API_KEY')
 };
 
 configuration.authorization = new Buffer(configuration.username+':'+configuration.apiKey).toString('base64');

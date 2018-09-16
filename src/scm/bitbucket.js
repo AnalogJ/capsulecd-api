@@ -2,12 +2,13 @@
 var Constants = require('../common/constants');
 var q = require('q');
 var security = require('../common/security');
+var nconf = require('../common/nconf');
 
 var OAuth = require('oauth');
 var OAuth2 = OAuth.OAuth2;
 var oauth_client = new OAuth2(
-    process.env.BITBUCKET_APP_CLIENT_KEY,
-    process.env.BITBUCKET_APP_CLIENT_SECRET,
+    nconf.get('BITBUCKET_APP_CLIENT_KEY'),
+    nconf.get('BITBUCKET_APP_CLIENT_SECRET'),
     'https://bitbucket.org',
     '/site/oauth2/authorize',
     '/site/oauth2/access_token',
@@ -18,6 +19,8 @@ var oauth_client = new OAuth2(
 var BitbucketApi = require("bitbucket");
 
 module.exports = {
+
+    //Link functions
     authorizeUrl: function(){
         return oauth_client.getAuthorizeUrl({response_type: 'code'});
     },
@@ -104,5 +107,131 @@ module.exports = {
                 };
                 return entry
             })
+    },
+
+    refreshAccessToken: function(decodedAuthData){
+        var deferred = q.defer();
+
+        oauth_client.getOAuthAccessToken(
+            decodedAuthData.RefreshToken,
+            {'grant_type':'refresh_token'},
+            function (err, access_token, refresh_token, results) {
+
+                if (err) return deferred.reject(err);
+                if(results.error) return deferred.reject(new Error(JSON.stringify(results)));
+
+                var oauth_data = {'access_token': access_token, refresh_token: refresh_token, 'raw': results}
+                return deferred.resolve(oauth_data);
+            });
+        return deferred.promise
+    },
+
+    getClient: function(decodedAuthData){
+        var bitbucket_client = new BitbucketApi();
+
+        //refresh token if necessary
+
+        bitbucket_client.authenticate({
+            type: "oauth",
+            token: decodedAuthData.AccessToken
+        });
+        return bitbucket_client
+    },
+
+    //Fetch Functions
+
+    getUser: function(bitbucket_client){
+        var deferred = q.defer();
+
+        bitbucket_client.user.get({}, function(err, data){
+            if (err) return deferred.reject(err);
+
+            //transform
+            var Organization = require('../models/organization')
+            var bitbucket_user = new Organization(data.data.username, data.data.display_name, '', data.data.links.avatar.href);
+
+            return deferred.resolve(bitbucket_user);
+        })
+        return deferred.promise
+    },
+
+
+    getOrgs: function(bitbucket_client, page){
+        // var deferred = q.defer();
+        // bitbucket_client.user.getOrgs({page:page}, function(err, data){
+        //     if (err) return deferred.reject(err);
+        //     return deferred.resolve(data);
+        // })
+        // return deferred.promise
+        return q.resolve([])
+
+    },
+
+    getOrgRepos: function (bitbucket_client, orgId, page){
+        // var deferred = q.defer();
+        // bitbucket_client.repos.getFromOrg({org:orgId, page:page}, function(err, data){
+        //     if (err) return deferred.reject(err);
+        //     return deferred.resolve(data);
+        // })
+        // return deferred.promise
+        return q.resolve([])
+    },
+
+    getUserRepos: function (bitbucket_client, userId, page){
+        var deferred = q.defer();
+
+        /*
+        https://developer.atlassian.com/bitbucket/api/2/reference/resource/repositories/%7Busername%7D
+
+        member: returns repositories to which the user has explicit read access
+        contributor: returns repositories to which the user has explicit write access
+        admin: returns repositories to which the user has explicit administrator access
+        owner: returns all repositories owned by the current user
+
+        * */
+
+        bitbucket_client.repositories.list({username:userId, page: page, role: "contributor"}, function(err, data){
+            if (err) return deferred.reject(err);
+
+            //transform
+            var Repository = require('../models/repository')
+            var repo_list = data.data.values.map(function(repo){
+                return new Repository(repo.slug, repo.updated_on)
+            })
+
+            return deferred.resolve(repo_list);
+        })
+
+        return deferred.promise
+    },
+
+    getRepoPullrequests: function (bitbucket_client, orgId, repoId, page){
+        var deferred = q.defer();
+        bitbucket_client.repositories.listPullRequests({repo_slug:repoId, state: 'OPEN', username: orgId}, function(err, data){
+            if (err) return deferred.reject(err);
+
+            //transform
+            var PullRequest = require('../models/pullrequest')
+            var prs = data.data.values.map(function(pr){
+                return new PullRequest(pr.id, pr.title, pr.summary.raw, pr.links.html.href, pr.author.username, pr.author.links.html.href, pr.updated_on)
+            })
+
+            return deferred.resolve(prs);
+        })
+        return deferred.promise
+    },
+
+    getRepoPullrequest: function (bitbucket_client, orgId, repoId, prNumber){
+        var deferred = q.defer();
+        bitbucket_client.repositories.getPullRequest({username:orgId, repo_slug:repoId, pull_request_id:prNumber},function(err, data){
+            if (err) return deferred.reject(err);
+
+            //transform
+            var PullRequest = require('../models/pullrequest')
+            var pr = new PullRequest(data.data.id, data.data.title, data.data.summary.raw, data.data.links.html.href, data.data.author.username, data.data.author.links.html.href, data.data.updated_on)
+
+            return deferred.resolve(pr);
+        })
+        return deferred.promise
     }
 }

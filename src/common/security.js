@@ -2,12 +2,13 @@
 // From http://lollyrock.com/articles/nodejs-encryption/
 
 // Nodejs encryption with CTR
+var nconf = require('./nconf');
 var crypto = require('crypto'),
     q = require('q'),
     algorithm = 'aes-256-ctr',
-    passphrase = process.env.ENCRYPTION_PASSPHRASE,
+    passphrase = nconf.get('ENCRYPTION_PASSPHRASE'),
     jwt = require('jsonwebtoken'),
-    jwt_passphrase = process.env.ENCRYPTION_JWT_PASSPHRASE;
+    jwt_passphrase = nconf.get('ENCRYPTION_JWT_PASSPHRASE');
 
 module.exports = {
     //API Token encryption/decryption

@@ -4,6 +4,7 @@ var security = require('../common/security');
 var Hyper = require('hyper.js');
 var aws4 = require('hyper-aws4');
 var url = require('url');
+var nconf = require('../common/nconf');
 
 function cleanLogs(docker_logs){
     //https://github.com/docker/docker/issues/7375
@@ -207,8 +208,8 @@ module.exports = {
             url: request_url,
             method: 'GET',
             credential: {
-                accessKey: process.env.HYPER_ACCESS_KEY,
-                secretKey:  process.env.HYPER_SECRET_KEY
+                accessKey: nconf.get('HYPER_ACCESS_KEY'),
+                secretKey:  nconf.get('HYPER_SECRET_KEY')
             },
             headers: {},
             body: ''

@@ -1,3 +1,5 @@
+var nconf = require('./nconf');
+
 module.exports = {
 
 
@@ -26,7 +28,7 @@ module.exports = {
             }
 
             var whitelisted_props = Object.getOwnPropertyNames(err)
-            if (process.env.STAGE != 'beta'){
+            if (nconf.get('STAGE') != 'beta'){
                 whitelisted_props = ["message","status"]
             }
 

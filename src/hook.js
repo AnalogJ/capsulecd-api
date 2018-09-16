@@ -1,4 +1,4 @@
-require('dotenv').config();
+var nconf = require('./common/nconf');
 var security = require('./common/security');
 var constants = require('./common/constants');
 var Helpers = require('./common/helpers');
@@ -105,7 +105,7 @@ module.exports.index = function (event, context, cb) {
             //we have to write this comment as the CapsuleCD user.
             capsulecd_github.authenticate({
                 type: "oauth",
-                token: process.env.GITHUB_CAPSULECD_USER_TOKEN
+                token: nconf.get('GITHUB_CAPSULECD_USER_TOKEN')
             });
 
             var deferred_comment = q.defer();

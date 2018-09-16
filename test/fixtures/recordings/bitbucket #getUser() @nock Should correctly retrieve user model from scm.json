@@ -1,0 +1,90 @@
+[
+    {
+        "scope": "https://api.bitbucket.org:443",
+        "method": "GET",
+        "path": "/2.0/user?access_token=placeholder_access_token",
+        "body": "",
+        "status": 200,
+        "response": {
+            "username": "sparktree",
+            "website": "http://www.thesparktree.com/",
+            "display_name": "SparkTree Inc NA",
+            "account_id": "557058:5c205029-XXXX-XXXX-XXXX-61b5fddf59ea",
+            "links": {
+                "hooks": {
+                    "href": "https://api.bitbucket.org/2.0/users/sparktree/hooks"
+                },
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/users/sparktree"
+                },
+                "repositories": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/sparktree"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/sparktree/"
+                },
+                "followers": {
+                    "href": "https://api.bitbucket.org/2.0/users/sparktree/followers"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/account/sparktree/avatar/"
+                },
+                "following": {
+                    "href": "https://api.bitbucket.org/2.0/users/sparktree/following"
+                },
+                "snippets": {
+                    "href": "https://api.bitbucket.org/2.0/snippets/sparktree"
+                }
+            },
+            "created_on": "2012-07-31T03:35:13.316223+00:00",
+            "is_staff": false,
+            "location": null,
+            "type": "user",
+            "uuid": "{7db0d153-XXXX-XXXX-XXXX-cea85d4f99c3}"
+        },
+        "rawHeaders": [
+            "Server",
+            "nginx",
+            "Vary",
+            "Authorization",
+            "Cache-Control",
+            "max-age=900",
+            "Content-Type",
+            "application/json; charset=utf-8",
+            "X-OAuth-Scopes",
+            "webhook, pullrequest:write, project, account",
+            "Strict-Transport-Security",
+            "max-age=31536000; includeSubDomains; preload",
+            "Date",
+            "Sat, 15 Sep 2018 22:17:01 GMT",
+            "X-Served-By",
+            "app-142",
+            "Accept-Ranges",
+            "bytes",
+            "X-Static-Version",
+            "54a54946c342",
+            "ETag",
+            "\"b0b78519f0e5250e885e407efa583f39\"",
+            "X-Content-Type-Options",
+            "nosniff",
+            "X-Render-Time",
+            "0.116142988205",
+            "X-Credential-Type",
+            "oauth2",
+            "X-Accepted-OAuth-Scopes",
+            "account",
+            "Connection",
+            "close",
+            "X-Version",
+            "54a54946c342",
+            "X-Request-Count",
+            "530",
+            "X-Frame-Options",
+            "SAMEORIGIN",
+            "X-Cache-Info",
+            "caching",
+            "Content-Length",
+            "915"
+        ]
+    }
+]

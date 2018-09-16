@@ -1,4 +1,4 @@
-require('dotenv').config();
+var nconf = require('./common/nconf');
 var security = require('./common/security');
 var Constants = require('./common/constants');
 var Helpers = require('./common/helpers');

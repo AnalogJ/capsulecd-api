@@ -1,5 +1,5 @@
 'use strict';
-require('dotenv').config();
+var nconf = require('./common/nconf');
 
 var Helpers = require('./common/helpers');
 var engine = require('./engines/hyper')

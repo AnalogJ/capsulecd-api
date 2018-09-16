@@ -2,12 +2,13 @@
 var Constants = require('../common/constants');
 var q = require('q');
 var security = require('../common/security');
+var nconf = require('../common/nconf');
 
 var OAuth = require('oauth');
 var OAuth2 = OAuth.OAuth2;
 var oauth_client = new OAuth2(
-    process.env.GITHUB_APP_CLIENT_KEY,
-    process.env.GITHUB_APP_CLIENT_SECRET,
+    nconf.get('GITHUB_APP_CLIENT_KEY'),
+    nconf.get('GITHUB_APP_CLIENT_SECRET'),
     'https://github.com',
     '/login/oauth/authorize',
     '/login/oauth/access_token'
@@ -17,6 +18,8 @@ var oauth_client = new OAuth2(
 var GitHubApi = require("github");
 
 module.exports = {
+    //Link function
+
     authorizeUrl: function(){
         var url = oauth_client.getAuthorizeUrl({
             'redirect_uri': Constants.web_endpoint + '/auth/callback/github', //Constants.lambda_endpoint + '/callback/github',
@@ -90,8 +93,102 @@ module.exports = {
             return entry
             })
 
+    },
+
+
+    getClient: function(decodedAuthData){
+        var github_client = new GitHubApi({
+            version: "3.0.0"
+        });
+        github_client.authenticate({
+            type: "oauth",
+            token: decodedAuthData.AccessToken
+        });
+        return github_client
+    },
+
+    //Fetch Functions
+
+    getUser: function(github_client){
+        var deferred = q.defer();
+
+        github_client.user.get({}, function(err, data){
+            if (err) return deferred.reject(err);
+            return deferred.resolve(data);
+        })
+        return deferred.promise
+    },
+
+
+    getOrgs: function(github_client, page){
+        var deferred = q.defer();
+        github_client.user.getOrgs({page:page}, function(err, data){
+            if (err) return deferred.reject(err);
+            return deferred.resolve(data);
+        })
+        return deferred.promise
+    },
+
+    getOrgRepos: function (github_client, orgId, page){
+        var deferred = q.defer();
+        github_client.repos.getFromOrg({org:orgId, page:page}, function(err, data){
+            if (err) return deferred.reject(err);
+
+            //transform
+            var Repository = require('../models/repository')
+            var repo_list = data.map(function(repo){
+                return new Repository(repo.name, repo.updated_at)
+            })
+
+            return deferred.resolve(repo_list);
+        })
+        return deferred.promise
+    },
+
+    getUserRepos: function (github_client, userId, page){
+        var deferred = q.defer();
+        github_client.repos.getAll({page: page}, function(err, data){
+            if (err) return deferred.reject(err);
+
+            //transform
+            var Repository = require('../models/repository')
+            var repo_list = data.map(function(repo){
+                return new Repository(repo.name, repo.updated_at)
+            })
+
+            return deferred.resolve(repo_list);
+        })
+        return deferred.promise
+    },
+
+    getRepoPullrequests: function (github_client, orgId, repoId, page){
+        var deferred = q.defer();
+        github_client.pullRequests.getAll({user:orgId, repo:repoId, state: 'open', page:page}, function(err, data){
+            if (err) return deferred.reject(err);
+
+            //transform
+            var PullRequest = require('../models/pullrequest')
+            var prs = data.map(function(pr){
+                return new PullRequest(pr.number, pr.title, pr.body, pr.html_url, pr.user.login, pr.user.html_url, pr.updated_at)
+            })
+
+            return deferred.resolve(prs);
+        })
+        return deferred.promise
+    },
+
+    getRepoPullrequest: function (github_client, orgId, repoId, prNumber){
+        var deferred = q.defer();
+        github_client.pullRequests.get({user:orgId, repo:repoId, number:prNumber},function(err, data){
+            if (err) return deferred.reject(err);
+
+            //transform
+            var PullRequest = require('../models/pullrequest')
+            var pr = new PullRequest(data.number, data.title, data.body, data.html_url, data.user.login, data.user.html_url, data.updated_at)
+
+            return deferred.resolve(pr);
+        })
+        return deferred.promise
     }
-
-
 
 }
