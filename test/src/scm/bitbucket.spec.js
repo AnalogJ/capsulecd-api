@@ -1,12 +1,13 @@
 var bitbucketScm = require('../../../src/scm/bitbucket.js');
 var should = require('should');
+var nconf = require('../../src/common/nconf');
 
 //this is just simple integration testing
 describe('bitbucket', function () {
 
     describe('#authorizeUrl()', function () {
         it('Should correctly generate url', function () {
-            bitbucketScm.authorizeUrl().should.eql("https://bitbucket.org/site/oauth2/authorize?response_type=code&client_id=BITBUCKET_APP_CLIENT_KEY")
+            bitbucketScm.authorizeUrl().should.eql("https://bitbucket.org/site/oauth2/authorize?response_type=code&client_id=" + nconf.get('BITBUCKET_APP_CLIENT_KEY'))
         });
     })
 

@@ -1,12 +1,13 @@
 var githubScm = require('../../../src/scm/github.js');
 var should = require('should');
+var nconf = require('../../src/common/nconf');
 
 //this is just simple integration testing
 describe('github', function () {
 
     describe('#authorizeUrl()', function () {
         it('Should correctly generate url', function () {
-            githubScm.authorizeUrl().should.eql("https://github.com/login/oauth/authorize?redirect_uri=https%3A%2F%2Fbeta.capsulecd.com%2Fauth%2Fcallback%2Fgithub&scope=user%3Aemail%2Crepo%2Cwrite%3Arepo_hook&client_id=PLACEHOLDER_GITHUB_APP_CLIENT_KEY")
+            githubScm.authorizeUrl().should.eql("https://github.com/login/oauth/authorize?redirect_uri=https%3A%2F%2Fbeta.capsulecd.com%2Fauth%2Fcallback%2Fgithub&scope=user%3Aemail%2Crepo%2Cwrite%3Arepo_hook&client_id=" + nconf.get('GITHUB_APP_CLIENT_KEY'))
         });
     })
 
