@@ -16,20 +16,27 @@ module.exports.index = function (event, context, cb) {
     if(!event.path.serviceType || !event.path.orgId || !event.path.repoId){
         return cb(new Error('service, org and repo are all required'))
     }
+
     var scm;
+    var pr_number;
+    var pr_valid;
     switch(event.path.serviceType) {
         case 'github':
             scm = githubScm
+            pr_valid = (event.body.action != "opened" && event.body.action != "reopened");
+            pr_number = event.body.number;
             break;
         case 'bitbucket':
             scm = bitbucketScm
+            pr_valid = (event.body.pullrequest.state.toLowerCase() == 'open')
+            pr_number = event.body.pullrequest.id
             break;
         default:
             return cb('Service not supported', null);
     }
 
-    var pr_number = event.body.number;
-    if(event.body.action != "opened" && event.body.action != "reopened"){
+
+    if(pr_valid){
         return cb(null, {
             message: "This is an unsupported action type. Ignoring.",
             action: event.body.action,
