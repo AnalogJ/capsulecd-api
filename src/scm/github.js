@@ -96,6 +96,9 @@ var githubScm = {
             })
 
     },
+    refreshAccessToken: function(decodedAuthData){
+        return q(decodedAuthData) //noop
+    },
 
     createCapsuleUser: function(githubClientPromise){
         return githubClientPromise

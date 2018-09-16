@@ -66,7 +66,7 @@ module.exports = {
         createContainerOpts.Env.push("CAPSULE_ENGINE_VERSION_BUMP_TYPE=" + (event.body.versionIncr || 'patch'));
 
         //access token is unique for each user
-        createContainerOpts.Env.push("CAPSULE_SCM_GITHUB_ACCESS_TOKEN="+token);
+        createContainerOpts.Env.push(`CAPSULE_SCM_${event.path.serviceType.toUpperCase()}_ACCESS_TOKEN=${token}`);
 
         //create a new container on Hyper
         var hyper = new Hyper();
