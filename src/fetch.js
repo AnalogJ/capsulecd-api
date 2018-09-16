@@ -32,29 +32,29 @@ module.exports.index = function (event, context, cb) {
 
             var page = event.query.page|0;
             if(event.path.orgId && event.path.repoId && event.path.prNumber) {
-                chain = scmClient.getRepoPullrequest(scmClient, event.path.orgId, event.path.repoId, event.path.prNumber)
+                chain = scm.getRepoPullrequest(scmClient, event.path.orgId, event.path.repoId, event.path.prNumber)
             }
             else if(event.path.orgId && event.path.repoId){
-                chain = scmClient.getRepoPullrequests(scmClient, event.path.orgId, event.path.repoId, page)
+                chain = scm.getRepoPullrequests(scmClient, event.path.orgId, event.path.repoId, page)
             }
             else if(event.path.orgId && !event.path.repoId){
 
                 if(event.path.orgId == decoded.Username){
                     //look up the user's repos
-                    chain = scmClient.getUserRepos(scmClient, event.path.orgId, page)
+                    chain = scm.getUserRepos(scmClient, event.path.orgId, page)
                 }
                 else{
-                    chain = scmClient.getOrgRepos(scmClient, event.path.orgId, page)
+                    chain = scm.getOrgRepos(scmClient, event.path.orgId, page)
                 }
             }
             else{
                 //no org specified, list all the orgs for this user.
                 if(page){
-                    chain = scmClient.getOrgs(scmClient, page)
+                    chain = scm.getOrgs(scmClient, page)
                 }
                 else{
                     //chain = getOrgs(github, page)
-                    chain = q.spread([scmClient.getUser(scmClient), scmClient.getOrgs(scmClient, page)], function(user, orgs){
+                    chain = q.spread([scm.getUser(scmClient), scm.getOrgs(scmClient, page)], function(user, orgs){
                         orgs.unshift(user) //adds the user obj to the beginning of the array.
                         return orgs
                     })
