@@ -187,7 +187,7 @@ functions:
     events:
       - schedule:
           rate: rate(6 hours)
-          enabled: ${self:custom.variables.${self:custom.variables.STAGE}.cleanup_enabled}
+          enabled: ${self:custom.variables.${opt:stage, self:provider.stage}.cleanup_enabled}
 
 #  certs:
 #    handler: src/certs.renew
