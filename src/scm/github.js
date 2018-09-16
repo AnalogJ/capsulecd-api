@@ -232,7 +232,7 @@ var githubScm = {
             })
     },
     // Hook Functions
-    createPRComment: function(githubClientPromise, orgId, repoId, prNumber, commentBody){
+    addPRComment: function(githubClientPromise, orgId, repoId, prNumber, commentBody){
         return githubClientPromise
             .then(function(github_client){
                 var deferred = q.defer();
@@ -241,6 +241,48 @@ var githubScm = {
                     return deferred.resolve(data);
                 })
                 return deferred.promise
+            })
+    },
+
+    //Project Functions
+    addRepoWebhook: function(githubClientPromise, orgId, repoId){
+        return githubClientPromise
+            .then(function(github_client){
+                var deferred_hook = q.defer();
+                github_client.repos.createHook({
+                    "user":orgId,
+                    "repo":repoId,
+                    "name":"web",
+                    "config": {
+                        "url": Constants.lambda_endpoint + '/hook/github/' + orgId + '/' + repoId,
+                        "content_type": "json"
+                    },
+                    "events":["pull_request"]
+                }, function(err, hook_data){
+                    if (err) return deferred_hook.reject(err);
+
+                    //after creating the hook, return the database data.
+                    return deferred_hook.resolve(hook_data);
+                });
+                return deferred_hook.promise
+            })
+    },
+    addRepoCollaborator: function(githubClientPromise, orgId, repoId){
+        return githubClientPromise
+            .then(function(github_client){
+                //TODO: does CapsuleCD need to be a collaborator anymore? Only for writing comments?
+                var deferred_collab = q.defer();
+                github_client.repos.addCollaborator({
+                    "user":orgId,
+                    "repo":repoId,
+                    "collabuser":"CapsuleCD"
+                }, function(err, hook_data){
+                    if (err) return deferred_collab.reject(err);
+
+                    //after creating the hook, return the database data.
+                    return deferred_collab.resolve(hook_data);
+                });
+                return deferred_collab.promise
             })
     }
 

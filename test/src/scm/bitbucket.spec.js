@@ -103,11 +103,11 @@ describe('bitbucket', function () {
         });
     })
 
-    describe('#createPRComment() @nock', function () {
+    describe('#addPRComment() @nock', function () {
         it('Should correctly create a comment on a pull request in scm as CapsuleCD user', function (done) {
             var bitbucket_client = bitbucketScm.getCapsuleClient()
 
-            bitbucketScm.createPRComment(bitbucket_client, 'sparktree', 'gem_analogj_test', '3', 'this is a test comment [body](http://www.google.com)')
+            bitbucketScm.addPRComment(bitbucket_client, 'sparktree', 'gem_analogj_test', '3', 'this is a test comment [body](http://www.google.com)')
                 .then(function(prs){
                     prs.user.username.toLowerCase().should.eql('capsulecd')
                     prs.content.raw.should.eql('this is a test comment [body](http://www.google.com)')
@@ -116,4 +116,34 @@ describe('bitbucket', function () {
                 .fail(done)
         });
     })
+
+
+    // describe('#addRepoCollaborator() @nock', function () {
+    //     it('Should correctly create CapsuleCD user as a collaborator on scm repo', function (done) {
+    //         var bitbucket_client = bitbucketScm.getClient({RefreshToken: 'jYV3JgQWGQbctQePcm'})
+    //
+    //         bitbucketScm.addRepoCollaborator(bitbucket_client, 'sparktree', 'gem_analogj_test')
+    //             .then(function(prs){
+    //                 prs.should.eql({})
+    //             })
+    //             .then(done)
+    //             .fail(done)
+    //     });
+    // })
+
+    describe('#addRepoWebhook() @nock', function () {
+        it('Should correctly create CapsuleCD webhook on scm repo', function (done) {
+            var bitbucket_client = bitbucketScm.getClient({RefreshToken: 'placeholder_refresh_token'})
+
+            bitbucketScm.addRepoWebhook(bitbucket_client, 'sparktree', 'gem_analogj_test')
+                .then(function(hook){
+                    hook.active.should.eql(true)
+                    hook.url.should.eql("https://api.capsulecd.com/beta/hook/bitbucket/sparktree/gem_analogj_test")
+                    hook.events.should.eql(["pullrequest:created"])
+                })
+                .then(done)
+                .fail(done)
+        });
+    })
+
 })

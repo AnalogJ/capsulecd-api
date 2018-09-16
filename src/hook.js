@@ -2,8 +2,10 @@ var nconf = require('./common/nconf');
 var security = require('./common/security');
 var constants = require('./common/constants');
 var Helpers = require('./common/helpers');
-var q = require('q');
+var githubScm = require('./scm/github')
+var bitbucketScm = require('./scm/bitbucket')
 
+var q = require('q');
 
 //Dynamodb client setup
 var AWS = require("aws-sdk");
@@ -99,7 +101,7 @@ module.exports.index = function (event, context, cb) {
 
             var capsuleClientPromise = scm.getCapsuleClient()
 
-            return scm.createPRComment(capsuleClientPromise, event.path.orgId,event.path.repoId, pr_number,
+            return scm.addPRComment(capsuleClientPromise, event.path.orgId,event.path.repoId, pr_number,
                 [
                     'Hi.',
                     '',

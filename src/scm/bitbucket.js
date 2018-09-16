@@ -282,7 +282,7 @@ var bitbucketScm = {
     },
 
     // Hook Functions
-    createPRComment: function(bitbucketClientPromise, orgId, repoId, prNumber, commentBody){
+    addPRComment: function(bitbucketClientPromise, orgId, repoId, prNumber, commentBody){
         return bitbucketClientPromise
             .then(function(bitbucket_client){
                 var deferred = q.defer();
@@ -292,6 +292,47 @@ var bitbucketScm = {
                 })
                 return deferred.promise
             })
+    },
+
+    //Project Functions
+    addRepoWebhook: function(bitbucketClientPromise, orgId, repoId){
+        return bitbucketClientPromise
+            .then(function (bitbucket_client) {
+                var deferred = q.defer();
+                bitbucket_client.repositories.createWebhook({username:orgId, repo_slug:repoId, _body:{
+                        description: "CapsuleCD " + (nconf.get('STAGE') =='master' ? '' : nconf.get('STAGE')),
+                        url: Constants.lambda_endpoint + '/hook/bitbucket/' + orgId + '/' + repoId,
+                        active: true,
+                        "events": [
+                            "pullrequest:created"
+                        ]
+                    }
+                    }, function(err, data){
+                    if (err) return deferred.reject(err);
+                    return deferred.resolve(data.data);
+                })
+                return deferred.promise
+            })
+    },
+
+    addRepoCollaborator: function(bitbucketClientPromise, orgId, repoId){
+        return q({})
+        // return bitbucketClientPromise
+        //     .then(function (bitbucket_client) {
+        //         var deferred = q.defer();
+        //         bitbucket_client.repositories.createWebhook({username:orgId, repo_slug:repoId, _body:{
+        //                 description: "CapsuleCD " + (nconf.get('STAGE') =='master' ? '' : nconf.get('STAGE')),
+        //                 url: Constants.lambda_endpoint + '/hook/bitbucket/' + orgId + '/' + repoId,
+        //                 active: true,
+        //                 "events": [
+        //                     "pullrequest:created"
+        //                 ]
+        //             }
+        //         }, function(err, data){
+        //             if (err) return deferred.reject(err);
+        //             return deferred.resolve(data.data);
+        //         })
+        //     })
     }
 };
 module.exports = bitbucketScm;

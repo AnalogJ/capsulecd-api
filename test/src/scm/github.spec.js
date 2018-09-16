@@ -95,14 +95,42 @@ describe('github', function () {
         });
     })
 
-    describe('#createPRComment() @nock', function () {
+    describe('#addPRComment() @nock', function () {
         it('Should correctly create a comment on a pull request in scm as CapsuleCD user', function (done) {
             var github_client = githubScm.getCapsuleClient()
 
-            githubScm.createPRComment(github_client, 'AnalogJ', 'npm_analogj_test', '14', 'this is a test comment body')
+            githubScm.addPRComment(github_client, 'AnalogJ', 'npm_analogj_test', '14', 'this is a test comment body')
                 .then(function(prs){
                     prs.user.login.toLowerCase().should.eql('capsulecd')
                     prs.body.should.eql('this is a test comment body')
+                })
+                .then(done)
+                .fail(done)
+        });
+    })
+
+    describe('#addRepoCollaborator() @nock', function () {
+        it('Should correctly create CapsuleCD user as a collaborator on scm repo', function (done) {
+            var github_client = githubScm.getClient({AccessToken: 'placeholder_access_token'})
+
+            githubScm.addRepoCollaborator(github_client, 'AnalogJ', 'npm_analogj_test')
+                .then(function(collab){
+                    collab.invitee.login.should.eql('CapsuleCD')
+                })
+                .then(done)
+                .fail(done)
+        });
+    })
+
+    describe('#addRepoWebhook() @nock', function () {
+        it('Should correctly create CapsuleCD webhook on scm repo', function (done) {
+            var github_client = githubScm.getClient({AccessToken: 'placeholder_access_token'})
+
+            githubScm.addRepoWebhook(github_client, 'AnalogJ', 'npm_analogj_test')
+                .then(function(hook){
+                    hook.active.should.eql(true)
+                    hook.config.url.should.eql("https://api.capsulecd.com/beta/hook/github/AnalogJ/npm_analogj_test")
+                    hook.events.should.eql(["pull_request"])
                 })
                 .then(done)
                 .fail(done)
