@@ -6,7 +6,7 @@ describe('github', function () {
 
     describe('#authorizeUrl()', function () {
         it('Should correctly generate url', function () {
-            githubScm.authorizeUrl().should.eql("https://github.com/login/oauth/authorize?redirect_uri=https%3A%2F%2Fbeta.capsulecd.com%2Fauth%2Fcallback%2Fgithub&scope=user%3Aemail%2Crepo%2Cwrite%3Arepo_hook&client_id=ac97167cd722170814b8")
+            githubScm.authorizeUrl().should.eql("https://github.com/login/oauth/authorize?redirect_uri=https%3A%2F%2Fbeta.capsulecd.com%2Fauth%2Fcallback%2Fgithub&scope=user%3Aemail%2Crepo%2Cwrite%3Arepo_hook&client_id=PLACEHOLDER_GITHUB_APP_CLIENT_KEY")
         });
     })
 
