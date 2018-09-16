@@ -1,4 +1,4 @@
-function Organization (orgName, orgDescription, orgBio, orgAvatar) {
+function ScmOrganization (orgName, orgDescription, orgBio, orgAvatar) {
     return {
         avatar_url: orgAvatar || '',
         bio: orgBio || '',
@@ -6,4 +6,4 @@ function Organization (orgName, orgDescription, orgBio, orgAvatar) {
         login: orgName
     }
 }
-module.exports = Organization
+module.exports = ScmOrganization

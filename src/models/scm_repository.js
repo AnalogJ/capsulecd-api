@@ -1,7 +1,7 @@
-function Repository (repoName, repoUpdatedAt) {
+function ScmRepository (repoName, repoUpdatedAt) {
     return {
         name: repoName || '',
         updated_at: repoUpdatedAt || ''
     }
 }
-module.exports = Repository
+module.exports = ScmRepository

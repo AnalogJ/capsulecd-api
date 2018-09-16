@@ -16,19 +16,19 @@ var docClient = new AWS.DynamoDB.DocumentClient({
 
 module.exports = {
     connect: function(event, context, cb) {
-        var url
+        var scm;
         switch(event.path.serviceType) {
             case 'github':
-                url = githubScm.authorizeUrl()
+                scm = githubScm
                 break;
             case 'bitbucket':
-                url = bitbucketScm.authorizeUrl()
+                scm = bitbucketScm
                 break;
             default:
                 return cb('Service not supported', null);
         }
 
-        var response = {url:url};
+        var response = {url:scm.authorizeUrl()};
 
         return cb(null, response)
         //var error = new Error('testing error response');
@@ -37,20 +37,20 @@ module.exports = {
     },
     callback: function(event, context, cb) {
 
-        var swapTokenPromise
-
+        var scm;
         switch(event.path.serviceType) {
             case 'github':
-                swapTokenPromise = githubScm.swapOAuthToken(event.query.code)
+                scm = githubScm
                 break;
             case 'bitbucket':
-                swapTokenPromise = bitbucketScm.swapOAuthToken(event.query.code)
+                scm = bitbucketScm
                 break;
             default:
                 return cb('Service not supported', null);
         }
 
-        return swapTokenPromise
+
+        return scm.swapOAuthToken(event.query.code)
             .then(function(entry){
                 console.log("[DEBUG]ENTRY", entry)
 

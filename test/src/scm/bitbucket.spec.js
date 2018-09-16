@@ -13,7 +13,7 @@ describe('bitbucket', function () {
 
     describe('#swapOAuthToken() @nock', function () {
         it('Should correctly swap code for oauth credentials and request user data.', function (done) {
-            bitbucketScm.swapOAuthToken('uzjWvXnTABcBcFzNtw')
+            bitbucketScm.swapOAuthToken('68BuaD9Gnxpx8ybkVp')
                 .then(function(userEntry){
                     userEntry.ServiceType.should.eql('bitbucket')
                     userEntry.Username.should.eql('sparktree')
@@ -26,7 +26,7 @@ describe('bitbucket', function () {
 
     describe('#getUser() @nock', function () {
         it('Should correctly retrieve user model from scm', function (done) {
-            var bitbucket_client = bitbucketScm.getClient({AccessToken: 'placeholder_access_token'})
+            var bitbucket_client = bitbucketScm.getClient({RefreshToken: 'placeholder_refresh_token'})
 
             bitbucketScm.getUser(bitbucket_client)
                 .then(function(userEntry){
@@ -41,7 +41,7 @@ describe('bitbucket', function () {
 
     describe('#getUserRepos() @nock', function () {
         it('Should correctly retrieve user repos from scm', function (done) {
-            var bitbucket_client = bitbucketScm.getClient({AccessToken: 'placeholder_access_token'})
+            var bitbucket_client = bitbucketScm.getClient({RefreshToken: 'placeholder_refresh_token'})
 
             bitbucketScm.getUserRepos(bitbucket_client, 'sparktree')
                 .then(function(repos){
@@ -57,7 +57,7 @@ describe('bitbucket', function () {
 
     describe('#getRepoPullrequests() @nock', function () {
         it('Should correctly retrieve repo pull requests from scm', function (done) {
-            var bitbucket_client = bitbucketScm.getClient({AccessToken: 'placeholder_access_token'})
+            var bitbucket_client = bitbucketScm.getClient({RefreshToken: 'placeholder_refresh_token'})
 
             bitbucketScm.getRepoPullrequests(bitbucket_client, 'sparktree', 'gem_analogj_test')
                 .then(function(prs){
@@ -80,7 +80,7 @@ describe('bitbucket', function () {
 
     describe('#getRepoPullrequest() @nock', function () {
         it('Should correctly retrieve repo pull request from scm', function (done) {
-            var bitbucket_client = bitbucketScm.getClient({AccessToken: 'placeholder_access_token'})
+            var bitbucket_client = bitbucketScm.getClient({RefreshToken: 'placeholder_refresh_token'})
 
             bitbucketScm.getRepoPullrequest(bitbucket_client, 'sparktree', 'gem_analogj_test', '3' )
                 .then(function(prs){

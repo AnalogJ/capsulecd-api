@@ -1,4 +1,4 @@
-function PullRequest (prNumber, prTitle, prBody, prLink, prUsername, prUserLink, prUpdatedAt) {
+function ScmPullRequest (prNumber, prTitle, prBody, prLink, prUsername, prUserLink, prUpdatedAt) {
     return {
         number: prNumber || '',
         title: prTitle || '',
@@ -11,4 +11,4 @@ function PullRequest (prNumber, prTitle, prBody, prLink, prUsername, prUserLink,
         updated_at: prUpdatedAt || ''
     }
 }
-module.exports = PullRequest
+module.exports = ScmPullRequest

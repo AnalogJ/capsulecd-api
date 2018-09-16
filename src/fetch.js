@@ -26,35 +26,35 @@ module.exports.index = function (event, context, cb) {
     return security.verify_token(event.token)
         .then(function(decoded){
 
-            var scmClient = scm.getClient(decoded)
+            var scmClientPromise = scm.getClient(decoded)
 
             var chain = null;
 
             var page = event.query.page|0;
             if(event.path.orgId && event.path.repoId && event.path.prNumber) {
-                chain = scm.getRepoPullrequest(scmClient, event.path.orgId, event.path.repoId, event.path.prNumber)
+                chain = scm.getRepoPullrequest(scmClientPromise, event.path.orgId, event.path.repoId, event.path.prNumber)
             }
             else if(event.path.orgId && event.path.repoId){
-                chain = scm.getRepoPullrequests(scmClient, event.path.orgId, event.path.repoId, page)
+                chain = scm.getRepoPullrequests(scmClientPromise, event.path.orgId, event.path.repoId, page)
             }
             else if(event.path.orgId && !event.path.repoId){
 
                 if(event.path.orgId == decoded.Username){
                     //look up the user's repos
-                    chain = scm.getUserRepos(scmClient, event.path.orgId, page)
+                    chain = scm.getUserRepos(scmClientPromise, event.path.orgId, page)
                 }
                 else{
-                    chain = scm.getOrgRepos(scmClient, event.path.orgId, page)
+                    chain = scm.getOrgRepos(scmClientPromise, event.path.orgId, page)
                 }
             }
             else{
                 //no org specified, list all the orgs for this user.
                 if(page){
-                    chain = scm.getOrgs(scmClient, page)
+                    chain = scm.getOrgs(scmClientPromise, page)
                 }
                 else{
                     //chain = getOrgs(github, page)
-                    chain = q.spread([scm.getUser(scmClient), scm.getOrgs(scmClient, page)], function(user, orgs){
+                    chain = q.spread([scm.getUser(scmClientPromise), scm.getOrgs(scmClientPromise, page)], function(user, orgs){
                         orgs.unshift(user) //adds the user obj to the beginning of the array.
                         return orgs
                     })
