@@ -23,6 +23,8 @@ var bitbucketScm = {
     getClient: function(decodedAuthData){
         var bitbucket_client = new BitbucketApi();
 
+        console.log("[DEBUG][GETCLIENT REFRESH]", decodedAuthData)
+
         //refresh token
         return bitbucketScm.refreshAccessToken(decodedAuthData)
             .then(function(oauthData){
