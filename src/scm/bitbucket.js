@@ -217,7 +217,7 @@ var bitbucketScm = {
 
                 * */
 
-                bitbucket_client.repositories.list({username:userId, page: page, role: "contributor"}, function(err, data){
+                bitbucket_client.repositories.list({username:userId, page: page, role: "contributor",sort: 'slug' }, function(err, data){
                     if (err) return deferred.reject(err);
 
                     //transform
