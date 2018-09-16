@@ -1,6 +1,6 @@
 var githubScm = require('../../../src/scm/github.js');
 var should = require('should');
-var nconf = require('../../src/common/nconf');
+var nconf = require('../../../src/common/nconf');
 
 //this is just simple integration testing
 describe('github', function () {
