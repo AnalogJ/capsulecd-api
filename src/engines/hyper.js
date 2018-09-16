@@ -29,6 +29,7 @@ module.exports = {
     start: function(project_data,event){
         var project = project_data.project;
         var token = project_data.token;
+        var username = project_data.username;
 
         var date_prefix = new Date().toISOString()
             .replace(/T/, '-')      // replace T with a space
@@ -66,6 +67,7 @@ module.exports = {
         createContainerOpts.Env.push("CAPSULE_ENGINE_VERSION_BUMP_TYPE=" + (event.body.versionIncr || 'patch'));
 
         //access token is unique for each user
+        createContainerOpts.Env.push(`CAPSULE_SCM_${event.path.serviceType.toUpperCase()}_USERNAME=${username}`);
         createContainerOpts.Env.push(`CAPSULE_SCM_${event.path.serviceType.toUpperCase()}_ACCESS_TOKEN=${token}`);
 
         //create a new container on Hyper

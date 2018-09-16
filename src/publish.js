@@ -45,7 +45,7 @@ function findProject(auth, serviceType, orgId, repoId){
         return db_deferred.resolve(data.Items[0]);
     });
     return q.spread([db_deferred.promise, scm.refreshAccessToken(auth)], function(projectData, authData){
-            return {project: projectData, token: authData.AccessToken}
+            return {project: projectData, token: authData.AccessToken, username: auth.Username}
         })
 }
 
