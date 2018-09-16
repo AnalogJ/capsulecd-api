@@ -237,7 +237,7 @@ var bitbucketScm = {
         return bitbucketClientPromise
             .then(function(bitbucket_client){
                 var deferred = q.defer();
-                bitbucket_client.repositories.listPullRequests({repo_slug:repoId, state: 'OPEN', username: orgId}, function(err, data){
+                bitbucket_client.repositories.listPullRequests({repo_slug:repoId, page: page, state: 'OPEN', username: orgId}, function(err, data){
                     if (err) return deferred.reject(err);
 
                     //transform
