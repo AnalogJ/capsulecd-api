@@ -12,7 +12,7 @@ dependencies:
   override:
     - npm install -g serverless
     - npm install
-    - npm ls
+    - npm ls || true
 
 test:
   override:
