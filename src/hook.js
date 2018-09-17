@@ -87,7 +87,7 @@ module.exports.index = function (event, context, cb) {
 
             var scmClientPromise = scm.getClient({
                 AccessToken: user.AccessToken ? security.decrypt(user.AccessToken) : '',
-                RefreshToken: user.AccessToken ? security.decrypt(user.RefreshToken) : ''
+                RefreshToken: user.RefreshToken ? security.decrypt(user.RefreshToken) : ''
             })
 
             return scm.getRepoPullrequest(scmClientPromise, event.path.orgId, event.path.repoId, pr_number)
