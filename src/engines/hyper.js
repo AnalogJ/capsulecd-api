@@ -4,6 +4,7 @@ var security = require('../common/security');
 var Hyper = require('hyper.js');
 var aws4 = require('hyper-aws4');
 var url = require('url');
+var nconf = require('../common/nconf');
 
 function cleanLogs(docker_logs){
     //https://github.com/docker/docker/issues/7375
@@ -28,6 +29,7 @@ module.exports = {
     start: function(project_data,event){
         var project = project_data.project;
         var token = project_data.token;
+        var username = project_data.username;
 
         var date_prefix = new Date().toISOString()
             .replace(/T/, '-')      // replace T with a space
@@ -65,7 +67,8 @@ module.exports = {
         createContainerOpts.Env.push("CAPSULE_ENGINE_VERSION_BUMP_TYPE=" + (event.body.versionIncr || 'patch'));
 
         //access token is unique for each user
-        createContainerOpts.Env.push("CAPSULE_SCM_GITHUB_ACCESS_TOKEN="+token);
+        createContainerOpts.Env.push(`CAPSULE_SCM_${event.path.serviceType.toUpperCase()}_USERNAME=${username}`);
+        createContainerOpts.Env.push(`CAPSULE_SCM_${event.path.serviceType.toUpperCase()}_ACCESS_TOKEN=${token}`);
 
         //create a new container on Hyper
         var hyper = new Hyper();
@@ -207,8 +210,8 @@ module.exports = {
             url: request_url,
             method: 'GET',
             credential: {
-                accessKey: process.env.HYPER_ACCESS_KEY,
-                secretKey:  process.env.HYPER_SECRET_KEY
+                accessKey: nconf.get('HYPER_ACCESS_KEY'),
+                secretKey:  nconf.get('HYPER_SECRET_KEY')
             },
             headers: {},
             body: ''

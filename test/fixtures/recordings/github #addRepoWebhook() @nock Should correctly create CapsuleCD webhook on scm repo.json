@@ -1,0 +1,98 @@
+[
+    {
+        "scope": "https://api.github.com:443",
+        "method": "post",
+        "path": "/repos/AnalogJ/npm_analogj_test/hooks?access_token=placeholder_access_token",
+        "body": {
+            "config": {
+                "url": "https://api.capsulecd.com/beta/hook/github/AnalogJ/npm_analogj_test",
+                "content_type": "json"
+            },
+            "events": [
+                "pull_request"
+            ],
+            "name": "web"
+        },
+        "status": 201,
+        "response": {
+            "type": "Repository",
+            "id": 51055618,
+            "name": "web",
+            "active": true,
+            "events": [
+                "pull_request"
+            ],
+            "config": {
+                "content_type": "json",
+                "url": "https://api.capsulecd.com/beta/hook/github/AnalogJ/npm_analogj_test",
+                "insecure_ssl": "0"
+            },
+            "updated_at": "2018-09-16T17:50:18Z",
+            "created_at": "2018-09-16T17:50:18Z",
+            "url": "https://api.github.com/repos/AnalogJ/npm_analogj_test/hooks/51055618",
+            "test_url": "https://api.github.com/repos/AnalogJ/npm_analogj_test/hooks/51055618/test",
+            "ping_url": "https://api.github.com/repos/AnalogJ/npm_analogj_test/hooks/51055618/pings",
+            "last_response": {
+                "code": null,
+                "status": "unused",
+                "message": null
+            }
+        },
+        "rawHeaders": [
+            "Server",
+            "GitHub.com",
+            "Date",
+            "Sun, 16 Sep 2018 17:50:18 GMT",
+            "Content-Type",
+            "application/json; charset=utf-8",
+            "Content-Length",
+            "603",
+            "Connection",
+            "close",
+            "Status",
+            "201 Created",
+            "X-RateLimit-Limit",
+            "5000",
+            "X-RateLimit-Remaining",
+            "4998",
+            "X-RateLimit-Reset",
+            "1537123644",
+            "Cache-Control",
+            "private, max-age=60, s-maxage=60",
+            "Vary",
+            "Accept, Authorization, Cookie, X-GitHub-OTP",
+            "ETag",
+            "\"a9ea972f9aa3ad5a7061fc3cd9467597\"",
+            "X-OAuth-Scopes",
+            "repo, user:email, write:repo_hook",
+            "X-Accepted-OAuth-Scopes",
+            "admin:repo_hook, public_repo, repo, write:repo_hook",
+            "X-OAuth-Client-Id",
+            "ac97167cd722170814b8",
+            "Location",
+            "https://api.github.com/repos/AnalogJ/npm_analogj_test/hooks/51055618",
+            "X-GitHub-Media-Type",
+            "github.v3; format=json",
+            "Access-Control-Expose-Headers",
+            "ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+            "Access-Control-Allow-Origin",
+            "*",
+            "Strict-Transport-Security",
+            "max-age=31536000; includeSubdomains; preload",
+            "X-Frame-Options",
+            "deny",
+            "X-Content-Type-Options",
+            "nosniff",
+            "X-XSS-Protection",
+            "1; mode=block",
+            "Referrer-Policy",
+            "origin-when-cross-origin, strict-origin-when-cross-origin",
+            "Content-Security-Policy",
+            "default-src 'none'",
+            "X-Runtime-rack",
+            "0.063787",
+            "X-GitHub-Request-Id",
+            "D830:1FE2:2DEDE6B:553E072:5B9E97D9"
+        ]
+    }
+]

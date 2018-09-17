@@ -1,9 +1,10 @@
-require('dotenv').config();
+var nconf = require('./common/nconf');
 var security = require('./common/security');
 var Constants = require('./common/constants');
 var Helpers = require('./common/helpers');
-//node-github client setup
-var GitHubApi = require("github");
+var githubScm = require('./scm/github')
+var bitbucketScm = require('./scm/bitbucket')
+
 var q = require('q');
 
 var AWS = require("aws-sdk");
@@ -20,7 +21,7 @@ module.exports.index = function(event, context, cb){
                 if(!event.path || !event.path.serviceType){
                     return findAllProject(auth, event)
                 }
-                else if(event.path.serviceType != 'github'){
+                else if(event.path.serviceType != 'github' && event.path.serviceType != 'bitbucket'){
                     throw new Error('Service not supported');
                 }
                 else if(!event.path.orgId || !event.path.repoId){
@@ -92,9 +93,17 @@ function findOneProject(auth, serviceType, orgId, repoId, event){
     return db_deferred.promise
 }
 function createProject(auth, serviceType, orgId, repoId, event){
-    var github = new GitHubApi({
-        version: "3.0.0"
-    });
+    var scm;
+    switch(serviceType) {
+        case 'github':
+            scm = githubScm;
+            break;
+        case 'bitbucket':
+            scm = bitbucketScm;
+            break;
+        default:
+            return cb('Service not supported', null);
+    }
 
     var entry = {
         "ServiceType": serviceType,
@@ -124,52 +133,14 @@ function createProject(auth, serviceType, orgId, repoId, event){
     return db_deferred.promise
         .then(function(data){
 
-            //authenticate and retrieve user data.
-            github.authenticate({
-                type: "oauth",
-                token: auth.AccessToken
-            });
-
-            var deferred_hook = q.defer();
-            github.repos.createHook({
-                "user":orgId,
-                "repo":repoId,
-                "name":"web",
-                "config": {
-                    "url": Constants.lambda_endpoint + '/hook/github/' + orgId + '/' + repoId,
-                    "content_type": "json"
-                },
-                "events":["pull_request"]
-            }, function(err, hook_data){
-                if (err) return deferred_hook.reject(err);
-
-                //after creating the hook, return the database data.
-                return deferred_hook.resolve(data);
-            });
-            return deferred_hook.promise
+            var scmClientPromise = scm.getClient(auth);
+            return q.all([scm.addRepoCollaborator(scmClientPromise, orgId, repoId), scm.addRepoWebhook(scmClientPromise, orgId, repoId)])
         })
         .then(function(){
-            //authenticate and retrieve user data.
-            github.authenticate({
-                type: "oauth",
-                token: auth.AccessToken
-            });
 
-            //TODO: does CapsuleCD need to be a collaborator anymore?
-            var deferred_collab = q.defer();
-            github.repos.addCollaborator({
-                "user":orgId,
-                "repo":repoId,
-                "collabuser":"CapsuleCD"
-            }, function(err, hook_data){
-                if (err) return deferred_collab.reject(err);
-
-                //after creating the hook, return the database data.
-                return deferred_collab.resolve(hook_data);
-            });
-            return deferred_collab.promise
-
+            return {}
         })
+
 }
 function updateProject(auth, serviceType, orgId, repoId, event){
 

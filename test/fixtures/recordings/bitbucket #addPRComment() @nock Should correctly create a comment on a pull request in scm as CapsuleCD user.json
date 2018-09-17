@@ -1,0 +1,58 @@
+[
+    {
+        "scope": "https://api.bitbucket.org:443",
+        "method": "POST",
+        "path": "/2.0/repositories/sparktree/gem_analogj_test/pullrequests/3/comments",
+        "body": {
+            "content": {
+                "raw": "this is a test comment [body](http://www.google.com)"
+            }
+        },
+        "status": 201,
+        "response": [
+            "1f8b0800000000000003bd54db8ed33010fd15cbbc80686a3bd976d3a8db07964fe08da2c88927ada96307db21ac56fd773469baed721548f036b23d73ce9c39e3476ab43d045a90471ac03463b0f78001ddc7d8858231d9e979a563d5d7078873e7772c9d73e6a1734147e73504163ae90fd103b01db4a5b4d2b8ddc7324288aceb8df1f0a9871003cb58edda166c0cec762978769b737a9c21546b7e88fd1cf73730c9154ec9946e9a17135c72414338050622285a90469a003342af588e3ce24307a8c1f5f98c508d39d98cfc6fd9fe8d48f48862441dcdd82b8eabec7c466a0f328222ce1a6d810c3aeec99bb301462ab5b3116c1ca5f27240a5e25e07a2039104eb904978f2be72eae1c34bf452c1d8300cf39d733b03f3dab5afe88cd056fa43df61058c941b2c9e4e86a0eb6ef393c26b49948c32d121812f11bc95264133df6d69f43d6c29411fdf6d471b7f07bda5c483b9db52eb1a678c1bb674834cd74c6ed6acdb2087b3073c58051ed4a9f39336a5b34839e5224ff82a11cb77e2b6487991aee699c844b678cd79c13996e903f851280cac6c47ad6bd985de40adf085d2a133f2a13c5fde9f2eefdfe2a5ac6bd7db588ed6a38b6a0579bac82115550e69ae9659a5e4aac2977fbdca482cb00ba53fd8c8a72436aa233fcb284fdd7efb8b3cdfe4a9ab0b283ba5b2c993d3fa8ddaa186fda9fdc774292ac8459580e2597223329554d99227375234f5a211b292f971a4d2770a4dfcab41a53c13f96550e7795fed7c39d918e51d199cff91e3570d8de57f3a050000"
+        ],
+        "rawHeaders": [
+            "Server",
+            "nginx",
+            "Vary",
+            "Authorization",
+            "Vary",
+            "Accept-Encoding",
+            "Content-Type",
+            "application/json; charset=utf-8",
+            "X-OAuth-Scopes",
+            "issue:write, pullrequest:write",
+            "Content-Encoding",
+            "gzip",
+            "Strict-Transport-Security",
+            "max-age=31536000; includeSubDomains; preload",
+            "Date",
+            "Sun, 16 Sep 2018 17:20:29 GMT",
+            "Location",
+            "https://api.bitbucket.org/2.0/repositories/sparktree/gem_analogj_test/pullrequests/3/comments/76103780",
+            "X-Served-By",
+            "app-139",
+            "ETag",
+            "\"gz[f52e2db8529a989ad8d26490602dadbe]\"",
+            "X-Static-Version",
+            "54a54946c342",
+            "X-Content-Type-Options",
+            "nosniff",
+            "X-Accepted-OAuth-Scopes",
+            "pullrequest",
+            "X-Credential-Type",
+            "apppassword",
+            "X-Render-Time",
+            "0.197621107101",
+            "Connection",
+            "close",
+            "X-Request-Count",
+            "317",
+            "X-Frame-Options",
+            "SAMEORIGIN",
+            "X-Version",
+            "54a54946c342"
+        ]
+    }
+]

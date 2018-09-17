@@ -1,0 +1,146 @@
+[
+    {
+        "scope": "https://bitbucket.org:443",
+        "method": "POST",
+        "path": "/site/oauth2/access_token",
+        "body": "grant_type=refresh_token&client_id=PLACEHOLDER_BITBUCKET_APP_CLIENT_KEY&client_secret=PLACEHOLDER_BITBUCKET_APP_CLIENT_SECRET&refresh_token=placeholder_refresh_token",
+        "status": 200,
+        "response": {
+            "access_token": "placeholder_access_token",
+            "scopes": "webhook pullrequest:write project team:write account",
+            "expires_in": 7200,
+            "refresh_token": "placeholder_refresh_token",
+            "token_type": "bearer"
+        },
+        "rawHeaders": [
+            "Server",
+            "nginx",
+            "Vary",
+            "Accept-Language, Cookie",
+            "Cache-Control",
+            "no-cache, no-store, must-revalidate, max-age=0",
+            "Content-Type",
+            "application/json",
+            "Strict-Transport-Security",
+            "max-age=31536000; includeSubDomains; preload",
+            "Date",
+            "Sun, 16 Sep 2018 18:10:01 GMT",
+            "X-Served-By",
+            "app-164",
+            "Expires",
+            "Sun, 16 Sep 2018 18:10:01 GMT",
+            "Content-Language",
+            "en",
+            "X-Static-Version",
+            "54a54946c342",
+            "ETag",
+            "\"e48d98455f19759bcb836038f06f3a38\"",
+            "X-Content-Type-Options",
+            "nosniff",
+            "X-Render-Time",
+            "0.0203080177307",
+            "Connection",
+            "close",
+            "Last-Modified",
+            "Sun, 16 Sep 2018 18:10:01 GMT",
+            "X-Version",
+            "54a54946c342",
+            "X-Request-Count",
+            "615",
+            "X-Frame-Options",
+            "SAMEORIGIN",
+            "Content-Length",
+            "253"
+        ]
+    },
+    {
+        "scope": "https://api.bitbucket.org:443",
+        "method": "POST",
+        "path": "/2.0/repositories/sparktree/gem_analogj_test/hooks?access_token=placeholder_access_token",
+        "body": {
+            "description": "CapsuleCD beta",
+            "url": "https://api.capsulecd.com/beta/hook/bitbucket/sparktree/gem_analogj_test",
+            "active": true,
+            "events": [
+                "pullrequest:created"
+            ]
+        },
+        "status": 201,
+        "response": {
+            "read_only": null,
+            "description": "CapsuleCD beta",
+            "links": {
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/sparktree/gem_analogj_test/hooks/%7B74f0b904-3ad1-4d4c-a1d4-662729aaec18%7D"
+                }
+            },
+            "url": "https://api.capsulecd.com/beta/hook/bitbucket/sparktree/gem_analogj_test",
+            "created_at": "2018-09-16T18:10:02.407854Z",
+            "skip_cert_verification": false,
+            "source": null,
+            "active": true,
+            "subject": {
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/sparktree/gem_analogj_test"
+                    },
+                    "html": {
+                        "href": "https://bitbucket.org/sparktree/gem_analogj_test"
+                    },
+                    "avatar": {
+                        "href": "https://bytebucket.org/ravatar/%7Be2b73ae6-6c63-461c-bd95-6531d077205f%7D?ts=default"
+                    }
+                },
+                "type": "repository",
+                "name": "gem_analogj_test",
+                "full_name": "sparktree/gem_analogj_test",
+                "uuid": "{e2b73ae6-6c63-461c-bd95-6531d077205f}"
+            },
+            "type": "webhook_subscription",
+            "events": [
+                "pullrequest:created"
+            ],
+            "uuid": "{74f0b904-3ad1-4d4c-a1d4-662729aaec18}"
+        },
+        "rawHeaders": [
+            "Server",
+            "nginx",
+            "Vary",
+            "Authorization",
+            "Content-Type",
+            "application/json; charset=utf-8",
+            "X-OAuth-Scopes",
+            "webhook, pullrequest:write, project, team:write, account",
+            "Strict-Transport-Security",
+            "max-age=31536000; includeSubDomains; preload",
+            "Date",
+            "Sun, 16 Sep 2018 18:10:02 GMT",
+            "Location",
+            "https://api.bitbucket.org/2.0/repositories/sparktree/gem_analogj_test/hooks/%7B74f0b904-3ad1-4d4c-a1d4-662729aaec18%7D",
+            "X-Served-By",
+            "app-141",
+            "ETag",
+            "\"36add011d32ef13d5319934033615377\"",
+            "X-Static-Version",
+            "54a54946c342",
+            "X-Content-Type-Options",
+            "nosniff",
+            "X-Accepted-OAuth-Scopes",
+            "webhook",
+            "X-Credential-Type",
+            "oauth2",
+            "X-Render-Time",
+            "0.208659887314",
+            "Connection",
+            "close",
+            "X-Request-Count",
+            "166",
+            "X-Frame-Options",
+            "SAMEORIGIN",
+            "X-Version",
+            "54a54946c342",
+            "Content-Length",
+            "949"
+        ]
+    }
+]

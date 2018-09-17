@@ -1,8 +1,10 @@
-require('dotenv').config();
+var nconf = require('./common/nconf');
 var security = require('./common/security');
 var Helpers = require('./common/helpers');
 var q = require('q');
 var Constants = require('./common/constants');
+var githubScm = require('./scm/github')
+var bitbucketScm = require('./scm/bitbucket')
 
 var AWS = require("aws-sdk");
 AWS.config.apiVersions = {
@@ -12,6 +14,20 @@ AWS.config.apiVersions = {
 var docClient = new AWS.DynamoDB.DocumentClient();
 
 function findProject(auth, serviceType, orgId, repoId){
+
+    var scm;
+    switch(serviceType) {
+        case 'github':
+            scm = githubScm;
+            break;
+        case 'bitbucket':
+            scm = bitbucketScm;
+            break;
+        default:
+            return q.reject('Service not supported');
+    }
+
+
     var params = {
         TableName : Constants.projects_table,
         KeyConditionExpression: "ServiceType = :serviceType and Id = :id",
@@ -26,9 +42,11 @@ function findProject(auth, serviceType, orgId, repoId){
     docClient.query(params, function(err, data) {
         if (err)  return db_deferred.reject(err);
 
-        return db_deferred.resolve({project:data.Items[0], token: auth.AccessToken});
+        return db_deferred.resolve(data.Items[0]);
     });
-    return db_deferred.promise
+    return q.spread([db_deferred.promise, scm.refreshAccessToken(auth)], function(projectData, authData){
+            return {project: projectData, token: authData.AccessToken, username: auth.Username}
+        })
 }
 
 function updateProjectStatus(auth, serviceType, orgId, repoId, prNumb, containerId){

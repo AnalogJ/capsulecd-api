@@ -1,39 +1,34 @@
-require('dotenv').config();
+var nconf = require('./common/nconf');
 var q = require('q');
 var Constants = require('./common/constants');
 var Helpers = require('./common/helpers');
 var security = require('./common/security');
-var OAuth = require('oauth');
-var OAuth2 = OAuth.OAuth2;
-var github_client = new OAuth2(
-    process.env.GITHUB_APP_CLIENT_KEY,
-    process.env.GITHUB_APP_CLIENT_SECRET,
-    'https://github.com',
-    '/login/oauth/authorize',
-    '/login/oauth/access_token'
-);
 
-//node-github client setup
-var GitHubApi = require("github");
+var githubScm = require('./scm/github')
+var bitbucketScm = require('./scm/bitbucket')
 
 //Dynamodb client setup
 var AWS = require("aws-sdk");
-var docClient = new AWS.DynamoDB.DocumentClient();
+var docClient = new AWS.DynamoDB.DocumentClient({
+    convertEmptyValues: true
+});
 
 
 module.exports = {
     connect: function(event, context, cb) {
-
-        if(event.path.serviceType != 'github'){
-            return cb('Service not supported', null);
+        var scm;
+        switch(event.path.serviceType) {
+            case 'github':
+                scm = githubScm
+                break;
+            case 'bitbucket':
+                scm = bitbucketScm
+                break;
+            default:
+                return cb('Service not supported', null);
         }
 
-        var url = github_client.getAuthorizeUrl({
-            'redirect_uri': Constants.web_endpoint + '/auth/callback/github', //Constants.lambda_endpoint + '/callback/github',
-            'scope': 'user:email,repo,write:repo_hook'
-        });
-
-        var response = {url:url};
+        var response = {url:scm.authorizeUrl()};
 
         return cb(null, response)
         //var error = new Error('testing error response');
@@ -41,74 +36,38 @@ module.exports = {
         //return Helpers.errorHandler(cb)(error);
     },
     callback: function(event, context, cb) {
-        var github = new GitHubApi({
-            version: "3.0.0"
-        });
-        console.log(event)
 
-        if(event.path.serviceType != 'github'){
-            throw 'Service not supported'
+        var scm;
+        switch(event.path.serviceType) {
+            case 'github':
+                scm = githubScm
+                break;
+            case 'bitbucket':
+                scm = bitbucketScm
+                break;
+            default:
+                return cb('Service not supported', null);
         }
 
-        //trade for access token
-        var deferred = q.defer();
-        github_client.getOAuthAccessToken(
-            event.query.code,
-            {},
-            function (err, access_token, refresh_token, results) {
-                if (err) return deferred.reject(err);
-                if(results.error) return deferred.reject(new Error(JSON.stringify(results)));
 
-                var oauth_data = {'access_token': access_token, 'raw': results}
-                return deferred.resolve(oauth_data);
-            });
+        return scm.swapOAuthToken(event.query.code)
+            .then(function(entry){
+                console.log("[DEBUG]ENTRY", entry)
 
-        return deferred.promise
-            .then(function(oauth_data){
-                console.log("OAUTH_DATA", oauth_data)
+                var unencrypted_accessToken = entry.AccessToken;
+                var unencrypted_refreshToken = entry.RefreshToken;
 
-                //authenticate and retrieve user data.
-                github.authenticate({
-                    type: "oauth",
-                    token: oauth_data.access_token
-                });
+                if(unencrypted_accessToken){
+                    entry.AccessToken = security.encrypt(unencrypted_accessToken)
+                }
 
-                var deferred_user = q.defer();
-                github.user.get({}, function(err, data){
-                    if (err) return deferred_user.reject(err);
-                    return deferred_user.resolve({user_profile:data, oauth_data:oauth_data});
-                });
-                return deferred_user.promise
-            })
-            .then(function(user_data){
-                console.log("USER_DATA", user_data)
-                //store in dynamo db.
-                //The following properties are stored in the User table:
-                //ServiceType
-                //ServiceId
-                //Username
-                //Name
-                //Email
-                //Company
-                //Blog
-                //Location
-                //AccessToken
+                if(unencrypted_refreshToken){
+                    entry.RefreshToken = security.encrypt(unencrypted_refreshToken)
+                }
 
-                //The table is keyed off of the ServiceType and Username.
-                var entry = {
-                    "ServiceType": 'github',
-                    "ServiceId": '' + user_data.user_profile.id,
-                    "Username": user_data.user_profile.login,
-                    "Name": user_data.user_profile.name,
-                    "Email": user_data.user_profile.email,
-                    "Company": user_data.user_profile.company,
-                    "Blog": user_data.user_profile.blog,
-                    "Location": user_data.user_profile.location,
-                    "AccessToken": security.encrypt(user_data.oauth_data.access_token),
-                    "AvatarUrl": user_data.user_profile.avatar_url
-                };
+
                 var params = {
-                    TableName:Constants.users_table,
+                    TableName: Constants.users_table,
                     Item: entry
                 };
 
@@ -116,11 +75,12 @@ module.exports = {
                 docClient.put(params, function(err, data) {
                     if (err)  return db_deferred.reject(err);
                     return db_deferred.resolve({
-                        "ServiceType": 'github',
-                        "ServiceId": user_data.user_profile.id,
-                        "Username": user_data.user_profile.login,
-                        "Name": user_data.user_profile.name,
-                        "AccessToken": user_data.oauth_data.access_token
+                        "ServiceType": event.path.serviceType,
+                        "ServiceId": entry.ServiceId,
+                        "Username": entry.Username,
+                        "Name": entry.Name,
+                        "AccessToken": unencrypted_accessToken,
+                        "RefreshToken": unencrypted_refreshToken
                     });
                 });
                 return db_deferred.promise

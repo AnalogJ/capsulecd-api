@@ -1,0 +1,144 @@
+[
+    {
+        "scope": "https://bitbucket.org:443",
+        "method": "POST",
+        "path": "/site/oauth2/access_token",
+        "body": "grant_type=refresh_token&client_id=PLACEHOLDER_BITBUCKET_APP_CLIENT_KEY&client_secret=PLACEHOLDER_BITBUCKET_APP_CLIENT_SECRET&refresh_token=placeholder_refresh_token",
+        "status": 200,
+        "response": {
+            "access_token": "placeholder_access_token",
+            "scopes": "webhook pullrequest:write project account",
+            "expires_in": 7200,
+            "refresh_token": "placeholder_refresh_token",
+            "token_type": "bearer"
+        },
+        "rawHeaders": [
+            "Server",
+            "nginx",
+            "Vary",
+            "Accept-Language, Cookie",
+            "Cache-Control",
+            "no-cache, no-store, must-revalidate, max-age=0",
+            "Content-Type",
+            "application/json",
+            "Strict-Transport-Security",
+            "max-age=31536000; includeSubDomains; preload",
+            "Date",
+            "Sun, 16 Sep 2018 07:30:39 GMT",
+            "X-Served-By",
+            "app-163",
+            "Expires",
+            "Sun, 16 Sep 2018 07:30:39 GMT",
+            "Content-Language",
+            "en",
+            "X-Static-Version",
+            "54a54946c342",
+            "ETag",
+            "\"1367926ccf82cc550e9c73611fc4df36\"",
+            "X-Content-Type-Options",
+            "nosniff",
+            "X-Render-Time",
+            "0.0158708095551",
+            "Connection",
+            "close",
+            "Last-Modified",
+            "Sun, 16 Sep 2018 07:30:39 GMT",
+            "X-Version",
+            "54a54946c342",
+            "X-Request-Count",
+            "673",
+            "X-Frame-Options",
+            "SAMEORIGIN",
+            "Content-Length",
+            "242"
+        ]
+    },
+    {
+        "scope": "https://api.bitbucket.org:443",
+        "method": "GET",
+        "path": "/2.0/user?access_token=placeholder_access_token",
+        "body": "",
+        "status": 200,
+        "response": {
+            "username": "sparktree",
+            "website": "http://www.thesparktree.com/",
+            "display_name": "SparkTree Inc NA",
+            "account_id": "557058:5c205029-ab43-43d7-988c-61b5fddf59ea",
+            "links": {
+                "hooks": {
+                    "href": "https://api.bitbucket.org/2.0/users/sparktree/hooks"
+                },
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/users/sparktree"
+                },
+                "repositories": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/sparktree"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/sparktree/"
+                },
+                "followers": {
+                    "href": "https://api.bitbucket.org/2.0/users/sparktree/followers"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/account/sparktree/avatar/"
+                },
+                "following": {
+                    "href": "https://api.bitbucket.org/2.0/users/sparktree/following"
+                },
+                "snippets": {
+                    "href": "https://api.bitbucket.org/2.0/snippets/sparktree"
+                }
+            },
+            "created_on": "2012-07-31T03:35:13.316223+00:00",
+            "is_staff": false,
+            "location": null,
+            "type": "user",
+            "uuid": "{7db0d153-ce95-4a66-acfe-cea85d4f99c3}"
+        },
+        "rawHeaders": [
+            "Server",
+            "nginx",
+            "Vary",
+            "Authorization",
+            "Cache-Control",
+            "max-age=900",
+            "Content-Type",
+            "application/json; charset=utf-8",
+            "X-OAuth-Scopes",
+            "webhook, pullrequest:write, project, account",
+            "Strict-Transport-Security",
+            "max-age=31536000; includeSubDomains; preload",
+            "Date",
+            "Sun, 16 Sep 2018 07:30:39 GMT",
+            "X-Served-By",
+            "app-140",
+            "Accept-Ranges",
+            "bytes",
+            "X-Static-Version",
+            "54a54946c342",
+            "ETag",
+            "\"b0b78519f0e5250e885e407efa583f39\"",
+            "X-Content-Type-Options",
+            "nosniff",
+            "X-Render-Time",
+            "0.0145518779755",
+            "X-Credential-Type",
+            "oauth2",
+            "X-Accepted-OAuth-Scopes",
+            "account",
+            "Connection",
+            "close",
+            "X-Version",
+            "54a54946c342",
+            "X-Request-Count",
+            "634",
+            "X-Frame-Options",
+            "SAMEORIGIN",
+            "X-Cache-Info",
+            "caching",
+            "Content-Length",
+            "915"
+        ]
+    }
+]
