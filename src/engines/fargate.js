@@ -69,7 +69,7 @@ function registerTaskDefinition(project_data,event){
         volumes: [],
         tags: [
             {
-                key: "CAPSULECD_PACKAGE_TYPE",
+                key: "CAPSULE_PACKAGE_TYPE",
                 value: project.Settings.packageType
             }
         ],
