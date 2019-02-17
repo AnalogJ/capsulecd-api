@@ -56,16 +56,16 @@ function registerTaskDefinition(project_data,event){
                     project.Settings.packageType
                 ],
                 environment: [],
-                cpu: 0,
                 essential: true,
                 image: project.Settings.dockerImage,
-                memory: 512
             }
         ],
 
         family: `capsulecd-${project.Settings.packageType}`,
         networkMode: "awsvpc",
         requiresCompatibilities: ["FARGATE"],
+        cpu: 0,
+        memory: 512,
         volumes: [],
         tags: [
             {
