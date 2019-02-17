@@ -30,6 +30,9 @@ provider:
     - Effect: Allow
       Action: dynamodb:*
       Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:*/${opt:stage,self:provider.stage}-${self:service}-*
+    - Effect: Allow
+      Action: ecs:*
+      Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:*/${opt:stage,self:provider.stage}-${self:service}-*
   environment:
     # general
     DOMAIN: api.capsulecd.com
