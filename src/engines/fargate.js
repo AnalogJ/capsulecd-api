@@ -47,6 +47,7 @@ function registerTaskDefinition(project_data,event){
     var params = {
         containerDefinitions: [
             {
+                name: `tmpl-capsulecd--${project.Settings.packageType}`,
                 //command must be overriden by the taskRun command
                 command: [
                     "capsulecd",
