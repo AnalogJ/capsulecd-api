@@ -92,7 +92,7 @@ module.exports.index = function(event, context, cb) {
         .then(function(decoded){
             return findProject(decoded, event.path.serviceType, event.path.orgId, event.path.repoId)
                 .then(function(project_data){
-                    return require('./engines/hyper').start(project_data, event);
+                    return require('./engines/fargate').start(project_data, event);
                     // return require('../engines/dockercloud')(project_data, event)
                 })
                 .then(function(containerId){

@@ -2,7 +2,7 @@
 var nconf = require('./common/nconf');
 
 var Helpers = require('./common/helpers');
-var engine = require('./engines/hyper')
+var engine = require('./engines/fargate')
 module.exports.index = (event, context, callback) => {
     return engine.cleanupContainers()
         .then(function(){
