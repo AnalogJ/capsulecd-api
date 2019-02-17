@@ -163,7 +163,7 @@ function runTaskDefinition(taskDefData,project_data,event) {
                 value: (event.body.versionIncr || 'patch')
             }
         ],
-        propagateTags: true,
+        propagateTags: 'TASK_DEFINITION',
         overrides: {
             containerOverrides: [
                 {
