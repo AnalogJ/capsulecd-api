@@ -64,8 +64,8 @@ function registerTaskDefinition(project_data,event){
         family: `capsulecd-${project.Settings.packageType}`,
         networkMode: "awsvpc",
         requiresCompatibilities: ["FARGATE"],
-        cpu: 0,
-        memory: 512,
+        cpu: "512",
+        memory: "1024",
         volumes: [],
         tags: [
             {
