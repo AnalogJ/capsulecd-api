@@ -54,12 +54,6 @@ function registerTaskDefinition(project_data,event){
                     "--package_type",
                     project.Settings.packageType
                 ],
-                tags: [
-                    {
-                        key: "CAPSULECD_PACKAGE_TYPE",
-                        value: project.Settings.packageType
-                    }
-                ],
                 environment: [],
                 cpu: 0,
                 essential: true,
@@ -70,8 +64,13 @@ function registerTaskDefinition(project_data,event){
 
         family: `capsulecd-${project.Settings.packageType}`,
         requiresCompatibilities: ["FARGATE"],
-        taskRoleArn: "",
-        volumes: []
+        volumes: [],
+        tags: [
+            {
+                key: "CAPSULECD_PACKAGE_TYPE",
+                value: project.Settings.packageType
+            }
+        ],
     };
     ecs.registerTaskDefinition(params, function(err, data) {
         if (err)  return register_deferred.reject(err);
