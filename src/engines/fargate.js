@@ -58,6 +58,8 @@ function registerTaskDefinition(project_data,event){
                 environment: [],
                 essential: true,
                 image: project.Settings.dockerImage,
+                cpu: 512,
+                memory: 1024
             }
         ],
 
