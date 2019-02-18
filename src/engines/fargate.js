@@ -212,10 +212,7 @@ module.exports = {
             .then(function(runTaskData){
                 //find the taskId (which can be used to determine the cloudwatch stream)
                 //taskArn: 'arn:aws:ecs:us-east-1:XXXXXX:task/default/d5313978aXXXXXXX9467699979e2',
-console.log(runTaskData.tasks[0].taskArn)
-console.log(runTaskData.tasks[0].taskArn.split(':').pop())
                 var taskId = runTaskData.tasks[0].taskArn.split(':').pop().split('/').pop();
-console.log(taskId)
                 return {
                     streamId: `${project_data.project.Settings.packageType}/capsulecd/${taskId}`,
                     taskId: taskId
@@ -230,14 +227,18 @@ console.log(taskId)
 
     logs: function(project_data, event){
         var deferred = q.defer();
+        var taskId = project_data.project.Pending[event.path.prNumber]
 
-
-console.log(project_data) //TODO: remove after debugging.
-console.log(event)
+        //TODO: get updated status for deployment.
+        var logsResponse = {
+            State: 'PENDING',
+            Lines: [],
+            Next: null
+        }
 
         var params = {
             logGroupName: `/aws/ecs/capsulecd-api-${nconf.get('STAGE')}-tasks`,
-            logStreamName: 'STRING_VALUE', /* required */
+            logStreamName: `${project_data.project.Settings.packageType}/capsulecd/${taskId}`, /* required */
             // endTime: 0,
             // limit: 0,
             // nextToken: 'STRING_VALUE',
@@ -247,11 +248,17 @@ console.log(event)
         cloudwatchlogs.getLogEvents(params, function(err, data) {
             if (err) return deferred.reject(err, err.stack); // an error occurred
             console.log(data);           // successful response
+
+            logsResponse.Next = data.nextForwardToken
+            for(var ndx in data.events){
+                var event = data.events[ndx]
+
+                logsResponse.Lines.push(event.message)
+            }
+
             return deferred.resolve(data);
         });
 
-
-        //pulling logs is currently a noop in AWS Fargate
         return deferred.promise
 
 
