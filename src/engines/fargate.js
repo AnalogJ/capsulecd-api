@@ -129,30 +129,30 @@ function runTaskDefinition(taskDefData,project_data,event) {
         taskDefinition: "capsulecd-"+project.Settings.packageType,
         launchType: "FARGATE",
         tags: [
-            {
-                key: "CAPSULE_SCM",
-                value: event.path.serviceType
-            },
-            {
-                key: "CAPSULE_SCM_REPO_FULL_NAME",
-                value: project.OrgId + '/' + project.RepoId
-            },
-            {
-                key: "CAPSULE_SCM_PULL_REQUEST",
-                value: event.path.prNumber
-            },
-            {
-                key: "CAPSULE_ENGINE_VERSION_BUMP_TYPE",
-                value: (event.body.versionIncr || 'patch')
-            },
-            {
-                key: "CAPSULE_START_DATE",
-                value: new Date().toISOString()
-            },
-            {
-                key: "CAPSULE_PACKAGE_TYPE",
-                value: project.Settings.packageType
-            }
+            // {
+            //     key: "CAPSULE_SCM",
+            //     value: event.path.serviceType
+            // },
+            // {
+            //     key: "CAPSULE_SCM_REPO_FULL_NAME",
+            //     value: project.OrgId + '/' + project.RepoId
+            // },
+            // {
+            //     key: "CAPSULE_SCM_PULL_REQUEST",
+            //     value: event.path.prNumber
+            // },
+            // {
+            //     key: "CAPSULE_ENGINE_VERSION_BUMP_TYPE",
+            //     value: (event.body.versionIncr || 'patch')
+            // },
+            // {
+            //     key: "CAPSULE_START_DATE",
+            //     value: new Date().toISOString()
+            // },
+            // {
+            //     key: "CAPSULE_PACKAGE_TYPE",
+            //     value: project.Settings.packageType
+            // }
         ],
         networkConfiguration: {
             awsvpcConfiguration: {
