@@ -210,8 +210,14 @@ module.exports = {
                 return runTaskDefinition(taskDefinitionData, project_data, event)
             })
             .then(function(runTaskData){
-console.log(runTaskData) //TODO: remove this once debugging complete.
-                return runTaskData; //runTaskData.tasks[0].containers[0].containerArn
+                //find the taskId (which can be used to determine the cloudwatch stream)
+                //taskArn: 'arn:aws:ecs:us-east-1:XXXXXX:task/default/d5313978aXXXXXXX9467699979e2',
+                var taskId = runTaskData.tasks[0].taskArn.split(':').pop().split('/').pop();
+
+                return {
+                    streamId: `${project_data.project.Settings.packageType}/capsulecd/${taskId}`,
+                    taskId: taskId
+                }
             })
     },
     //TODO: add a timed task to pull the lastest image for all containers, every 1 hour?
@@ -224,7 +230,7 @@ console.log(runTaskData) //TODO: remove this once debugging complete.
         var deferred = q.defer();
 
 
-console.log(project_data) //TODO: remove after debugging. 
+console.log(project_data) //TODO: remove after debugging.
 console.log(event)
 
         var params = {

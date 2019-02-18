@@ -49,14 +49,14 @@ function findProject(auth, serviceType, orgId, repoId){
         })
 }
 
-function updateProjectStatus(auth, serviceType, orgId, repoId, prNumb, containerId){
+function updateProjectStatus(auth, serviceType, orgId, repoId, prNumb, taskData){
 
     var expressionAttributeValues = {
         ":owner": auth.Username
     };
     var updateExpression = "set Pending.#prnumb = :containerid";
     var expressionAttributeNames = {'#prnumb': prNumb};
-    expressionAttributeValues[':containerid'] = containerId;
+    expressionAttributeValues[':containerid'] = taskId;
 
     var params = {
         TableName : Constants.projects_table,
@@ -77,7 +77,7 @@ function updateProjectStatus(auth, serviceType, orgId, repoId, prNumb, container
     })
     return db_deferred.promise
         .then(function(){
-            return {}
+            return taskData
         });
 }
 
@@ -92,12 +92,13 @@ module.exports.index = function(event, context, cb) {
         .then(function(decoded){
             return findProject(decoded, event.path.serviceType, event.path.orgId, event.path.repoId)
                 .then(function(project_data){
-                    return require('./engines/fargate').start(project_data, event);
                     // return require('../engines/dockercloud')(project_data, event)
+                    return require('./engines/fargate').start(project_data, event)
                 })
-                .then(function(containerId){
-                    return updateProjectStatus(decoded, event.path.serviceType, event.path.orgId, event.path.repoId, event.path.prNumber, containerId)
+                .then(function(taskData){
+                    return updateProjectStatus(decoded, event.path.serviceType, event.path.orgId, event.path.repoId, event.path.prNumber, taskData)
                 })
+
         })
         .then(function(payload){
             //update the project so we know its currently being processed.
