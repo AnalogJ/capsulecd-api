@@ -8,6 +8,8 @@ AWS.config.apiVersions = {
 };
 var ecs = new AWS.ECS();
 
+//https://www.prodops.io/blog/deploying-fargate-services-using-cloudformation
+
 
 
 var url = require('url');
@@ -68,13 +70,7 @@ function registerTaskDefinition(project_data,event){
         requiresCompatibilities: ["FARGATE"],
         cpu: "512",
         memory: "1024",
-        volumes: [],
-        tags: [
-            {
-                key: "CAPSULE_PACKAGE_TYPE",
-                value: project.Settings.packageType
-            }
-        ],
+        volumes: []
     };
     ecs.registerTaskDefinition(params, function(err, data) {
         if (err)  return register_deferred.reject(err);
@@ -152,9 +148,12 @@ function runTaskDefinition(taskDefData,project_data,event) {
             {
                 key: "CAPSULE_START_DATE",
                 value: new Date().toISOString()
+            },
+            {
+                key: "CAPSULE_PACKAGE_TYPE",
+                value: project.Settings.packageType
             }
         ],
-        propagateTags: 'TASK_DEFINITION',
         networkConfiguration: {
             awsvpcConfiguration: {
                 subnets: [
