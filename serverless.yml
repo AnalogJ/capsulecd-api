@@ -33,6 +33,9 @@ provider:
     - Effect: Allow
       Action: ecs:*
       Resource: "*"
+    - Effect: Allow
+      Action: iam:PassRole
+      Resource: "arn:aws:iam::450541372000:role/${self:service}-${opt:stage, self:provider.stage}-ecsExecutionRole"
   environment:
     # general
     DOMAIN: api.capsulecd.com
