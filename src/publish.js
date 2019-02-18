@@ -49,7 +49,7 @@ function findProject(auth, serviceType, orgId, repoId){
         })
 }
 
-function updateProjectStatus(auth, serviceType, orgId, repoId, prNumb, taskData){
+function updateProjectStatus(auth, serviceType, orgId, repoId, prNumb){
 
     var expressionAttributeValues = {
         ":owner": auth.Username
@@ -76,9 +76,6 @@ function updateProjectStatus(auth, serviceType, orgId, repoId, prNumb, taskData)
         return db_deferred.resolve({});
     })
     return db_deferred.promise
-        .then(function(){
-            return taskData
-        });
 }
 
 
@@ -96,7 +93,10 @@ module.exports.index = function(event, context, cb) {
                     return require('./engines/fargate').start(project_data, event)
                 })
                 .then(function(taskData){
-                    return updateProjectStatus(decoded, event.path.serviceType, event.path.orgId, event.path.repoId, event.path.prNumber, taskData)
+                    return updateProjectStatus(decoded, event.path.serviceType, event.path.orgId, event.path.repoId, event.path.prNumber)
+                        .then(function(){
+                            return taskData
+                        })
                 })
 
         })
