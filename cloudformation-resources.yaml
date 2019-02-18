@@ -55,8 +55,8 @@ DynamoDBProject:
 #ExecutionRoleArn: This is the IAM role that the ECS agent/host assumes and is needed for cloudwatch logs/ECR access etc.
 EcsExecutionRole:
   Type: AWS::IAM::Role
-  RoleName: "${self:service}-${opt:stage, self:provider.stage}-ecsExecutionRole"
   Properties:
+    RoleName: "${self:service}-${opt:stage, self:provider.stage}-ecsExecutionRole"
     AssumeRolePolicyDocument:
       Statement:
       - Effect: Allow
