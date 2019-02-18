@@ -47,7 +47,7 @@ function registerTaskDefinition(project_data,event){
     var params = {
         containerDefinitions: [
             {
-                name: `tmpl-capsulecd--${project.Settings.packageType}`,
+                name: 'capsulecd',
                 //command must be overriden by the taskRun command
                 command: [
                     "capsulecd",
@@ -89,19 +89,6 @@ function runTaskDefinition(taskDefData,project_data,event) {
     var project = project_data.project;
     var token = project_data.token;
     var username = project_data.username;
-
-
-    var date_prefix = new Date().toISOString()
-        .replace(/T/, '-')      // replace T with a space
-        .replace(/\..+/, '')     // delete the dot and everything after
-        .replace(/:/g,'-');
-
-    var container_name = (date_prefix + '-' + event.path.serviceType + '-' + event.path.orgId + '-' + event.path.repoId + '-' + event.path.prNumber)
-        .toLowerCase() //all chars should be lowercase
-        .replace(/[^a-z0-9]/gmi, " ").replace(/\s+/g, "-") // makesure we match hyper.js internal regex: [a-z0-9]([-a-z0-9]*[a-z0-9])?
-        .substring(0,48)//hyper doesnt like it if the container name is too long.
-        .replace(/-$/, '') //hyper doesnt like it if the last character is a '-'
-
 
     var env = []
 
@@ -161,13 +148,17 @@ function runTaskDefinition(taskDefData,project_data,event) {
             {
                 key: "CAPSULE_ENGINE_VERSION_BUMP_TYPE",
                 value: (event.body.versionIncr || 'patch')
+            },
+            {
+                key: "CAPSULE_START_DATE",
+                value: new Date().toISOString()
             }
         ],
         propagateTags: 'TASK_DEFINITION',
         overrides: {
             containerOverrides: [
                 {
-                    name: container_name,
+                    name: 'capsulecd',
                     environment: env,
                     command: [
                         "capsulecd",
