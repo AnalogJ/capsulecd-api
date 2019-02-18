@@ -212,8 +212,10 @@ module.exports = {
             .then(function(runTaskData){
                 //find the taskId (which can be used to determine the cloudwatch stream)
                 //taskArn: 'arn:aws:ecs:us-east-1:XXXXXX:task/default/d5313978aXXXXXXX9467699979e2',
+console.log(runTaskData.tasks[0].taskArn)
+console.log(runTaskData.tasks[0].taskArn.split(':').pop())
                 var taskId = runTaskData.tasks[0].taskArn.split(':').pop().split('/').pop();
-
+console.log(taskId)
                 return {
                     streamId: `${project_data.project.Settings.packageType}/capsulecd/${taskId}`,
                     taskId: taskId
