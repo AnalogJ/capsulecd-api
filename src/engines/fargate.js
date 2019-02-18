@@ -249,6 +249,8 @@ module.exports = {
             if (err) return deferred.reject(err, err.stack); // an error occurred
             console.log(data);           // successful response
 
+
+            //if next and current are the same, set next to null (ignore)
             logsResponse.Next = data.nextForwardToken
             for(var ndx in data.events){
                 var event = data.events[ndx]
