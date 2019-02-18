@@ -76,6 +76,7 @@ function registerTaskDefinition(project_data,event){
         ],
 
         family: `capsulecd-${project.Settings.packageType}`,
+        executionRoleArn: `arn:aws:iam::450541372000:role/capsulecd-api-${nconf.get('STAGE')}-ecsExecutionRole`,
         networkMode: "awsvpc",
         requiresCompatibilities: ["FARGATE"],
         cpu: "512",
