@@ -255,7 +255,10 @@ module.exports = {
             for(var ndx in data.events){
                 var event = data.events[ndx]
 
-                logsResponse.Lines.push(event.message)
+                logsResponse.Lines.push({
+                    stream: 'stdout', //TODO: not sure how to differentiate between stdout and stderr. 
+                    line: event.message
+                })
             }
 
             return deferred.resolve(logsResponse);
