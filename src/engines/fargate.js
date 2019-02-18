@@ -4,9 +4,11 @@ var security = require('../common/security');
 var AWS = require("aws-sdk");
 AWS.config.apiVersions = {
     ecs: '2014-11-13',
+    cloudwatchlogs: '2014-03-28'
     // other service API versions
 };
 var ecs = new AWS.ECS();
+var cloudwatchlogs = new AWS.CloudWatchLogs();
 
 //https://www.prodops.io/blog/deploying-fargate-services-using-cloudformation
 //https://github.com/docker/docker/issues/7375
@@ -68,7 +70,7 @@ function registerTaskDefinition(project_data,event){
                     options: {
                         'awslogs-create-group': 'true',
                         'awslogs-region': 'us-east-1',
-                        'awslogs-group': `/aws/ecs/capsulecd-${project.Settings.packageType}-logs`,
+                        'awslogs-group': `/aws/ecs/capsulecd-api-${nconf.get('STAGE')}-tasks`,
                         'awslogs-stream-prefix': project.Settings.packageType
                     }
                 },
@@ -194,6 +196,7 @@ function runTaskDefinition(taskDefData,project_data,event) {
 
     ecs.runTask(params, function(err, data) {
         if (err)  return run_deferred.reject(err);
+        console.log(data)
         return run_deferred.resolve(data)
     });
 
@@ -207,7 +210,8 @@ module.exports = {
                 return runTaskDefinition(taskDefinitionData, project_data, event)
             })
             .then(function(runTaskData){
-                return runTaskData.tasks[0].containers[0].containerArn
+console.log(runTaskData) //TODO: remove this once debugging complete.
+                return runTaskData; //runTaskData.tasks[0].containers[0].containerArn
             })
     },
     //TODO: add a timed task to pull the lastest image for all containers, every 1 hour?
@@ -217,9 +221,30 @@ module.exports = {
     },
 
     logs: function(project_data, event){
+        var deferred = q.defer();
+
+
+console.log(project_data) //TODO: remove after debugging. 
+console.log(event)
+
+        var params = {
+            logGroupName: `/aws/ecs/capsulecd-api-${nconf.get('STAGE')}-tasks`,
+            logStreamName: 'STRING_VALUE', /* required */
+            // endTime: 0,
+            // limit: 0,
+            // nextToken: 'STRING_VALUE',
+            // startFromHead: true || false,
+            // startTime: 0
+        };
+        cloudwatchlogs.getLogEvents(params, function(err, data) {
+            if (err) return deferred.reject(err, err.stack); // an error occurred
+            console.log(data);           // successful response
+            return deferred.resolve(data);
+        });
+
 
         //pulling logs is currently a noop in AWS Fargate
-        return q.resolve({})
+        return deferred.promise
 
 
     },
