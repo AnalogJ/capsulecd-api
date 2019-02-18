@@ -9,7 +9,8 @@ AWS.config.apiVersions = {
 var ecs = new AWS.ECS();
 
 //https://www.prodops.io/blog/deploying-fargate-services-using-cloudformation
-
+//https://github.com/docker/docker/issues/7375
+// https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/ECS.html#registerTaskDefinition-property
 
 
 var url = require('url');
@@ -61,7 +62,16 @@ function registerTaskDefinition(project_data,event){
                 essential: true,
                 image: project.Settings.dockerImage,
                 cpu: 512,
-                memory: 1024
+                memory: 1024,
+                logConfiguration: {
+                    logDriver: 'awslogs', /* required */
+                    options: {
+                        'awslogs-create-group': 'true',
+                        'awslogs-region': 'us-east-1',
+                        'awslogs-group': `/aws/ecs/capsulecd-${project.Settings.packageType}-logs`,
+                        'awslogs-stream-prefix': project.Settings.packageType
+                    }
+                },
             }
         ],
 
@@ -129,30 +139,31 @@ function runTaskDefinition(taskDefData,project_data,event) {
         taskDefinition: "capsulecd-"+project.Settings.packageType,
         launchType: "FARGATE",
         tags: [
-            // {
-            //     key: "CAPSULE_SCM",
-            //     value: event.path.serviceType
-            // },
-            // {
-            //     key: "CAPSULE_SCM_REPO_FULL_NAME",
-            //     value: project.OrgId + '/' + project.RepoId
-            // },
-            // {
-            //     key: "CAPSULE_SCM_PULL_REQUEST",
-            //     value: event.path.prNumber
-            // },
-            // {
-            //     key: "CAPSULE_ENGINE_VERSION_BUMP_TYPE",
-            //     value: (event.body.versionIncr || 'patch')
-            // },
-            // {
-            //     key: "CAPSULE_START_DATE",
-            //     value: new Date().toISOString()
-            // },
-            // {
-            //     key: "CAPSULE_PACKAGE_TYPE",
-            //     value: project.Settings.packageType
-            // }
+            //TODO: requires extended tag format for
+            {
+                key: "CAPSULE_SCM",
+                value: event.path.serviceType
+            },
+            {
+                key: "CAPSULE_SCM_REPO_FULL_NAME",
+                value: project.OrgId + '/' + project.RepoId
+            },
+            {
+                key: "CAPSULE_SCM_PULL_REQUEST",
+                value: event.path.prNumber
+            },
+            {
+                key: "CAPSULE_ENGINE_VERSION_BUMP_TYPE",
+                value: (event.body.versionIncr || 'patch')
+            },
+            {
+                key: "CAPSULE_START_DATE",
+                value: new Date().toISOString()
+            },
+            {
+                key: "CAPSULE_PACKAGE_TYPE",
+                value: project.Settings.packageType
+            }
         ],
         networkConfiguration: {
             awsvpcConfiguration: {
