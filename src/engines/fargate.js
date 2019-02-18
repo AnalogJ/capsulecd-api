@@ -258,7 +258,7 @@ module.exports = {
                 logsResponse.Lines.push(event.message)
             }
 
-            return deferred.resolve(data);
+            return deferred.resolve(logsResponse);
         });
 
         return deferred.promise

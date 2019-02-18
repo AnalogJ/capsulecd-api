@@ -4,6 +4,15 @@ var nconf = require('./common/nconf');
 var Helpers = require('./common/helpers');
 var engine = require('./engines/fargate')
 module.exports.index = (event, context, callback) => {
+
+    //TOOD: lots of cleanup tasks below:
+
+    //cleanup old containers
+    //cleanup old logs
+    //cleanup old versions of tasks
+    //cleanup old versionf of deployments? (should be done by serverless)
+
+
     return engine.cleanupContainers()
         .then(function(){
             callback(null, 'cleanup finished successfully');
