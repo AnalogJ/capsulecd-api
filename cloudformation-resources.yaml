@@ -55,6 +55,7 @@ DynamoDBProject:
 #ExecutionRoleArn: This is the IAM role that the ECS agent/host assumes and is needed for cloudwatch logs/ECR access etc.
 EcsExecutionRole:
   Type: AWS::IAM::Role
+  RoleName: "${self:service}-${opt:stage, self:provider.stage}-ecsExecutionRole"
   Properties:
     AssumeRolePolicyDocument:
       Statement:
@@ -67,4 +68,11 @@ EcsExecutionRole:
 
     ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
-    RoleName: "${self:service}-${opt:stage, self:provider.stage}-ecsExecutionRole"
+    Policies:
+    - PolicyName: ecs-cloudwatch-create-group
+      PolicyDocument:
+        Statement:
+        - Effect: Allow
+          Action:
+          - logs:CreateLogGroup
+          Resource: "*"
