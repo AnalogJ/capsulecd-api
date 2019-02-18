@@ -157,11 +157,8 @@ function runTaskDefinition(taskDefData,project_data,event) {
         propagateTags: 'TASK_DEFINITION',
         networkConfiguration: {
             awsvpcConfiguration: {
-                "subnets": [
+                subnets: [
                     "subnet-afea3085"
-                ],
-                "securityGroups": [
-                    "capsul-4191"
                 ],
                 assignPublicIp: "DISABLED",
             }
