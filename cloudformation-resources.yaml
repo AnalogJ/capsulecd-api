@@ -56,6 +56,15 @@ DynamoDBProject:
 EcsExecutionRole:
   Type: AWS::IAM::Role
   Properties:
+    AssumeRolePolicyDocument:
+      Statement:
+      - Effect: Allow
+        Principal:
+          Service:
+          - ecs.amazonaws.com
+        Action:
+        - sts:AssumeRole
+
     ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
     RoleName: "${self:service}-${opt:stage, self:provider.stage}-ecsExecutionRole"
