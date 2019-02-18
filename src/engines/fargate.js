@@ -159,7 +159,7 @@ function runTaskDefinition(taskDefData,project_data,event) {
                 subnets: [
                     "subnet-afea3085"
                 ],
-                assignPublicIp: "DISABLED",
+                assignPublicIp: "ENABLED",
             }
         },
         overrides: {
