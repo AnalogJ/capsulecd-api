@@ -26,6 +26,7 @@ provider:
   stage: 'beta'
   region: 'us-east-1'
   cfLogs: true
+  logRetentionInDays: 14
   iamRoleStatements:
     - Effect: Allow
       Action: dynamodb:*

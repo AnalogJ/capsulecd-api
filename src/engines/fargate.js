@@ -256,7 +256,7 @@ module.exports = {
                 var event = data.events[ndx]
 
                 logsResponse.Lines.push({
-                    stream: 'stdout', //TODO: not sure how to differentiate between stdout and stderr. 
+                    stream: 'stdout', //TODO: not sure how to differentiate between stdout and stderr.
                     line: event.message
                 })
             }
