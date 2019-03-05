@@ -187,7 +187,7 @@ function updateProject(auth, serviceType, orgId, repoId, event){
         .then(function(data){
             //only pull the docker image if we're making changes to the settings, not secrets
             if(event.body.Settings) {
-                return require('./engines/hyper').pullImage(event.body.Settings.dockerImage);
+                return require('./engines/fargate').pullImage(event.body.Settings.dockerImage);
             }
             return {}
         })

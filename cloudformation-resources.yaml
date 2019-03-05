@@ -35,3 +35,44 @@ DynamoDBProject:
       ReadCapacityUnits: '5'
       WriteCapacityUnits: '5'
     TableName: "${opt:stage, self:provider.stage}-${self:service}-projects"
+
+# TaskRoleArn: This is the IAM role that the code running in the container assumes
+# - e.g. you'd use this so that application code can authenticate with AWS resources like S3/DynamoDB etc.
+#EcsTaskRole:
+#  Type: AWS::IAM::Role
+#  Properties:
+#    AssumeRolePolicyDocument:
+#      JSON object
+#    ManagedPolicyArns:
+#      - String
+#    MaxSessionDuration: Integer
+#    Path: String
+#    PermissionsBoundary: String
+#    Policies:
+#      - Policies
+#    RoleName: String
+
+#ExecutionRoleArn: This is the IAM role that the ECS agent/host assumes and is needed for cloudwatch logs/ECR access etc.
+EcsExecutionRole:
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: "${self:service}-${opt:stage, self:provider.stage}-ecsExecutionRole"
+    AssumeRolePolicyDocument:
+      Statement:
+      - Effect: Allow
+        Principal:
+          Service:
+          - ecs-tasks.amazonaws.com
+        Action:
+        - sts:AssumeRole
+
+    ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+    Policies:
+    - PolicyName: ecs-cloudwatch-create-group
+      PolicyDocument:
+        Statement:
+        - Effect: Allow
+          Action:
+          - logs:CreateLogGroup
+          Resource: "*"
