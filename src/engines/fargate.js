@@ -213,6 +213,7 @@ function getTaskStatus(taskId){
 
     ecs.describeTasks(params, function(err, data) {
         if (err)  return deferred.reject(err);
+        console.log(data)
         return deferred.resolve(data.tasks[0].lastStatus)
     });
 
