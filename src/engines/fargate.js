@@ -214,6 +214,10 @@ function getTaskStatus(taskId){
     ecs.describeTasks(params, function(err, data) {
         if (err)  return deferred.reject(err);
         console.log(data)
+
+        if(data.tasks.length == 0){
+            return deferred.resolve("STOPPED") //happens when task is very old and has been cleaned up
+        }
         return deferred.resolve(data.tasks[0].lastStatus)
     });
 
