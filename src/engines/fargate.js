@@ -308,7 +308,7 @@ module.exports = {
             return getTaskLogs(project_data, taskId, event.query.NextToken)
         }
         else {
-            getTaskStatus(taskId)
+            return getTaskStatus(taskId)
                 .then(function(status){
                     if((status == "RUNNING") || (status == "STOPPED")){
                         return getTaskLogs(project_data, taskId, null)
