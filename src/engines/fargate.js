@@ -240,8 +240,8 @@ function getTaskLogs(project_data, taskId, nextToken){
         NextToken: null
     }
 
-    if(event.query.NextToken){
-        params.nextToken = event.query.NextToken
+    if(nextToken){
+        params.nextToken = nextToken
     }
 
     cloudwatchlogs.getLogEvents(params, function(err, data) {
@@ -304,7 +304,7 @@ module.exports = {
 
 
         if(event.query.NextToken){
-            return getTaskLogs(project_data, taskId,)
+            return getTaskLogs(project_data, taskId, event.query.NextToken)
         }
         else {
             getTaskStatus(taskId)
