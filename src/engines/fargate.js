@@ -203,6 +203,71 @@ function runTaskDefinition(taskDefData,project_data,event) {
     return run_deferred.promise
 }
 
+
+function getTaskStatus(taskId){
+    var deferred = q.defer();
+
+    var params = {
+        tasks: [ taskId ]
+    };
+
+    ecs.describeTasks(params, function(err, data) {
+        if (err)  return deferred.reject(err);
+        return deferred.resolve(data.tasks[0].lastStatus)
+    });
+
+    return deferred.promise
+}
+
+function getTaskLogs(project_data, taskId, nextToken){
+    var deferred = q.defer();
+
+
+    var params = {
+        logGroupName: `/aws/ecs/capsulecd-api-${nconf.get('STAGE')}-tasks`,
+        logStreamName: `${project_data.project.Settings.packageType}/capsulecd/${taskId}`, /* required */
+        // endTime: 0,
+        // limit: 0,
+        // nextToken: 'STRING_VALUE',
+        // startFromHead: true || false,
+        // startTime: 0
+    };
+
+    //TODO: get updated status for deployment.
+    var logsResponse = {
+        State: 'RUNNING',
+        Lines: [],
+        NextToken: null
+    }
+
+    if(event.query.NextToken){
+        params.nextToken = event.query.NextToken
+    }
+
+    cloudwatchlogs.getLogEvents(params, function(err, data) {
+        if (err) return deferred.reject(err, err.stack); // an error occurred
+        console.log(data);           // successful response
+
+        //if next and current are the same, set next to null (ignore)
+        if(nextToken != data.nextForwardToken){
+            logsResponse.NextToken = data.nextForwardToken
+        }
+
+        for(var ndx in data.events){
+            var event = data.events[ndx]
+
+            logsResponse.Lines.push({
+                stream: 'stdout', //TODO: not sure how to differentiate between stdout and stderr.
+                line: event.message
+            })
+        }
+
+        return deferred.resolve(logsResponse);
+    });
+
+    return deferred.promise
+}
+
 module.exports = {
     start: function(project_data,event){
         return registerTaskDefinition(project_data, event)
@@ -226,47 +291,38 @@ module.exports = {
     },
 
     logs: function(project_data, event){
-        var deferred = q.defer();
         var taskId = project_data.project.Pending[event.path.prNumber]
 
-        //TODO: get updated status for deployment.
-        var logsResponse = {
-            State: 'PENDING',
-            Lines: [],
-            Next: null
+        //check if there's a NextToken specified.
+        //  if no NextToken found, check the status of the container, check if its running yet.
+        //      if container is running (or finished)
+        //          return the current logs (and NextToken)
+        //      else if container is not running (STARTING?)
+        //          return empty (UI should retry after delay)
+        //  else
+        //      return the logs
+
+
+        if(event.query.NextToken){
+            return getTaskLogs(project_data, taskId,)
         }
+        else {
+            getTaskStatus(taskId)
+                .then(function(status){
+                    if((status == "RUNNING") || (status == "STOPPED")){
+                        return getTaskLogs(project_data, taskId, null)
+                    }
+                    else {
+                        //container is pending.
 
-        var params = {
-            logGroupName: `/aws/ecs/capsulecd-api-${nconf.get('STAGE')}-tasks`,
-            logStreamName: `${project_data.project.Settings.packageType}/capsulecd/${taskId}`, /* required */
-            // endTime: 0,
-            // limit: 0,
-            // nextToken: 'STRING_VALUE',
-            // startFromHead: true || false,
-            // startTime: 0
-        };
-        cloudwatchlogs.getLogEvents(params, function(err, data) {
-            if (err) return deferred.reject(err, err.stack); // an error occurred
-            console.log(data);           // successful response
-
-
-            //if next and current are the same, set next to null (ignore)
-            logsResponse.Next = data.nextForwardToken
-            for(var ndx in data.events){
-                var event = data.events[ndx]
-
-                logsResponse.Lines.push({
-                    stream: 'stdout', //TODO: not sure how to differentiate between stdout and stderr.
-                    line: event.message
+                        return {
+                            State: status,
+                            Lines: [],
+                            NextToken: null
+                        }
+                    }
                 })
-            }
-
-            return deferred.resolve(logsResponse);
-        });
-
-        return deferred.promise
-
-
+        }
     },
     cleanupContainers: function(){
 
